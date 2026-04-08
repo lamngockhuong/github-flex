@@ -4,7 +4,7 @@ export const SETTINGS_DEFAULTS = {
   tableExpand: true,
   imageLightbox: true,
   gifPicker: true,
-  zenMode: true,
+  sidebarToggle: true,
 };
 
 // Chrome storage keys
@@ -17,11 +17,11 @@ export const STYLE_IDS = {
   WIDE_LAYOUT: "ghflex-wide-layout-styles",
   TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
-  ZEN_MODE: "ghflex-zen-mode-styles",
+  SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
 };
 
-// Zen mode storage key (localStorage for per-page state)
-export const ZEN_MODE_STORAGE_KEY = "ghflex-zen-hidden";
+// Sidebar toggle storage key (localStorage for per-page state)
+export const SIDEBAR_TOGGLE_STORAGE_KEY = "ghflex-sidebar-hidden";
 
 // Table expand storage prefix
 export const TABLE_EXPAND_STORAGE_PREFIX = "ghflex-table-expand";

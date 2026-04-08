@@ -1,11 +1,11 @@
-// Zen Mode feature - hide sidebar with toggle
+// Sidebar Toggle feature - hide/show sidebar
 
 import { ICONS } from "../../shared/icons.js";
 
-const STORAGE_KEY = "ghflex-zen-hidden";
-const TOGGLE_ID = "ghflex-zen-toggle";
-const HIDDEN_CLASS = "ghflex-zen-hidden";
-const STYLE_ID = "ghflex-zen-styles";
+const STORAGE_KEY = "ghflex-sidebar-hidden";
+const TOGGLE_ID = "ghflex-sidebar-toggle";
+const HIDDEN_CLASS = "ghflex-sidebar-hidden";
+const STYLE_ID = "ghflex-sidebar-toggle-styles";
 
 // Sidebar selectors for different GitHub layouts
 const SIDEBAR_SELECTORS = [
@@ -15,7 +15,7 @@ const SIDEBAR_SELECTORS = [
   "#partial-discussion-sidebar", // Discussion
 ];
 
-class ZenMode {
+class SidebarToggle {
   constructor() {
     this.enabled = false;
     this.sidebar = null;
@@ -27,6 +27,9 @@ class ZenMode {
     this.popstateHandler = null;
     this.originalPushState = null;
     this.originalReplaceState = null;
+    // Debounce/timeout tracking
+    this.initTimeoutId = null;
+    this.observerDebounceId = null;
   }
 
   /**
@@ -36,6 +39,13 @@ class ZenMode {
     for (const selector of SIDEBAR_SELECTORS) {
       const element = document.querySelector(selector);
       if (element) {
+        // Skip .Layout-sidebar if it's a left navigation sidebar (not metadata)
+        if (selector === ".Layout-sidebar") {
+          const parent = element.closest(".Layout");
+          if (parent?.classList.contains("Layout--sidebarPosition-start")) {
+            continue; // Skip left-positioned sidebars (navigation)
+          }
+        }
         return element;
       }
     }
@@ -85,12 +95,7 @@ class ZenMode {
    */
   applyState() {
     if (!this.sidebar) return;
-
-    if (this.isHidden) {
-      this.sidebar.classList.add(HIDDEN_CLASS);
-    } else {
-      this.sidebar.classList.remove(HIDDEN_CLASS);
-    }
+    this.sidebar.classList.toggle(HIDDEN_CLASS, this.isHidden);
   }
 
   /**
@@ -100,7 +105,7 @@ class ZenMode {
     try {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(this.isHidden));
     } catch (error) {
-      console.error("Failed to save zen mode state:", error);
+      console.error("Failed to save sidebar state:", error);
     }
   }
 
@@ -114,7 +119,7 @@ class ZenMode {
         this.isHidden = JSON.parse(saved);
       }
     } catch (error) {
-      console.error("Failed to load zen mode state:", error);
+      console.error("Failed to load sidebar state:", error);
       this.isHidden = false;
     }
   }
@@ -135,20 +140,30 @@ class ZenMode {
   }
 
   /**
-   * Setup MutationObserver for SPA navigation
+   * Setup MutationObserver for SPA navigation (debounced)
    */
   setupObserver() {
     this.observer = new MutationObserver(() => {
-      // Check if sidebar still exists
-      if (this.sidebar && !document.body.contains(this.sidebar)) {
-        this.sidebar = null;
-        this.init();
-      }
-      // Check if toggle button still exists
-      if (this.toggleButton && !document.body.contains(this.toggleButton)) {
-        this.toggleButton = null;
-        this.init();
-      }
+      // Debounce rapid mutations
+      clearTimeout(this.observerDebounceId);
+      this.observerDebounceId = setTimeout(() => {
+        // Check if sidebar still exists
+        if (this.sidebar && !document.body.contains(this.sidebar)) {
+          this.sidebar = null;
+          this.init();
+          return;
+        }
+        // Check if toggle button still exists
+        if (this.toggleButton && !document.body.contains(this.toggleButton)) {
+          this.toggleButton = null;
+          this.init();
+          return;
+        }
+        // Check if sidebar appeared (wasn't found before but now exists)
+        if (!this.sidebar && this.findSidebar()) {
+          this.init();
+        }
+      }, 100);
     });
 
     this.observer.observe(document.body, {
@@ -180,9 +195,14 @@ class ZenMode {
       document.body.appendChild(this.toggleButton);
     }
 
-    // Apply saved state
+    // Apply saved state (without animation)
     this.applyState();
     this.updateToggleIcon();
+
+    // Enable transitions after initial state is set (next frame)
+    requestAnimationFrame(() => {
+      this.sidebar?.classList.add("ghflex-sidebar-ready");
+    });
   }
 
   /**
@@ -193,7 +213,7 @@ class ZenMode {
     const link = document.createElement("link");
     link.id = STYLE_ID;
     link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("content/styles/zen-mode.css");
+    link.href = chrome.runtime.getURL("content/styles/sidebar-toggle.css");
     document.head.appendChild(link);
   }
 
@@ -205,7 +225,7 @@ class ZenMode {
   }
 
   /**
-   * Enable zen mode feature
+   * Enable sidebar toggle feature
    */
   enable() {
     if (this.enabled) return;
@@ -219,7 +239,8 @@ class ZenMode {
 
     // Re-init on popstate (browser back/forward)
     this.popstateHandler = () => {
-      setTimeout(() => this.init(), 100);
+      clearTimeout(this.initTimeoutId);
+      this.initTimeoutId = setTimeout(() => this.init(), 100);
     };
     window.addEventListener("popstate", this.popstateHandler);
 
@@ -230,22 +251,28 @@ class ZenMode {
     const self = this;
     history.pushState = function (...args) {
       self.originalPushState.apply(this, args);
-      setTimeout(() => self.init(), 100);
+      clearTimeout(self.initTimeoutId);
+      self.initTimeoutId = setTimeout(() => self.init(), 100);
     };
 
     history.replaceState = function (...args) {
       self.originalReplaceState.apply(this, args);
-      setTimeout(() => self.init(), 100);
+      clearTimeout(self.initTimeoutId);
+      self.initTimeoutId = setTimeout(() => self.init(), 100);
     };
   }
 
   /**
-   * Disable zen mode feature
+   * Disable sidebar toggle feature
    */
   disable() {
     if (!this.enabled) return;
 
     this.enabled = false;
+
+    // Clear pending timeouts
+    clearTimeout(this.initTimeoutId);
+    clearTimeout(this.observerDebounceId);
 
     // Remove toggle button
     if (this.toggleButton?.parentNode) {
@@ -253,9 +280,10 @@ class ZenMode {
       this.toggleButton = null;
     }
 
-    // Remove hidden class from sidebar
+    // Remove classes from sidebar
     if (this.sidebar) {
       this.sidebar.classList.remove(HIDDEN_CLASS);
+      this.sidebar.classList.remove("ghflex-sidebar-ready");
       this.sidebar = null;
     }
 
@@ -293,4 +321,4 @@ class ZenMode {
 }
 
 // Export singleton instance
-export const zenMode = new ZenMode();
+export const sidebarToggle = new SidebarToggle();

@@ -5,7 +5,7 @@ const SETTING_KEYS = [
   "tableExpand",
   "imageLightbox",
   "gifPicker",
-  "zenMode",
+  "sidebarToggle",
 ];
 
 async function init() {
@@ -19,6 +19,13 @@ async function init() {
     checkbox.addEventListener("change", async (e) => {
       await saveSetting(key, e.target.checked);
     });
+  }
+
+  // Set version from manifest
+  const version = chrome.runtime.getManifest().version;
+  const versionEl = document.getElementById("app-version");
+  if (versionEl) {
+    versionEl.textContent = `v${version}`;
   }
 }
 

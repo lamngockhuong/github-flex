@@ -1,14 +1,140 @@
 /* Wide Layout - Expand GitHub UI to full viewport width */
+/* Based on Wide GitHub userscript by xthexder */
 
-.ghflex-wide-layout .container-xl,
-.ghflex-wide-layout .Layout,
+/* General full-page container */
 .ghflex-wide-layout .application-main .container-xl {
-  max-width: 100% !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
+  max-width: none !important;
 }
 
-/* Ensure main content area expands */
+/* General content sub-container */
+.ghflex-wide-layout .application-main .container-lg {
+  max-width: none !important;
+  margin-left: 0 !important;
+}
+
+/* Repository home sidebar */
+.ghflex-wide-layout .react-repos-overview-margin {
+  margin-right: 0;
+}
+
+/* Commit History and Branches page */
+.ghflex-wide-layout #js-repo-pjax-container
+  div[style^="--sticky-pane-height:"]
+  > div[class^="Box-sc-"]:first-child {
+  max-width: none;
+}
+
+/* Repository Tags page */
+.ghflex-wide-layout .application-main .col-11 {
+  width: 100%;
+}
+
+/* Issue list Assignee alignment */
+.ghflex-wide-layout #js-repo-pjax-container .js-issue-row .text-right {
+  max-width: 303px !important;
+}
+
+/* New React layout (2024) */
+
+/* Issues list page */
+.ghflex-wide-layout .application-main
+  div[style^="--sticky-pane-height:"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]:nth-child(2)
+  > div[class^="Box-sc-"] {
+  max-width: none;
+}
+
+/* Issue page */
+.ghflex-wide-layout #js-repo-pjax-container
+  div[data-target="react-app.reactRoot"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"] {
+  max-width: none;
+}
+
+/* New React layout (2025) */
+
+/* Issues list page */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="prc-PageLayout-Content-"]
+  > div[class^="Box-sc-"] {
+  max-width: none;
+}
+
+/* Issues list page (July 2025) */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane-"] {
+  max-width: none;
+}
+
+/* Issues list page (Feb 2026) */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane__"] {
+  max-width: none;
+}
+
+/* Issue page */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"]
+  > div[class^="Box-sc-"] {
+  max-width: none;
+}
+
+/* Issue page (July 2025) */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="IssueViewer-module__issueViewerContainer-"]
+  > div[class^="Box-sc-"] {
+  max-width: none;
+}
+
+/* Issue page (Jan 2026) */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="ContentWrapper-module__contentContainer--"] {
+  max-width: none;
+}
+
+/* Issue page (Feb 2026) */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="prc-PageLayout-Content-"] {
+  max-width: none;
+}
+
+.ghflex-wide-layout
+  .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="ContentWrapper-module__contentContainer__"] {
+  max-width: none;
+}
+
+/* New issue page */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="IssueCreatePage-module__createPaneContainer-"] {
+  max-width: none;
+}
+
+/* Commit list page */
+.ghflex-wide-layout .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="prc-PageLayout-PageLayoutWrapper-"] {
+  max-width: none;
+}
+
+/* Layout main content */
 .ghflex-wide-layout .Layout-main {
   max-width: 100% !important;
 }
@@ -16,8 +142,6 @@
 /* Repository header container */
 .ghflex-wide-layout .pagehead {
   max-width: 100% !important;
-  padding-left: 32px !important;
-  padding-right: 32px !important;
 }
 
 /* File browser and code view */

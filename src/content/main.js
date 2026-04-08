@@ -1,16 +1,16 @@
 import { getSettings } from "../shared/storage.js";
 import { gifPicker } from "./features/gif-picker.js";
 import { imageLightbox } from "./features/image-lightbox.js";
+import { sidebarToggle } from "./features/sidebar-toggle.js";
 import { tableExpand } from "./features/table-expand.js";
 import { wideLayout } from "./features/wide-layout.js";
-import { zenMode } from "./features/zen-mode.js";
 
 const features = {
   wideLayout,
   tableExpand,
   imageLightbox,
   gifPicker,
-  zenMode,
+  sidebarToggle,
 };
 
 async function init() {

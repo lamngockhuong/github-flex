@@ -1,0 +1,191 @@
+/* Sidebar Toggle styles - smooth sidebar hide/show animation */
+
+:root {
+  --ghflex-sidebar-animation: 250ms;
+}
+
+/* Toggle button styling */
+#ghflex-sidebar-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  background: var(--bgColor-default, #fff);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(31, 35, 40, 0.12);
+  transition: all 0.2s ease;
+}
+
+#ghflex-sidebar-toggle:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+  border-color: var(--borderColor-muted, #bdc3c9);
+}
+
+#ghflex-sidebar-toggle:active {
+  transform: scale(0.95);
+}
+
+#ghflex-sidebar-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--fgColor-default, #1f2328);
+}
+
+/* Dark mode support for toggle button */
+@media (prefers-color-scheme: dark) {
+  #ghflex-sidebar-toggle {
+    background: var(--bgColor-default, #0d1117);
+    border-color: var(--borderColor-default, #30363d);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  #ghflex-sidebar-toggle:hover {
+    background: var(--bgColor-muted, #161b22);
+    border-color: var(--borderColor-muted, #484f58);
+  }
+
+  #ghflex-sidebar-toggle svg {
+    color: var(--fgColor-default, #e6edf3);
+  }
+}
+
+/* Shared sidebar animation and hidden state */
+.ghflex-sidebar-ready {
+  transition:
+    width var(--ghflex-sidebar-animation) ease,
+    opacity var(--ghflex-sidebar-animation) ease;
+}
+
+.ghflex-sidebar-hidden {
+  width: 0 !important;
+  min-width: 0 !important;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  padding: 0 !important;
+  margin: 0 !important;
+  overflow: hidden !important;
+}
+
+/* Expand main content when old UI sidebar is hidden */
+.Layout:has(.Layout-sidebar.ghflex-sidebar-hidden) {
+  grid-template-columns: 1fr !important;
+}
+
+.Layout-main:has(~ .Layout-sidebar.ghflex-sidebar-hidden) {
+  max-width: 100% !important;
+}
+
+/* Expand main content when PageLayout sidebar is hidden */
+[class*="prc-PageLayout"]:has(
+    [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+
+/* Ensure content area expands */
+[class*="prc-PageLayout-Content"]:has(
+    ~ [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  ) {
+  max-width: 100% !important;
+  flex: 1 !important;
+}
+
+/* PR/Issue page - expand content wrapper when sidebar hidden */
+[class*="prc-PageLayout-ContentWrapper"]:has(
+    [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+  display: block !important;
+  gap: 0 !important;
+}
+
+/* Generic: any flex/grid parent containing hidden sidebar */
+*:has(> [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden) {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+
+/* Content sibling of hidden pane */
+[class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  ~ [class*="prc-PageLayout-Content"] {
+  max-width: 100% !important;
+  width: 100% !important;
+}
+
+/* Remove max-width from inner content when sidebar hidden */
+[class*="prc-PageLayout-ContentWrapper"]:has(
+    ~ [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  )
+  [class*="prc-PageLayout-Content"] {
+  max-width: 100% !important;
+}
+
+/* Also target when content is before pane */
+*:has(> [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden)
+  > [class*="prc-PageLayout-ContentWrapper"]
+  [class*="prc-PageLayout-Content"] {
+  max-width: 100% !important;
+}
+
+/* Expand main content when issue metadata is hidden */
+[class*="IssueViewer-module"]:has(
+    [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+}
+
+/* Generic: any parent containing hidden metadata */
+*:has(> [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden) {
+  grid-template-columns: 1fr !important;
+  gap: 0 !important;
+}
+
+/* Issue page content wrapper - remove gap when sidebar hidden */
+[class*="contentAndSidebarWrapper"]:has(
+    [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ) {
+  gap: 0 !important;
+}
+
+/* Content sibling of hidden metadata - expand to full width */
+[data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ~ [class*="contentArea"],
+[data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ~ [class*="ContentWrapper"],
+[data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ~ [class*="prc-PageLayout-Content"] {
+  max-width: 100% !important;
+  width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+/* Expand discussion main content when sidebar is hidden */
+.discussion-sidebar-container:has(
+    #partial-discussion-sidebar.ghflex-sidebar-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+}
+
+/* Discussion page - expand content column when sidebar hidden */
+#partial-discussion-sidebar.ghflex-sidebar-hidden ~ .col-md-9,
+.col-md-9:has(~ #partial-discussion-sidebar.ghflex-sidebar-hidden) {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+}
+
+/* Also handle when content comes before sidebar */
+*:has(> #partial-discussion-sidebar.ghflex-sidebar-hidden) > .col-md-9 {
+  width: 100% !important;
+  max-width: 100% !important;
+  flex: 1 1 100% !important;
+}
