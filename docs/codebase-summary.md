@@ -9,7 +9,7 @@ GitHub Flex is a Chrome Manifest V3 extension enhancing GitHub's interface with 
 - **Total Files:** ~15 source files
 - **Total LOC:** ~576 lines
 - **Languages:** JavaScript (ES Modules), CSS, HTML
-- **Bundle Output:** 2 entry points (content script, popup)
+- **Bundle Output:** 3 entry points (early-inject, content script, popup)
 - **External Services:** 1 (GIF API proxy)
 
 ## Directory Structure
@@ -21,8 +21,9 @@ github-flex/
 │   │   └── service-worker.js          # Extension lifecycle events (13 LOC)
 │   ├── content/
 │   │   ├── main.js                    # Feature initialization (55 LOC)
+│   │   ├── early-inject.js            # FOUC prevention (document_start)
 │   │   ├── features/
-│   │   │   ├── wide-layout.js         # Full viewport width (36 LOC)
+│   │   │   ├── wide-layout.js         # Full viewport width (21 LOC)
 │   │   │   ├── table-expand.js        # Expandable tables (211 LOC)
 │   │   │   ├── image-lightbox.js      # Image zoom overlay (316 LOC)
 │   │   │   ├── gif-picker.js          # GIF search modal (575 LOC)
@@ -56,7 +57,15 @@ github-flex/
 
 ### Entry Points
 
-#### 1. Content Script (`src/content/main.js`)
+#### 1. Early Inject Script (`src/content/early-inject.js`)
+- **When:** Runs at `document_start` (before DOM renders)
+- **What:** Prevents FOUC by applying wide-layout CSS state immediately
+- **Flow:**
+  ```
+  Check chrome.storage → if wideLayout=false, add disabled class → CSS respects class
+  ```
+
+#### 2. Content Script (`src/content/main.js`)
 - **When:** Runs at `document_idle` on github.com/* and gist.github.com/*
 - **What:** Loads settings from chrome.storage, enables features, listens for setting changes
 - **Flow:**
@@ -64,7 +73,7 @@ github-flex/
   init() → getSettings() → enable each feature → listen for chrome.storage changes
   ```
 
-#### 2. Popup (`src/popup/popup.js`)
+#### 3. Popup (`src/popup/popup.js`)
 - **When:** User clicks extension icon
 - **What:** Loads current settings, binds checkbox toggles, saves to chrome.storage.sync
 - **Flow:**
@@ -106,11 +115,11 @@ export const featureName = {
 
 ### Feature Implementations
 
-#### Wide Layout (`wide-layout.js`)
-- **Pattern:** CSS-only, no JavaScript logic
-- **Mechanism:** Adds `.ghflex-wide-layout` class to `<html>`
+#### Wide Layout (`wide-layout.js` + `early-inject.js`)
+- **Pattern:** CSS injected via manifest at document_start (FOUC prevention)
+- **Mechanism:** Opt-out selector `html:not(.ghflex-wide-layout-disabled)`
 - **Style:** Overrides GitHub's `.container-xl` max-width
-- **State:** None (purely visual)
+- **State:** Class toggle only (no internal state)
 
 #### Table Expand (`table-expand.js`)
 - **Pattern:** Wrapper injection + button controls
@@ -170,7 +179,8 @@ SETTINGS_DEFAULTS = {
 STORAGE_KEYS = { SETTINGS: "settings" }
 
 STYLE_IDS = {
-  WIDE_LAYOUT: "ghflex-wide-layout-styles",
+  // Note: wide-layout CSS injected via manifest, not dynamically
+  TABLE_EXPAND: "ghflex-table-expand-styles",
   // ... (unique IDs for each feature's <link> tag)
 }
 

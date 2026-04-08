@@ -172,25 +172,25 @@ localStorage (per-origin, github.com)
 
 ### Wide Layout
 
-**Architecture:** Pure CSS override
+**Architecture:** CSS injected at document_start (FOUC prevention)
 
 ```
-User enables in popup
+Page load starts
         ↓
-chrome.storage.sync updated
+early-inject.js runs (document_start)
+        ├─► CSS already injected via manifest
+        └─► Check chrome.storage.sync
+                ├─► wideLayout=false → add .ghflex-wide-layout-disabled
+                └─► wideLayout=true/undefined → do nothing (CSS applies)
         ↓
-Content script receives change
+CSS selector: html:not(.ghflex-wide-layout-disabled) .container-xl
         ↓
-wideLayout.enable()
-        ├─► Adds class to <html>: "ghflex-wide-layout"
-        └─► Injects CSS: chrome.runtime.getURL("styles/wide-layout.css")
-                ↓
-        CSS overrides GitHub's .container-xl max-width
-                ↓
-        Content expands to full viewport
+Content renders wide immediately (no flash)
 ```
 
-**No JavaScript Logic:** Everything happens in CSS. Feature module only manages injection/removal.
+**Why this pattern?** Previous approach loaded CSS via JS at document_idle, causing visible layout shift. Now CSS is bundled in manifest and applies synchronously before first paint.
+
+**Runtime toggle:** `wide-layout.js` only adds/removes disabled class for popup toggle.
 
 ### Table Expand
 

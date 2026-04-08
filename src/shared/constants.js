@@ -12,9 +12,9 @@ export const STORAGE_KEYS = {
   SETTINGS: "settings",
 };
 
-// Feature style IDs
+// Feature style IDs (for dynamically injected CSS)
+// Note: wide-layout CSS is injected via manifest, not here
 export const STYLE_IDS = {
-  WIDE_LAYOUT: "ghflex-wide-layout-styles",
   TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
   SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",

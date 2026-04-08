@@ -1,35 +1,20 @@
-// Wide Layout feature - expands GitHub to full viewport width
+// CSS injected via manifest at document_start to prevent FOUC
+// This module toggles the disabled class for runtime control
 
-const STYLE_ID = "ghflex-wide-layout-styles";
-const CLASS_NAME = "ghflex-wide-layout";
+const DISABLED_CLASS = "ghflex-wide-layout-disabled";
 
 export const wideLayout = {
   enabled: false,
 
   enable() {
     if (this.enabled) return;
-    document.documentElement.classList.add(CLASS_NAME);
-    this.injectStyles();
+    document.documentElement.classList.remove(DISABLED_CLASS);
     this.enabled = true;
   },
 
   disable() {
     if (!this.enabled) return;
-    document.documentElement.classList.remove(CLASS_NAME);
-    this.removeStyles();
+    document.documentElement.classList.add(DISABLED_CLASS);
     this.enabled = false;
-  },
-
-  injectStyles() {
-    if (document.getElementById(STYLE_ID)) return;
-    const link = document.createElement("link");
-    link.id = STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("content/styles/wide-layout.css");
-    document.head.appendChild(link);
-  },
-
-  removeStyles() {
-    document.getElementById(STYLE_ID)?.remove();
   },
 };

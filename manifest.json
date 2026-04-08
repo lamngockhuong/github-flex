@@ -30,6 +30,19 @@
         "https://github.com/*",
         "https://gist.github.com/*"
       ],
+      "css": [
+        "src/content/styles/wide-layout.css"
+      ],
+      "js": [
+        "src/content/early-inject.js"
+      ],
+      "run_at": "document_start"
+    },
+    {
+      "matches": [
+        "https://github.com/*",
+        "https://gist.github.com/*"
+      ],
       "js": [
         "src/content/main.js"
       ],

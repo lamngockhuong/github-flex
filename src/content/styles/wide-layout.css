@@ -1,43 +1,46 @@
 /* Wide Layout - Expand GitHub UI to full viewport width */
-/* Based on Wide GitHub userscript by xthexder */
+/* Based on Wide GitHub extension by xthexder */
+/* Uses opt-out selector to prevent FOUC - CSS applies unless disabled class present */
 
 /* General full-page container */
-.ghflex-wide-layout .application-main .container-xl {
+html:not(.ghflex-wide-layout-disabled) .application-main .container-xl {
   max-width: none !important;
 }
 
 /* General content sub-container */
-.ghflex-wide-layout .application-main .container-lg {
+html:not(.ghflex-wide-layout-disabled) .application-main .container-lg {
   max-width: none !important;
   margin-left: 0 !important;
 }
 
 /* Repository home sidebar */
-.ghflex-wide-layout .react-repos-overview-margin {
+html:not(.ghflex-wide-layout-disabled) .react-repos-overview-margin {
   margin-right: 0;
 }
 
 /* Commit History and Branches page */
-.ghflex-wide-layout #js-repo-pjax-container
+html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
   div[style^="--sticky-pane-height:"]
   > div[class^="Box-sc-"]:first-child {
   max-width: none;
 }
 
 /* Repository Tags page */
-.ghflex-wide-layout .application-main .col-11 {
+html:not(.ghflex-wide-layout-disabled) .application-main .col-11 {
   width: 100%;
 }
 
 /* Issue list Assignee alignment */
-.ghflex-wide-layout #js-repo-pjax-container .js-issue-row .text-right {
+html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
+  .js-issue-row
+  .text-right {
   max-width: 303px !important;
 }
 
 /* New React layout (2024) */
 
 /* Issues list page */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[style^="--sticky-pane-height:"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -48,7 +51,7 @@
 }
 
 /* Issue page */
-.ghflex-wide-layout #js-repo-pjax-container
+html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
   div[data-target="react-app.reactRoot"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -60,7 +63,7 @@
 /* New React layout (2025) */
 
 /* Issues list page */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-Content-"]
   > div[class^="Box-sc-"] {
@@ -68,21 +71,21 @@
 }
 
 /* Issues list page (July 2025) */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane-"] {
   max-width: none;
 }
 
 /* Issues list page (Feb 2026) */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane__"] {
   max-width: none;
 }
 
 /* Issue page */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -92,7 +95,7 @@
 }
 
 /* Issue page (July 2025) */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="IssueViewer-module__issueViewerContainer-"]
   > div[class^="Box-sc-"] {
@@ -100,20 +103,20 @@
 }
 
 /* Issue page (Jan 2026) */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ContentWrapper-module__contentContainer--"] {
   max-width: none;
 }
 
 /* Issue page (Feb 2026) */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-Content-"] {
   max-width: none;
 }
 
-.ghflex-wide-layout
+html:not(.ghflex-wide-layout-disabled)
   .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ContentWrapper-module__contentContainer__"] {
@@ -121,30 +124,30 @@
 }
 
 /* New issue page */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="IssueCreatePage-module__createPaneContainer-"] {
   max-width: none;
 }
 
 /* Commit list page */
-.ghflex-wide-layout .application-main
+html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-PageLayoutWrapper-"] {
   max-width: none;
 }
 
 /* Layout main content */
-.ghflex-wide-layout .Layout-main {
+html:not(.ghflex-wide-layout-disabled) .Layout-main {
   max-width: 100% !important;
 }
 
 /* Repository header container */
-.ghflex-wide-layout .pagehead {
+html:not(.ghflex-wide-layout-disabled) .pagehead {
   max-width: 100% !important;
 }
 
 /* File browser and code view */
-.ghflex-wide-layout .repository-content {
+html:not(.ghflex-wide-layout-disabled) .repository-content {
   max-width: 100% !important;
 }

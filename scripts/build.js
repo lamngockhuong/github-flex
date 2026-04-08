@@ -11,6 +11,7 @@ const isWatch = process.argv.includes("--watch");
 // Shared build configurations
 const ENTRY_POINTS = [
   { entry: "src/content/main.js", out: "content/main.js" },
+  { entry: "src/content/early-inject.js", out: "content/early-inject.js" },
   { entry: "src/popup/popup.js", out: "popup/popup.js" },
 ];
 
@@ -48,7 +49,11 @@ function updateManifest() {
   const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8"));
   manifest.background.service_worker = "background/service-worker.js";
   manifest.action.default_popup = "popup/popup.html";
-  manifest.content_scripts[0].js = ["content/main.js"];
+  // Early inject script (document_start) - CSS injected via manifest
+  manifest.content_scripts[0].css = ["content/styles/wide-layout.css"];
+  manifest.content_scripts[0].js = ["content/early-inject.js"];
+  // Main script (document_idle)
+  manifest.content_scripts[1].js = ["content/main.js"];
   manifest.web_accessible_resources[0].resources = ["content/styles/*.css"];
   writeFileSync(join(DIST, "manifest.json"), JSON.stringify(manifest, null, 2));
 }

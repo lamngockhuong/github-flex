@@ -79,7 +79,7 @@ module.exports = featureName;
 **Quotes:** Double quotes preferred
 ```javascript
 // ✓ Good
-const styleId = "ghflex-wide-layout-styles";
+const styleId = "ghflex-table-expand-styles";
 
 // ✓ Also acceptable (for avoiding escapes)
 const html = '<button class="btn">Click</button>';
