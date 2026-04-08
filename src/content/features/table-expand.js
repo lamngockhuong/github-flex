@@ -82,7 +82,9 @@ export const tableExpand = {
         isExpanded ? "Collapse" : "Expand",
         () => {
           container.classList.toggle("ghflex-table-expanded");
-          const nowExpanded = container.classList.contains("ghflex-table-expanded");
+          const nowExpanded = container.classList.contains(
+            "ghflex-table-expanded",
+          );
           this.expandedState[stateKey] = nowExpanded;
           this.saveState();
           expandBtn.innerHTML = nowExpanded ? ICONS.unlock : ICONS.lock;

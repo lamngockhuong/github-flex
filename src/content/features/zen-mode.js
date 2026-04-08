@@ -60,7 +60,9 @@ class ZenMode {
    */
   updateToggleIcon() {
     if (this.toggleButton) {
-      this.toggleButton.innerHTML = this.isHidden ? ICONS.showSidebar : ICONS.hideSidebar;
+      this.toggleButton.innerHTML = this.isHidden
+        ? ICONS.showSidebar
+        : ICONS.hideSidebar;
       this.toggleButton.setAttribute(
         "aria-label",
         this.isHidden ? "Show sidebar" : "Hide sidebar",

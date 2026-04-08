@@ -11,23 +11,23 @@
   --gf-primary-bg: #f5f0ff;
 
   /* Secondary - complementary colors */
-  --gf-secondary: #238636;      /* GitHub green - for success states */
+  --gf-secondary: #238636; /* GitHub green - for success states */
   --gf-secondary-light: #3fb950;
 
   /* Accent */
-  --gf-accent: #58a6ff;         /* GitHub blue - links, highlights */
+  --gf-accent: #58a6ff; /* GitHub blue - links, highlights */
   --gf-accent-light: #79c0ff;
 
   /* Neutral */
-  --gf-bg-primary: #0d1117;     /* Dark mode background */
+  --gf-bg-primary: #0d1117; /* Dark mode background */
   --gf-bg-secondary: #161b22;
   --gf-bg-tertiary: #21262d;
-  --gf-bg-light: #ffffff;       /* Light mode background */
+  --gf-bg-light: #ffffff; /* Light mode background */
 
   /* Text */
-  --gf-text-primary: #f0f6fc;   /* Dark mode */
+  --gf-text-primary: #f0f6fc; /* Dark mode */
   --gf-text-secondary: #8b949e;
-  --gf-text-light: #24292f;     /* Light mode */
+  --gf-text-light: #24292f; /* Light mode */
 
   /* Borders */
   --gf-border: #30363d;
