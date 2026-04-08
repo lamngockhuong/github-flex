@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.2](https://github.com/lamngockhuong/github-flex/compare/v0.0.1...v0.0.2) (2026-04-08)
+
+
+### Features
+
+* replace zen mode with sidebar toggle ([34a20b0](https://github.com/lamngockhuong/github-flex/commit/34a20b09cd5e0698d8c824901284cacb54137924))
+
+
+### Bug Fixes
+
+* exclude wide layout and sidebar toggle from GitHub Projects pages ([ea94392](https://github.com/lamngockhuong/github-flex/commit/ea94392ebc954bee4ed3b6e97467b5dc6e196f80))
+* prevent wide layout FOUC with early CSS injection ([b960a27](https://github.com/lamngockhuong/github-flex/commit/b960a27b836d0318380a6b69bff9ff7530f1040f))
+
 ## 0.0.1 (2026-04-08)
 
 
