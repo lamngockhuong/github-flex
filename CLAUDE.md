@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-GitHub Flex is a Chrome Manifest V3 extension that enhances GitHub's interface with features like wide layout, table expansion, image lightbox, GIF picker, and zen mode.
+GitHub Flex is a Chrome Manifest V3 extension that enhances GitHub's interface with features like wide layout, table expansion, image lightbox, GIF picker, and sidebar toggle.
 
 ## Commands
 

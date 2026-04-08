@@ -8,7 +8,7 @@ A Chrome extension that enhances GitHub's interface with productivity features.
 - **Table Expand** - Expandable tables with persistent state
 - **Image Lightbox** - Click images to view in fullscreen overlay
 - **GIF Picker** - Insert GIFs in comments and issues
-- **Zen Mode** - Distraction-free reading mode
+- **Sidebar Toggle** - Hide/show sidebar with button or `Alt+M` shortcut
 
 ## Installation
 
