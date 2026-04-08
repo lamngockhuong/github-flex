@@ -760,7 +760,7 @@ Static Files (copy)
         ├─► src/content/styles/*.css → dist/content/styles/*.css
         ├─► src/background/service-worker.js → dist/background/service-worker.js
         ├─► icons/* → dist/icons/*
-        └─► _locales/* → dist/_locales/*
+        └─► _locales/{en,vi}/* → dist/_locales/{en,vi}/*
         ↓
 Manifest Processing
         ├─► Read: manifest.json
@@ -947,6 +947,7 @@ No cleanup needed (pure client-side, no server state)
 - **Firefox Support:** Port to Manifest V2 (Firefox doesn't fully support V3)
 - **GitHub Enterprise:** Add host_permissions for custom domains
 - **Theme Sync:** Detect GitHub theme (light/dark) and adjust extension styles
+- **More Locales:** Expand language support beyond English and Vietnamese
 
 ### Out of Scope
 - **Backend Services:** Extension remains fully client-side

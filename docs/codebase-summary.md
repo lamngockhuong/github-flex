@@ -45,7 +45,8 @@ github-flex/
 ├── scripts/
 │   └── build.js                       # esbuild bundler (93 LOC)
 ├── _locales/
-│   └── en/messages.json               # i18n strings
+│   ├── en/messages.json               # i18n strings (English - default)
+│   └── vi/messages.json               # i18n strings (Vietnamese)
 ├── icons/                             # Extension icons (16/48/128px)
 ├── manifest.json                      # Chrome extension config
 ├── package.json
@@ -557,7 +558,7 @@ pnpm dev         # Watch mode (auto-rebuild)
 1. **Keyboard Shortcuts:** Configurable hotkeys for features
 2. **Settings Sync:** Import/export configuration
 3. **Theme Support:** Dark mode color adjustments
-4. **Localization:** Multi-language support (currently English only)
+4. **More Locales:** Expand language support (currently English and Vietnamese)
 5. **Performance:** Intersection Observer for lazy feature activation
 6. **Accessibility:** ARIA labels, keyboard navigation for modals
 

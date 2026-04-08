@@ -1,5 +1,5 @@
 import * as esbuild from "esbuild";
-import { readFileSync, writeFileSync, mkdirSync, cpSync, existsSync, watch } from "fs";
+import { readFileSync, writeFileSync, mkdirSync, cpSync, watch, readdirSync } from "fs";
 import { join, dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -8,7 +8,6 @@ const ROOT = join(__dirname, "..");
 const DIST = join(ROOT, "dist");
 const isWatch = process.argv.includes("--watch");
 
-// Shared build configurations
 const ENTRY_POINTS = [
   { entry: "src/content/main.js", out: "content/main.js" },
   { entry: "src/content/early-inject.js", out: "content/early-inject.js" },
@@ -20,6 +19,9 @@ const BASE_CONFIG = {
   format: "iife",
   target: "chrome88",
 };
+
+const LOCALES = ["en", "vi"];
+const ICON_SIZES = [16, 48, 128];
 
 async function bundleAll(minify = true) {
   await Promise.all(
@@ -34,50 +36,82 @@ async function bundleAll(minify = true) {
   );
 }
 
-function copyStaticFiles() {
-  cpSync(join(ROOT, "src/popup/popup.html"), join(DIST, "popup/popup.html"));
-  cpSync(join(ROOT, "src/popup/popup.css"), join(DIST, "popup/popup.css"));
-  cpSync(join(ROOT, "src/content/styles"), join(DIST, "content/styles"), { recursive: true });
-  cpSync(join(ROOT, "src/background/service-worker.js"), join(DIST, "background/service-worker.js"));
+async function processCSS(srcPath, destPath, minify) {
+  const css = readFileSync(srcPath, "utf8");
+  if (minify) {
+    const result = await esbuild.transform(css, { loader: "css", minify: true });
+    writeFileSync(destPath, result.code);
+  } else {
+    writeFileSync(destPath, css);
+  }
 }
 
-function updateManifest() {
-  cpSync(join(ROOT, "_locales"), join(DIST, "_locales"), { recursive: true });
-  cpSync(join(ROOT, "icons"), join(DIST, "icons"), { recursive: true });
+function minifyHTML(html) {
+  return html
+    .replace(/<!--[\s\S]*?-->/g, "")
+    .replace(/>\s+</g, "><")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+}
 
-  // Read from source, modify, write to dist (avoid redundant copy+read)
+async function copyStaticFiles(minify = true) {
+  let html = readFileSync(join(ROOT, "src/popup/popup.html"), "utf8");
+  if (minify) html = minifyHTML(html);
+  writeFileSync(join(DIST, "popup/popup.html"), html);
+
+  cpSync(join(ROOT, "src/background/service-worker.js"), join(DIST, "background/service-worker.js"));
+
+  await processCSS(join(ROOT, "src/popup/popup.css"), join(DIST, "popup/popup.css"), minify);
+
+  mkdirSync(join(DIST, "content/styles"), { recursive: true });
+  const cssFiles = readdirSync(join(ROOT, "src/content/styles")).filter((f) => f.endsWith(".css"));
+  await Promise.all(
+    cssFiles.map((file) =>
+      processCSS(join(ROOT, "src/content/styles", file), join(DIST, "content/styles", file), minify)
+    )
+  );
+}
+
+function copyAssets(minify = true) {
+  const jsonFormat = minify ? undefined : 2;
+
+  for (const locale of LOCALES) {
+    const srcPath = join(ROOT, "_locales", locale, "messages.json");
+    const destDir = join(DIST, "_locales", locale);
+    mkdirSync(destDir, { recursive: true });
+    const json = JSON.parse(readFileSync(srcPath, "utf8"));
+    writeFileSync(join(destDir, "messages.json"), JSON.stringify(json, null, jsonFormat));
+  }
+
+  mkdirSync(join(DIST, "icons"), { recursive: true });
+  for (const size of ICON_SIZES) {
+    cpSync(join(ROOT, `icons/icon-${size}.png`), join(DIST, `icons/icon-${size}.png`));
+  }
+
   const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8"));
   manifest.background.service_worker = "background/service-worker.js";
   manifest.action.default_popup = "popup/popup.html";
-  // Early inject script (document_start) - CSS injected via manifest
   manifest.content_scripts[0].css = ["content/styles/wide-layout.css"];
   manifest.content_scripts[0].js = ["content/early-inject.js"];
-  // Main script (document_idle)
   manifest.content_scripts[1].js = ["content/main.js"];
   manifest.web_accessible_resources[0].resources = ["content/styles/*.css"];
-  writeFileSync(join(DIST, "manifest.json"), JSON.stringify(manifest, null, 2));
+  writeFileSync(join(DIST, "manifest.json"), JSON.stringify(manifest, null, jsonFormat));
 }
 
-// Ensure dist directory exists
-if (!existsSync(DIST)) {
-  mkdirSync(DIST, { recursive: true });
-}
+mkdirSync(DIST, { recursive: true });
 
-// Initial build
-await bundleAll(!isWatch);
-copyStaticFiles();
-updateManifest();
+const minify = !isWatch;
+await Promise.all([bundleAll(minify), copyStaticFiles(minify)]);
+copyAssets(minify);
 console.log("Build complete: dist/");
 
-// Watch mode
 if (isWatch) {
   console.log("Watching for changes...");
 
   let debounceTimer;
   const rebuild = async () => {
     try {
-      await bundleAll(false);
-      copyStaticFiles();
+      await Promise.all([bundleAll(false), copyStaticFiles(false)]);
       console.log(`[${new Date().toLocaleTimeString()}] Rebuilt`);
     } catch (e) {
       console.error("Build error:", e);
@@ -89,7 +123,6 @@ if (isWatch) {
     debounceTimer = setTimeout(rebuild, 100);
   });
 
-  // Cleanup on exit
   process.on("SIGINT", () => {
     watcher.close();
     process.exit(0);

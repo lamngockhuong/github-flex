@@ -42,6 +42,13 @@ pnpm lint:fix   # Auto-fix issues
 pnpm test       # Run tests
 ```
 
+## Languages
+
+- English (default)
+- Vietnamese (Tiếng Việt)
+
+The extension automatically displays in the browser's language if supported.
+
 ## Tech Stack
 
 - Chrome Manifest V3

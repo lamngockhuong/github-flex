@@ -4,7 +4,7 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Expand GitHub's interface - wide layout, expandable tables/images, GIF picker, zen mode",
+    "message": "Expand GitHub's interface - wide layout, expandable tables/images, GIF picker, sidebar toggle",
     "description": "Extension description"
   },
   "wideLayout": { "message": "Wide Layout" },
@@ -15,6 +15,6 @@
   "imageLightboxDesc": { "message": "Click images to zoom" },
   "gifPicker": { "message": "GIF Picker" },
   "gifPickerDesc": { "message": "Add GIF button to comments" },
-  "zenMode": { "message": "Zen Mode" },
-  "zenModeDesc": { "message": "Toggle sidebar (Alt+M)" }
+  "sidebarToggle": { "message": "Sidebar Toggle" },
+  "sidebarToggleDesc": { "message": "Hide/show sidebar (Alt+M)" }
 }

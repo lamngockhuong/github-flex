@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "GitHub Flex",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Mở rộng giao diện GitHub - bố cục rộng, phóng to bảng/hình ảnh, chọn GIF, ẩn/hiện sidebar",
+    "description": "Extension description"
+  },
+  "wideLayout": { "message": "Bố cục rộng" },
+  "wideLayoutDesc": { "message": "Mở rộng GitHub ra toàn chiều ngang" },
+  "tableExpand": { "message": "Phóng to bảng" },
+  "tableExpandDesc": { "message": "Phóng to bảng ra toàn màn hình" },
+  "imageLightbox": { "message": "Phóng to hình ảnh" },
+  "imageLightboxDesc": { "message": "Nhấp vào hình để phóng to" },
+  "gifPicker": { "message": "Chọn GIF" },
+  "gifPickerDesc": { "message": "Thêm nút GIF vào bình luận" },
+  "sidebarToggle": { "message": "Ẩn/hiện Sidebar" },
+  "sidebarToggleDesc": { "message": "Ẩn/hiện thanh bên (Alt+M)" }
+}

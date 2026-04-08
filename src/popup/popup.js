@@ -8,7 +8,17 @@ const SETTING_KEYS = [
   "sidebarToggle",
 ];
 
+/** Apply i18n translations to elements with data-i18n attribute */
+function applyI18n() {
+  document.querySelectorAll("[data-i18n]").forEach((el) => {
+    const key = el.getAttribute("data-i18n");
+    const message = chrome.i18n.getMessage(key);
+    if (message) el.textContent = message;
+  });
+}
+
 async function init() {
+  applyI18n();
   const settings = await getSettings();
 
   for (const key of SETTING_KEYS) {
