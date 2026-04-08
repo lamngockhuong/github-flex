@@ -1,6 +1,6 @@
 {
   "name": "github-flex",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "Chrome extension to expand GitHub's interface",
   "private": true,
   "type": "module",
@@ -11,6 +11,7 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
+    "ci": "pnpm lint && pnpm test",
     "build": "node scripts/build.js",
     "dev": "node scripts/build.js --watch"
   },

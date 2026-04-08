@@ -1,0 +1,125 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g., 1.0.0)"
+        required: true
+        type: string
+      prerelease:
+        description: "Mark as pre-release (RC)?"
+        type: boolean
+        default: false
+      dry_run:
+        description: "Dry run (build only, skip release)"
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      version:
+        description: "Version from release-please"
+        required: true
+        type: string
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # ─────────────────────────────────────────────────────────────
+  # Prepare: Extract version from different trigger sources
+  # ─────────────────────────────────────────────────────────────
+  prepare:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      dry_run: ${{ steps.version.outputs.dry_run }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+    steps:
+      - name: Extract version
+        id: version
+        run: |
+          if [ -n "${{ inputs.version }}" ]; then
+            VERSION="${{ inputs.version }}"
+            DRY_RUN="${{ inputs.dry_run || 'false' }}"
+            PRERELEASE="${{ inputs.prerelease || 'false' }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/v}"
+            DRY_RUN="false"
+            PRERELEASE="false"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "dry_run=$DRY_RUN" >> $GITHUB_OUTPUT
+          echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+          echo "Release version: $VERSION (dry_run: $DRY_RUN, prerelease: $PRERELEASE)"
+
+  # ─────────────────────────────────────────────────────────────
+  # Build: Install, lint, build, package
+  # ─────────────────────────────────────────────────────────────
+  build:
+    name: Build Extension
+    runs-on: ubuntu-latest
+    needs: [prepare]
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: pnpm/action-setup@v5
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: "24"
+          cache: "pnpm"
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm run ci
+
+      - run: pnpm run build
+
+      - name: Create ZIP
+        run: |
+          cd dist
+          zip -r ../github-flex-v${{ needs.prepare.outputs.version }}.zip .
+
+      - name: Generate checksums
+        run: sha256sum github-flex-*.zip > checksums.txt
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: release-assets
+          path: |
+            github-flex-*.zip
+            checksums.txt
+          retention-days: 1
+
+  # ─────────────────────────────────────────────────────────────
+  # Release: Create GitHub Release with assets
+  # ─────────────────────────────────────────────────────────────
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [prepare, build]
+    if: needs.prepare.outputs.dry_run != 'true'
+    permissions:
+      contents: write
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v8
+        with:
+          name: release-assets
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && '-rc' || '' }}
+          name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && ' (RC)' || '' }}
+          prerelease: ${{ needs.prepare.outputs.prerelease == 'true' }}
+          generate_release_notes: true
+          files: |
+            github-flex-*.zip
+            checksums.txt
