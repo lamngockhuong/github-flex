@@ -1,0 +1,51 @@
+/**
+ * GitHub Flex - Color Palette
+ * Based on Purple #8957e5 primary color
+ */
+
+:root {
+  /* Primary - Purple */
+  --gf-primary: #8957e5;
+  --gf-primary-light: #a371f7;
+  --gf-primary-dark: #6e40c9;
+  --gf-primary-bg: #f5f0ff;
+
+  /* Secondary - complementary colors */
+  --gf-secondary: #238636;      /* GitHub green - for success states */
+  --gf-secondary-light: #3fb950;
+
+  /* Accent */
+  --gf-accent: #58a6ff;         /* GitHub blue - links, highlights */
+  --gf-accent-light: #79c0ff;
+
+  /* Neutral */
+  --gf-bg-primary: #0d1117;     /* Dark mode background */
+  --gf-bg-secondary: #161b22;
+  --gf-bg-tertiary: #21262d;
+  --gf-bg-light: #ffffff;       /* Light mode background */
+
+  /* Text */
+  --gf-text-primary: #f0f6fc;   /* Dark mode */
+  --gf-text-secondary: #8b949e;
+  --gf-text-light: #24292f;     /* Light mode */
+
+  /* Borders */
+  --gf-border: #30363d;
+  --gf-border-light: #d0d7de;
+
+  /* States */
+  --gf-success: #238636;
+  --gf-warning: #d29922;
+  --gf-error: #f85149;
+  --gf-info: #58a6ff;
+}
+
+/* Semantic aliases */
+:root {
+  --gf-logo-bg: var(--gf-primary);
+  --gf-logo-fg: #ffffff;
+  --gf-button-primary: var(--gf-primary);
+  --gf-button-primary-hover: var(--gf-primary-light);
+  --gf-link: var(--gf-accent);
+  --gf-link-hover: var(--gf-accent-light);
+}
