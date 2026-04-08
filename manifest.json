@@ -1,12 +1,17 @@
 {
   "manifest_version": 3,
   "name": "__MSG_extName__",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "__MSG_extDescription__",
   "default_locale": "en",
   "homepage_url": "https://github.com/lamngockhuong/github-flex",
-  "permissions": ["storage"],
-  "host_permissions": ["https://github.com/*", "https://gist.github.com/*"],
+  "permissions": [
+    "storage"
+  ],
+  "host_permissions": [
+    "https://github.com/*",
+    "https://gist.github.com/*"
+  ],
   "background": {
     "service_worker": "src/background/service-worker.js",
     "type": "module"
@@ -21,15 +26,25 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://github.com/*", "https://gist.github.com/*"],
-      "js": ["src/content/main.js"],
+      "matches": [
+        "https://github.com/*",
+        "https://gist.github.com/*"
+      ],
+      "js": [
+        "src/content/main.js"
+      ],
       "run_at": "document_idle"
     }
   ],
   "web_accessible_resources": [
     {
-      "resources": ["src/content/styles/*.css"],
-      "matches": ["https://github.com/*", "https://gist.github.com/*"]
+      "resources": [
+        "src/content/styles/*.css"
+      ],
+      "matches": [
+        "https://github.com/*",
+        "https://gist.github.com/*"
+      ]
     }
   ],
   "icons": {
