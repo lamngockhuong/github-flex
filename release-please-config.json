@@ -8,8 +8,7 @@
       "release-type": "node",
       "bump-minor-pre-major": true,
       "bump-patch-for-minor-pre-major": true,
-      "extra-files": ["manifest.json", "package.json"],
-      "release-as": "0.0.1"
+      "extra-files": ["manifest.json", "package.json"]
     }
   }
 }
