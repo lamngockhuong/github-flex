@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.4](https://github.com/lamngockhuong/github-flex/compare/v0.0.3...v0.0.4) (2026-04-08)
+
+
+### Bug Fixes
+
+* **build:** create output directories before writing files ([5bae5d5](https://github.com/lamngockhuong/github-flex/commit/5bae5d59001ce15f730eaaad771c6f0e9f549a28))
+
 ## [0.0.3](https://github.com/lamngockhuong/github-flex/compare/v0.0.2...v0.0.3) (2026-04-08)
 
 
