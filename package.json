@@ -3,6 +3,8 @@
   "version": "0.0.2",
   "description": "Chrome extension to expand GitHub's interface",
   "private": true,
+  "license": "MIT",
+  "author": "Lam Ngoc Khuong <hi@khuong.dev>",
   "type": "module",
   "scripts": {
     "lint": "biome check src/",
