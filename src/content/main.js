@@ -13,13 +13,26 @@ const features = {
   sidebarToggle,
 };
 
+// URL patterns where certain features should be excluded
+const PROJECT_BOARD_PATTERN = /\/(orgs|users)\/[^/]+\/projects\//;
+const FEATURE_EXCLUSIONS = {
+  wideLayout: [PROJECT_BOARD_PATTERN],
+  sidebarToggle: [PROJECT_BOARD_PATTERN],
+};
+
+function shouldEnableFeature(key) {
+  const patterns = FEATURE_EXCLUSIONS[key];
+  if (!patterns) return true;
+  return !patterns.some((p) => p.test(location.pathname));
+}
+
 async function init() {
   try {
     const settings = await getSettings();
 
     // Initialize each enabled feature
     for (const [key, feature] of Object.entries(features)) {
-      if (settings[key] && feature?.enable) {
+      if (settings[key] && feature?.enable && shouldEnableFeature(key)) {
         feature.enable();
       }
     }
@@ -35,7 +48,9 @@ async function init() {
         if (!feature) continue;
         const enabled = settingsChange[key];
         if (enabled !== undefined) {
-          enabled ? feature.enable() : feature.disable();
+          enabled && shouldEnableFeature(key)
+            ? feature.enable()
+            : feature.disable();
         }
       }
     });
