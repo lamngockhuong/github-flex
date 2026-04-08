@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.zip
+.DS_Store
+coverage/
+
+# Claude Code
+.claude/
+.playwright-mcp/
+
+# Plans and reports
+plans/

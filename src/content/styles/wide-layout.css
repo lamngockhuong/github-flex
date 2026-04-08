@@ -1,0 +1,26 @@
+/* Wide Layout - Expand GitHub UI to full viewport width */
+
+.ghflex-wide-layout .container-xl,
+.ghflex-wide-layout .Layout,
+.ghflex-wide-layout .application-main .container-xl {
+  max-width: 100% !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* Ensure main content area expands */
+.ghflex-wide-layout .Layout-main {
+  max-width: 100% !important;
+}
+
+/* Repository header container */
+.ghflex-wide-layout .pagehead {
+  max-width: 100% !important;
+  padding-left: 32px !important;
+  padding-right: 32px !important;
+}
+
+/* File browser and code view */
+.ghflex-wide-layout .repository-content {
+  max-width: 100% !important;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="popup.css">
+  <title>GitHub Flex</title>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-title">
+        <img src="../../icons/icon-48.png" alt="GitHub Flex" class="header-logo">
+        <h1>GitHub Flex</h1>
+      </div>
+    </header>
+
+    <div class="settings">
+      <label class="setting">
+        <input type="checkbox" id="wideLayout" checked>
+        <div class="setting-text">
+          <span class="label" data-i18n="wideLayout">Wide Layout</span>
+          <span class="desc" data-i18n="wideLayoutDesc">Expand GitHub to full width</span>
+        </div>
+      </label>
+      <label class="setting">
+        <input type="checkbox" id="tableExpand" checked>
+        <div class="setting-text">
+          <span class="label" data-i18n="tableExpand">Table Expand</span>
+          <span class="desc" data-i18n="tableExpandDesc">Expand tables with fullscreen</span>
+        </div>
+      </label>
+      <label class="setting">
+        <input type="checkbox" id="imageLightbox" checked>
+        <div class="setting-text">
+          <span class="label" data-i18n="imageLightbox">Image Lightbox</span>
+          <span class="desc" data-i18n="imageLightboxDesc">Click images to zoom</span>
+        </div>
+      </label>
+      <label class="setting">
+        <input type="checkbox" id="gifPicker" checked>
+        <div class="setting-text">
+          <span class="label" data-i18n="gifPicker">GIF Picker</span>
+          <span class="desc" data-i18n="gifPickerDesc">Add GIF button to comments</span>
+        </div>
+      </label>
+      <label class="setting">
+        <input type="checkbox" id="zenMode" checked>
+        <div class="setting-text">
+          <span class="label" data-i18n="zenMode">Zen Mode</span>
+          <span class="desc" data-i18n="zenModeDesc">Toggle sidebar (Alt+M)</span>
+        </div>
+      </label>
+    </div>
+
+    <footer class="popup-footer">
+      <a href="https://github.com/lamngockhuong/github-flex" target="_blank" id="app-version">v1.0.0</a>
+    </footer>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

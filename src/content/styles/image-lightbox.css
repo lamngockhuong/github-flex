@@ -1,0 +1,147 @@
+/* Image Lightbox - click to zoom images with pan support */
+
+/* === LIGHTBOX TRIGGER === */
+.ghflex-lightbox-trigger {
+  cursor: zoom-in;
+  transition: opacity 0.2s ease;
+}
+
+.ghflex-lightbox-trigger:hover {
+  opacity: 0.9;
+}
+
+/* === LIGHTBOX OVERLAY === */
+#ghflex-lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+}
+
+#ghflex-lightbox.active {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ghflex-lightbox-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.85);
+  cursor: zoom-out;
+}
+
+.ghflex-lightbox-content {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+}
+
+.ghflex-lightbox-img-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: auto;
+}
+
+.ghflex-lightbox-img {
+  max-width: 90vw;
+  max-height: 80vh;
+  object-fit: contain;
+  transition: transform 0.15s ease-out;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+.ghflex-lightbox-img.dragging {
+  cursor: grabbing;
+  transition: none;
+}
+
+/* === LIGHTBOX CONTROLS === */
+.ghflex-lightbox-controls {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.ghflex-lightbox-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f6f8fa;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 18px;
+  color: #24292f;
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.ghflex-lightbox-btn:hover {
+  background: #eaeef2;
+  border-color: #8c959f;
+}
+
+.ghflex-lightbox-close {
+  margin-left: 8px;
+  background: #cf222e;
+  border-color: #cf222e;
+  color: white;
+}
+
+.ghflex-lightbox-close:hover {
+  background: #a40e26;
+  border-color: #a40e26;
+}
+
+.ghflex-lightbox-zoom {
+  min-width: 50px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  color: #24292f;
+}
+
+/* === DARK MODE === */
+@media (prefers-color-scheme: dark) {
+  .ghflex-lightbox-controls {
+    background: rgba(33, 38, 45, 0.95);
+  }
+
+  .ghflex-lightbox-btn {
+    background: #21262d;
+    border-color: #30363d;
+    color: #e6edf3;
+  }
+
+  .ghflex-lightbox-btn:hover {
+    background: #30363d;
+    border-color: #8b949e;
+  }
+
+  .ghflex-lightbox-zoom {
+    color: #e6edf3;
+  }
+}

@@ -1,0 +1,304 @@
+/* GIF Picker styles */
+
+/* GIF Button */
+.ghflex-gif-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 8px;
+  margin: 0 4px;
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--color-btn-bg, #f6f8fa);
+  color: var(--color-fg-default, #24292f);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ghflex-gif-btn:hover {
+  background: var(--color-btn-hover-bg, #f3f4f6);
+  border-color: var(--color-btn-hover-border, #afb8c1);
+}
+
+.ghflex-gif-btn:active {
+  background: var(--color-btn-active-bg, #ebecf0);
+}
+
+.ghflex-gif-btn svg {
+  flex-shrink: 0;
+}
+
+/* Modal Overlay */
+.ghflex-gif-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+.ghflex-gif-overlay.ghflex-gif-active {
+  display: flex;
+}
+
+/* Modal */
+.ghflex-gif-modal {
+  background: var(--color-canvas-default, #ffffff);
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 12px;
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.15);
+  width: 90%;
+  max-width: 640px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Modal Header */
+.ghflex-gif-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-default, #d0d7de);
+  background: var(--color-canvas-subtle, #f6f8fa);
+}
+
+.ghflex-gif-header h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-fg-default, #24292f);
+}
+
+.ghflex-gif-close {
+  background: none;
+  border: none;
+  font-size: 24px;
+  line-height: 1;
+  color: var(--color-fg-muted, #57606a);
+  cursor: pointer;
+  padding: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.ghflex-gif-close:hover {
+  background: var(--color-btn-hover-bg, #f3f4f6);
+  color: var(--color-fg-default, #24292f);
+}
+
+/* Search Section */
+.ghflex-gif-search {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border-default, #d0d7de);
+}
+
+.ghflex-gif-search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-border-default, #d0d7de);
+  border-radius: 6px;
+  background: var(--color-canvas-default, #ffffff);
+  color: var(--color-fg-default, #24292f);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.2s ease;
+}
+
+.ghflex-gif-search-input:focus {
+  border-color: var(--color-accent-emphasis, #0969da);
+  box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.15);
+}
+
+/* GIF Content Grid */
+.ghflex-gif-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  padding: 20px;
+  overflow-y: auto;
+  max-height: 500px;
+}
+
+.ghflex-gif-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.ghflex-gif-content::-webkit-scrollbar-track {
+  background: var(--color-canvas-subtle, #f6f8fa);
+}
+
+.ghflex-gif-content::-webkit-scrollbar-thumb {
+  background: var(--color-border-default, #d0d7de);
+  border-radius: 4px;
+}
+
+.ghflex-gif-content::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-muted, #afb8c1);
+}
+
+/* GIF Item */
+.ghflex-gif-item {
+  position: relative;
+  aspect-ratio: 1;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--color-canvas-subtle, #f6f8fa);
+  transition: transform 0.2s ease;
+}
+
+.ghflex-gif-item:hover {
+  transform: scale(1.02);
+}
+
+.ghflex-gif-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* GIF Item Overlay */
+.ghflex-gif-overlay-actions {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.ghflex-gif-item:hover .ghflex-gif-overlay-actions {
+  opacity: 1;
+}
+
+/* Action Buttons */
+.ghflex-gif-insert-btn,
+.ghflex-gif-copy-btn {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #ffffff;
+}
+
+.ghflex-gif-insert-btn {
+  background: #2da44e;
+}
+
+.ghflex-gif-insert-btn:hover {
+  background: #2c974b;
+}
+
+.ghflex-gif-copy-btn {
+  background: #0969da;
+}
+
+.ghflex-gif-copy-btn:hover {
+  background: #0860ca;
+}
+
+.ghflex-gif-copy-btn.ghflex-gif-copied {
+  background: #1f883d;
+}
+
+/* Empty State */
+.ghflex-gif-empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--color-fg-muted, #57606a);
+  font-size: 14px;
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+  .ghflex-gif-btn {
+    background: var(--color-btn-bg, #21262d);
+    color: var(--color-fg-default, #c9d1d9);
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .ghflex-gif-btn:hover {
+    background: var(--color-btn-hover-bg, #30363d);
+    border-color: var(--color-btn-hover-border, #8b949e);
+  }
+
+  .ghflex-gif-modal {
+    background: var(--color-canvas-default, #0d1117);
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .ghflex-gif-header {
+    background: var(--color-canvas-subtle, #161b22);
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .ghflex-gif-search {
+    border-color: var(--color-border-default, #30363d);
+  }
+
+  .ghflex-gif-search-input {
+    background: var(--color-canvas-subtle, #161b22);
+    border-color: var(--color-border-default, #30363d);
+    color: var(--color-fg-default, #c9d1d9);
+  }
+
+  .ghflex-gif-item {
+    background: var(--color-canvas-subtle, #161b22);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .ghflex-gif-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .ghflex-gif-content {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .ghflex-gif-content {
+    grid-template-columns: 1fr;
+  }
+
+  .ghflex-gif-header h3 {
+    font-size: 14px;
+  }
+
+  .ghflex-gif-search {
+    padding: 12px 16px;
+  }
+}

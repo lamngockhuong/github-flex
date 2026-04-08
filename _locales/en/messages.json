@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "GitHub Flex",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Expand GitHub's interface - wide layout, expandable tables/images, GIF picker, zen mode",
+    "description": "Extension description"
+  },
+  "wideLayout": { "message": "Wide Layout" },
+  "wideLayoutDesc": { "message": "Expand GitHub to full width" },
+  "tableExpand": { "message": "Table Expand" },
+  "tableExpandDesc": { "message": "Expand tables with fullscreen" },
+  "imageLightbox": { "message": "Image Lightbox" },
+  "imageLightboxDesc": { "message": "Click images to zoom" },
+  "gifPicker": { "message": "GIF Picker" },
+  "gifPickerDesc": { "message": "Add GIF button to comments" },
+  "zenMode": { "message": "Zen Mode" },
+  "zenModeDesc": { "message": "Toggle sidebar (Alt+M)" }
+}

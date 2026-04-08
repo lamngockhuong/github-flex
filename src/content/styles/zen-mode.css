@@ -1,0 +1,140 @@
+/* Zen Mode styles - smooth sidebar hide/show animation */
+
+:root {
+  --ghflex-zen-animation: 250ms;
+}
+
+/* Toggle button styling */
+#ghflex-zen-toggle {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 40px;
+  height: 40px;
+  border-radius: 6px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  background: var(--bgColor-default, #fff);
+  cursor: pointer;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(31, 35, 40, 0.12);
+  transition: all 0.2s ease;
+}
+
+#ghflex-zen-toggle:hover {
+  background: var(--bgColor-muted, #f6f8fa);
+  border-color: var(--borderColor-muted, #bdc3c9);
+}
+
+#ghflex-zen-toggle:active {
+  transform: scale(0.95);
+}
+
+#ghflex-zen-toggle svg {
+  width: 20px;
+  height: 20px;
+  color: var(--fgColor-default, #1f2328);
+}
+
+/* Dark mode support for toggle button */
+@media (prefers-color-scheme: dark) {
+  #ghflex-zen-toggle {
+    background: var(--bgColor-default, #0d1117);
+    border-color: var(--borderColor-default, #30363d);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+
+  #ghflex-zen-toggle:hover {
+    background: var(--bgColor-muted, #161b22);
+    border-color: var(--borderColor-muted, #484f58);
+  }
+
+  #ghflex-zen-toggle svg {
+    color: var(--fgColor-default, #e6edf3);
+  }
+}
+
+/* Old UI Layout sidebar */
+.Layout-sidebar {
+  transition:
+    transform var(--ghflex-zen-animation) ease,
+    opacity var(--ghflex-zen-animation) ease;
+}
+
+.Layout-sidebar.ghflex-zen-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* Expand main content when old UI sidebar is hidden */
+.Layout:has(.Layout-sidebar.ghflex-zen-hidden) {
+  grid-template-columns: 1fr !important;
+}
+
+/* PageLayout (React) sidebar */
+[class*="prc-PageLayout-PaneWrapper"] {
+  transition:
+    transform var(--ghflex-zen-animation) ease,
+    opacity var(--ghflex-zen-animation) ease;
+}
+
+[class*="prc-PageLayout-PaneWrapper"].ghflex-zen-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* Expand main content when PageLayout sidebar is hidden */
+[class*="prc-PageLayout"]:has(
+    [class*="prc-PageLayout-PaneWrapper"].ghflex-zen-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+}
+
+/* New UI issue/PR metadata container */
+[data-testid="issue-viewer-metadata-container"] {
+  transition:
+    transform var(--ghflex-zen-animation) ease,
+    opacity var(--ghflex-zen-animation) ease;
+}
+
+[data-testid="issue-viewer-metadata-container"].ghflex-zen-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* Discussion sidebar */
+#partial-discussion-sidebar {
+  transition:
+    transform var(--ghflex-zen-animation) ease,
+    opacity var(--ghflex-zen-animation) ease;
+}
+
+#partial-discussion-sidebar.ghflex-zen-hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  position: absolute;
+  right: 0;
+}
+
+/* Expand discussion main content when sidebar is hidden */
+.discussion-sidebar-container:has(
+    #partial-discussion-sidebar.ghflex-zen-hidden
+  ) {
+  grid-template-columns: 1fr !important;
+}

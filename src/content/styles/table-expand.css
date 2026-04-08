@@ -1,0 +1,153 @@
+/* Table Expand - Expandable tables with fullscreen */
+
+.ghflex-table-wrapper {
+  position: relative;
+}
+
+.ghflex-table-container {
+  position: relative;
+  overflow-x: auto;
+}
+
+/* Button group */
+.ghflex-table-btn-group {
+  position: absolute;
+  top: -28px;
+  right: 0;
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.ghflex-table-wrapper:hover .ghflex-table-btn-group,
+.ghflex-table-btn-group:focus-within {
+  opacity: 1;
+}
+
+.ghflex-table-toggle {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  background-color: var(--bgColor-default, #ffffff);
+  color: var(--fgColor-muted, #656d76);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  transition: background-color 150ms ease;
+}
+
+.ghflex-table-toggle:hover {
+  background-color: var(--bgColor-muted, #f6f8fa);
+  color: var(--fgColor-default, #1f2328);
+}
+
+.ghflex-table-toggle svg {
+  width: 14px;
+  height: 14px;
+}
+
+.ghflex-table-container table {
+  margin: 0;
+}
+
+/* Expanded: remove width constraints */
+.ghflex-table-container.ghflex-table-expanded table {
+  max-width: none !important;
+  width: max-content !important;
+}
+
+/* Always show buttons when expanded */
+.ghflex-table-wrapper:has(.ghflex-table-expanded) .ghflex-table-btn-group {
+  opacity: 1;
+}
+
+/* === FULLSCREEN OVERLAY === */
+.ghflex-table-fullscreen-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  background: var(--bgColor-default, #ffffff);
+  overflow: auto;
+}
+
+.ghflex-table-fullscreen-content {
+  padding: 24px;
+  min-height: 100%;
+}
+
+.ghflex-table-fullscreen-close {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+  background-color: var(--bgColor-default, #ffffff);
+  color: var(--fgColor-muted, #656d76);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: background-color 150ms ease;
+}
+
+.ghflex-table-fullscreen-close:hover {
+  background-color: var(--bgColor-muted, #f6f8fa);
+  color: var(--fgColor-default, #1f2328);
+}
+
+.ghflex-table-fullscreen-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.ghflex-table-fullscreen-table {
+  width: max-content !important;
+  max-width: none !important;
+  margin: 0 auto;
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.ghflex-table-fullscreen-table th,
+.ghflex-table-fullscreen-table td {
+  padding: 8px 16px;
+  border: 1px solid var(--borderColor-default, #d0d7de);
+}
+
+.ghflex-table-fullscreen-table th {
+  background-color: var(--bgColor-muted, #f6f8fa);
+  font-weight: 600;
+}
+
+.ghflex-table-fullscreen-table tr:nth-child(even) {
+  background-color: var(--bgColor-muted, #f6f8fa);
+}
+
+/* === DARK MODE === */
+@media (prefers-color-scheme: dark) {
+  .ghflex-table-fullscreen-overlay {
+    background: var(--bgColor-default, #0d1117);
+  }
+
+  .ghflex-table-fullscreen-table th,
+  .ghflex-table-fullscreen-table td {
+    border-color: var(--borderColor-default, #30363d);
+  }
+
+  .ghflex-table-fullscreen-table th {
+    background-color: var(--bgColor-muted, #161b22);
+  }
+
+  .ghflex-table-fullscreen-table tr:nth-child(even) {
+    background-color: var(--bgColor-muted, #161b22);
+  }
+}
