@@ -55,6 +55,9 @@ function minifyHTML(html) {
 }
 
 async function copyStaticFiles(minify = true) {
+  mkdirSync(join(DIST, "popup"), { recursive: true });
+  mkdirSync(join(DIST, "background"), { recursive: true });
+
   let html = readFileSync(join(ROOT, "src/popup/popup.html"), "utf8");
   if (minify) html = minifyHTML(html);
   writeFileSync(join(DIST, "popup/popup.html"), html);
