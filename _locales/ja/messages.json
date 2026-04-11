@@ -1,0 +1,20 @@
+{
+  "extName": {
+    "message": "GitHub Flex",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "GitHubのUIを拡張 - ワイドレイアウト、テーブル/画像の拡大、GIFピッカー、サイドバー切替",
+    "description": "Extension description"
+  },
+  "wideLayout": { "message": "ワイドレイアウト" },
+  "wideLayoutDesc": { "message": "GitHubを全幅表示にする" },
+  "tableExpand": { "message": "テーブル拡大" },
+  "tableExpandDesc": { "message": "テーブルを全画面で表示" },
+  "imageLightbox": { "message": "画像ライトボックス" },
+  "imageLightboxDesc": { "message": "画像をクリックして拡大" },
+  "gifPicker": { "message": "GIFピッカー" },
+  "gifPickerDesc": { "message": "コメントにGIFボタンを追加" },
+  "sidebarToggle": { "message": "サイドバー切替" },
+  "sidebarToggleDesc": { "message": "サイドバーの表示/非表示 (Alt+M)" }
+}
