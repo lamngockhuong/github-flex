@@ -2,7 +2,9 @@
 import {
   GIF_API_URL,
   GIF_DEBOUNCE_DELAY,
+  MESSAGE_ACTIONS,
   STYLE_IDS,
+  TOOLBAR_SELECTOR,
 } from "../../shared/constants.js";
 
 // Vietnamese diacritics to ASCII conversion map
@@ -157,25 +159,51 @@ const TEXTAREA_SELECTORS = [
   'textarea[class*="prc-Textarea"]',
 ].join(", ");
 
-// State
 let currentTextarea = null;
-let debounceTimer = null;
 let observer = null;
+let renderGeneration = 0;
+const blobUrls = new Set();
 
-// Normalize Vietnamese text to ASCII
+const VIET_REGEX = new RegExp(`[${Object.keys(VIET_MAP).join("")}]`, "g");
+
 function normalizeVietnamese(text) {
-  return text
-    .split("")
-    .map((char) => VIET_MAP[char] || char)
-    .join("");
+  return text.replace(VIET_REGEX, (ch) => VIET_MAP[ch]);
 }
 
-// Debounce function
 function debounce(func, delay) {
+  let timer;
   return function (...args) {
-    clearTimeout(debounceTimer);
-    debounceTimer = setTimeout(() => func.apply(this, args), delay);
+    clearTimeout(timer);
+    timer = setTimeout(() => func.apply(this, args), delay);
   };
+}
+
+// Fetch image via service worker to bypass page CSP restrictions.
+// GitHub's CSP blocks giphy.com images, but allows blob: URLs.
+function proxyLoadImage(imgEl, url, generation) {
+  chrome.runtime.sendMessage(
+    { action: MESSAGE_ACTIONS.FETCH_IMAGE, url },
+    (response) => {
+      if (generation !== renderGeneration) return;
+      if (chrome.runtime.lastError || !response || response.error) return;
+      const binary = atob(response.data);
+      const bytes = new Uint8Array(binary.length);
+      for (let i = 0; i < binary.length; i++) {
+        bytes[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([bytes], { type: "image/gif" });
+      const blobUrl = URL.createObjectURL(blob);
+      blobUrls.add(blobUrl);
+      imgEl.src = blobUrl;
+    },
+  );
+}
+
+function revokeBlobUrls() {
+  for (const url of blobUrls) {
+    URL.revokeObjectURL(url);
+  }
+  blobUrls.clear();
 }
 
 // Validate GIF URL (security: prevent javascript: URLs and non-GIPHY domains)
@@ -218,11 +246,15 @@ function createGifButton() {
   button.className = "ghflex-gif-btn";
   button.setAttribute("aria-label", "Add GIF");
   button.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-      <path d="M4.75 4.5a.75.75 0 0 0 0 1.5h6.5a.75.75 0 0 0 0-1.5h-6.5ZM5 7.75A.75.75 0 0 1 5.75 7h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 5 7.75ZM5.75 10a.75.75 0 0 0 0 1.5h2.5a.75.75 0 0 0 0-1.5h-2.5Z"/>
-      <path d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2Zm2-.5a.5.5 0 0 0-.5.5v12a.5.5 0 0 0 .5.5h12a.5.5 0 0 0 .5-.5V2a.5.5 0 0 0-.5-.5H2Z"/>
+    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+      <path d="M4 4C4 3.44772 4.44772 3 5 3H14H14.5858C14.851 3 15.1054 3.10536 15.2929 3.29289L19.7071 7.70711C19.8946 7.89464 20 8.149 20 8.41421V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4Z" stroke-width="2" stroke-linecap="round"/>
+      <path d="M20 8H15V3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9 13H8C7.44772 13 7 13.4477 7 14V16C7 16.5523 7.44772 17 8 17H8.5C9.05228 17 9.5 16.5523 9.5 16V15.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M9 15.5H9.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 13V17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15 17V13L17 13" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M15.5 15H16.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>
-    GIF
   `;
 
   return button;
@@ -322,7 +354,9 @@ function renderGifs(gifs) {
   const content = document.querySelector(".ghflex-gif-content");
   if (!content) return;
 
+  const gen = ++renderGeneration;
   content.innerHTML = "";
+  revokeBlobUrls();
 
   if (gifs.length === 0) {
     const empty = document.createElement("div");
@@ -347,9 +381,11 @@ function renderGifs(gifs) {
     item.className = "ghflex-gif-item";
 
     const img = document.createElement("img");
-    img.src = previewUrl;
     img.alt = title;
-    img.loading = "lazy";
+    // Transparent 1x1 GIF placeholder to maintain layout before blob loads
+    img.src =
+      "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+    proxyLoadImage(img, previewUrl, gen);
 
     const overlay = document.createElement("div");
     overlay.className = "ghflex-gif-overlay-actions";
@@ -433,6 +469,7 @@ function closeModal() {
   if (overlay) {
     overlay.classList.remove("ghflex-gif-active");
   }
+  revokeBlobUrls();
   currentTextarea = null;
 }
 
@@ -443,12 +480,40 @@ function handleEscapeKey(e) {
   }
 }
 
+// Find the toolbar associated with a textarea
+function findToolbar(textarea) {
+  // Try form ancestor first (PRs, discussions)
+  const form = textarea.closest("form");
+  if (form) {
+    const toolbar = form.querySelector(TOOLBAR_SELECTOR);
+    if (toolbar) return toolbar;
+  }
+
+  // Try common parent containers (React-based issue pages)
+  const container =
+    textarea.closest('[class*="CommentBox"]') ||
+    textarea.closest('[class*="MarkdownEditor"]') ||
+    textarea.closest('[class*="markdown-editor"]') ||
+    textarea.closest('[data-testid="markdown-editor"]');
+  if (container) {
+    const toolbar = container.querySelector(TOOLBAR_SELECTOR);
+    if (toolbar) return toolbar;
+  }
+
+  // Fallback: walk up to find nearest toolbar
+  let el = textarea.parentElement;
+  for (let i = 0; i < 8 && el; i++) {
+    const toolbar = el.querySelector(TOOLBAR_SELECTOR);
+    if (toolbar) return toolbar;
+    el = el.parentElement;
+  }
+
+  return null;
+}
+
 // Add GIF button to toolbar
 function addGifButtonToToolbar(textarea) {
-  // Check if button already exists
-  const toolbar = textarea
-    .closest("form")
-    ?.querySelector('.toolbar, [role="toolbar"], markdown-toolbar');
+  const toolbar = findToolbar(textarea);
   if (!toolbar) return;
 
   // Don't add if already exists
@@ -543,6 +608,7 @@ function removeModal() {
     overlay.remove();
   }
   document.removeEventListener("keydown", handleEscapeKey);
+  revokeBlobUrls();
 }
 
 // Public API

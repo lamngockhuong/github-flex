@@ -12,6 +12,7 @@ const ENTRY_POINTS = [
   { entry: "src/content/main.js", out: "content/main.js" },
   { entry: "src/content/early-inject.js", out: "content/early-inject.js" },
   { entry: "src/popup/popup.js", out: "popup/popup.js" },
+  { entry: "src/background/service-worker.js", out: "background/service-worker.js" },
 ];
 
 const BASE_CONFIG = {
@@ -61,8 +62,6 @@ async function copyStaticFiles(minify = true) {
   let html = readFileSync(join(ROOT, "src/popup/popup.html"), "utf8");
   if (minify) html = minifyHTML(html);
   writeFileSync(join(DIST, "popup/popup.html"), html);
-
-  cpSync(join(ROOT, "src/background/service-worker.js"), join(DIST, "background/service-worker.js"));
 
   await processCSS(join(ROOT, "src/popup/popup.css"), join(DIST, "popup/popup.css"), minify);
 

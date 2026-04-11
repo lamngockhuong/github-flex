@@ -84,9 +84,12 @@ github-flex/
   ```
 
 #### 3. Service Worker (`src/background/service-worker.js`)
-- **When:** Extension install/update
-- **What:** Logs installation events (minimal functionality)
-- **Note:** Mostly placeholder for Manifest V3 requirement
+- **When:** Extension install/update AND on message from content script
+- **Install/Update:** Logs extension lifecycle events
+- **Image Proxy:** Intercepts FETCH_IMAGE messages, fetches GIF images, encodes as base64
+  - Validates URLs (only giphy.com/giphycdn.com allowed)
+  - Returns base64-encoded image data to bypass GitHub CSP
+  - Handles fetch errors gracefully
 
 ### Feature Architecture
 
@@ -144,16 +147,18 @@ export const featureName = {
 - **Events:** Click (open/close), wheel (zoom), mousedown/move/up (pan)
 
 #### GIF Picker (`gif-picker.js`)
-- **Pattern:** Modal dialog + API integration
+- **Pattern:** Modal dialog + Service Worker proxy + API integration
 - **Mechanism:**
-  1. Detects comment toolbars, injects GIF button
+  1. Detects comment toolbars (form, React containers, DOM walk)
   2. Button click opens modal with search input
   3. Debounced search (300ms) to Cloudflare Worker API
-  4. Click GIF inserts markdown at cursor: `![alt](url)`
-  5. Vietnamese normalization: `tieng viet` → `tiếng việt`
-- **State:** `{ currentTextarea: null, searchTimeout: null, lastQuery: "" }`
-- **Security:** URL validation (only giphy.com/giphycdn.com), markdown escaping
-- **API:** `GET https://github-gifs.aldilaff6545.workers.dev/?search={query}`
+  4. Service worker proxies GIF images via base64 (CSP bypass)
+  5. Click GIF inserts markdown at cursor: `![alt](url)`
+  6. Vietnamese normalization: Regex-based diacritic mapping
+- **State:** `{ currentTextarea: null, renderGeneration: 0, blobUrls: Set }`
+- **Security:** Service worker URL validation, content script validation, markdown escaping
+- **API:** `GET https://github-gifs.aldilaff6545.workers.dev/?q={query}`
+- **Proxy:** Service worker fetches images, encodes base64, content script creates blob URLs
 
 #### Zen Mode (`zen-mode.js`)
 - **Pattern:** Class toggle + keyboard shortcut
@@ -175,19 +180,27 @@ SETTINGS_DEFAULTS = {
   tableExpand: true,
   imageLightbox: true,
   gifPicker: true,
-  zenMode: true,
+  sidebarToggle: true,
 }
 
 STORAGE_KEYS = { SETTINGS: "settings" }
 
 STYLE_IDS = {
-  // Note: wide-layout CSS injected via manifest, not dynamically
   TABLE_EXPAND: "ghflex-table-expand-styles",
-  // ... (unique IDs for each feature's <link> tag)
+  GIF_PICKER: "ghflex-gif-picker-styles",
+  SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
 }
 
 GIF_API_URL = "https://github-gifs.aldilaff6545.workers.dev"
 GIF_DEBOUNCE_DELAY = 300
+
+// Service worker message actions
+MESSAGE_ACTIONS = {
+  FETCH_IMAGE: "fetchImage",
+}
+
+// Toolbar detection selector
+TOOLBAR_SELECTOR = '.toolbar, [role="toolbar"], markdown-toolbar'
 ```
 
 #### `shared/storage.js`

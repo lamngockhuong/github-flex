@@ -168,7 +168,7 @@ export const featureName = {
     // 1. Remove styles
     // 2. Remove event listeners
     // 3. Disconnect observers
-    // 4. Clean up DOM
+    // 4. Clean up DOM (revoke blob URLs, clear references)
     this.enabled = false;
   },
 
@@ -180,8 +180,31 @@ export const featureName = {
 **Rules:**
 - `enabled` flag prevents double-enable/disable
 - `enable()` is idempotent (safe to call multiple times)
-- `disable()` cleans up all side effects
+- `disable()` cleans up all side effects (including blob URLs, Set collections, etc.)
 - Helper methods prefixed with `_` (internal only)
+
+**Blob URL Management Pattern (GIF Picker):**
+```javascript
+const blobUrls = new Set();
+
+function createBlobUrl(data) {
+  const blob = new Blob([data], { type: "image/gif" });
+  const url = URL.createObjectURL(blob);
+  blobUrls.add(url);  // Track for cleanup
+  return url;
+}
+
+function revokeBlobUrls() {
+  for (const url of blobUrls) {
+    URL.revokeObjectURL(url);  // Free memory
+  }
+  blobUrls.clear();
+}
+
+disable() {
+  revokeBlobUrls();  // Always cleanup in disable()
+}
+```
 
 ### State Management
 
@@ -313,6 +336,37 @@ removeStyles() {
 - Always set unique `id` for cleanup
 - Check existence before injecting (idempotent)
 
+**GitHub CSS Variables Pattern (Button Styling):**
+
+Match GitHub's design system using CSS custom properties for consistency:
+
+```css
+/* GIF button matches GitHub's invisible toolbar buttons */
+.ghflex-gif-btn {
+  background: transparent;
+  color: var(--fgColor-muted, var(--color-fg-muted, #656d76));
+  width: var(--control-medium-size, 2rem);
+  height: var(--control-medium-size, 2rem);
+}
+
+.ghflex-gif-btn:hover {
+  background-color: var(--button-invisible-bgColor-hover, var(--color-action-list-item-default-hover-bg));
+  color: var(--fgColor-default, var(--color-fg-default, #1f2328));
+}
+
+/* Primary button for inserting GIFs */
+.ghflex-gif-insert-btn {
+  background: var(--button-primary-bgColor-rest, var(--color-btn-primary-bg, #1f883d));
+  color: var(--button-primary-fgColor-rest, var(--color-btn-primary-text, #fff));
+}
+
+.ghflex-gif-insert-btn:hover {
+  background: var(--button-primary-bgColor-hover, var(--color-btn-primary-hover-bg, #1a7f37));
+}
+```
+
+**Rationale:** Using CSS variables makes the extension adapt to GitHub's theme changes (light/dark mode) without code updates.
+
 ### Error Handling
 
 **Silent Failures with Logging:**
@@ -386,6 +440,47 @@ try {
 // ✗ Bad (unhandled rejection)
 const result = await riskyOperation(); // Can crash extension
 ```
+
+**Preventing Stale Async Callbacks (GIF Picker Pattern):**
+
+When UI state changes during async operations, use generation counters to ignore stale results:
+
+```javascript
+let renderGeneration = 0;
+
+function openModal() {
+  renderGeneration++;  // Invalidate previous renders
+  // ... show modal
+}
+
+function renderGifs(gifs) {
+  renderGeneration++;  // New render generation
+  const currentGen = renderGeneration;
+  
+  // Async image load
+  gifs.forEach((gif, idx) => {
+    chrome.runtime.sendMessage(
+      { action: MESSAGE_ACTIONS.FETCH_IMAGE, url: gif.url },
+      (response) => {
+        if (currentGen !== renderGeneration) {
+          // This render was invalidated by user input
+          return;
+        }
+        // Safe to process this result
+        imgEl.src = URL.createObjectURL(blob);
+      }
+    );
+  });
+}
+
+function closeModal() {
+  renderGeneration++;  // Invalidate pending renders
+  revokeBlobUrls();
+  // ... cleanup
+}
+```
+
+**Rationale:** User might search multiple times or close modal while images load. Generation counter prevents UI bugs from processing outdated results.
 
 ### Comments
 
@@ -482,6 +577,34 @@ div.ghflex-wrapper > button.ghflex-btn { ... }
 /* ✗ Avoid (outdated) */
 .ghflex-modal-content {
   display: table;
+}
+```
+
+**CSS Grid for Image Galleries:**
+```css
+/* ✓ Good (fixed row height for predictable layout) */
+.ghflex-gif-content {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 150px;  /* Fixed height ensures consistent layout */
+  gap: 12px;
+}
+
+.ghflex-gif-item img {
+  position: absolute;  /* Overlay approach */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;  /* Maintain aspect ratio without distortion */
+}
+
+/* ✓ Responsive adjustment */
+@media (max-width: 768px) {
+  .ghflex-gif-content {
+    grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: 130px;
+  }
 }
 ```
 
@@ -583,15 +706,37 @@ localStorage.setItem("settings", JSON.stringify(settings));
 
 ### Message Passing
 
-**Not currently used** (all features in content script), but pattern:
+**Content Script ↔ Service Worker (GIF Picker Image Proxy):**
+
+Service worker validates and fetches GIF images, bypassing GitHub's CSP. Base64 encoding avoids JSON number array overhead (~300% overhead).
 
 ```javascript
-// Background → Content
-chrome.tabs.sendMessage(tabId, { action: "toggleFeature" });
+// Content Script
+chrome.runtime.sendMessage(
+  { action: MESSAGE_ACTIONS.FETCH_IMAGE, url: gifUrl },
+  (response) => {
+    if (chrome.runtime.lastError || response.error) return;
+    const blob = new Blob([atob(response.data)], { type: "image/gif" });
+    imgEl.src = URL.createObjectURL(blob);
+  }
+);
 
-// Content → Background
-chrome.runtime.sendMessage({ action: "getSettings" });
+// Service Worker
+chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+  if (msg.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
+  if (!isAllowedImageUrl(msg.url)) {
+    sendResponse({ error: "Not allowed" });
+    return true;
+  }
+  fetch(msg.url)
+    .then(r => r.arrayBuffer())
+    .then(buf => sendResponse({ data: btoa(String.fromCharCode(...new Uint8Array(buf))) }))
+    .catch(e => sendResponse({ error: e.message }));
+  return true;
+});
 ```
+
+**Rules:** Validate URLs in both places; use base64; return `true` for async.
 
 ## Security Standards
 
@@ -876,35 +1021,10 @@ disable() {
 - Clear intervals/timeouts
 - Nullify references to DOM elements
 
-## Accessibility
+## Accessibility & Localization
 
-**Not Currently Prioritized** (v1.0), but future considerations:
-
-- ARIA labels for icon buttons
-- Keyboard navigation for modals
-- Focus management (trap focus in modal)
-- Screen reader announcements for state changes
-
-## Localization
-
-**Current:** English only (`_locales/en/messages.json`)
-
-**Future Pattern:**
-```json
-{
-  "extName": { "message": "GitHub Flex" },
-  "extDescription": { "message": "Enhance GitHub interface" }
-}
-```
-
-**Usage:**
-```javascript
-// manifest.json
-"name": "__MSG_extName__"
-
-// JavaScript
-chrome.i18n.getMessage("extName");
-```
+- **Accessibility:** Out of scope for v1.0 (planned for v1.1)
+- **Localization:** Current: English only; extension supports i18n via `_locales/` directory
 
 ## Code Review Checklist
 
@@ -950,22 +1070,9 @@ setTimeout(callback, DEBOUNCE_DELAY);
 
 ### CSS
 
-```css
-/* ✗ !important overuse */
-.ghflex-btn {
-  color: blue !important;
-  font-size: 14px !important;
-}
-
-/* ✗ Overly specific selectors */
-body > div > div > table.markdown { ... }
-
-/* ✗ Universal selector */
-* { box-sizing: border-box; }
-
-/* ✗ Fixed heights */
-.ghflex-modal { height: 500px; } /* Doesn't scale */
-```
+- Minimize !important usage (GitHub's inline styles may force it, document exception)
+- Avoid overly specific selectors; use semantic classes
+- Avoid fixed heights (use grid-auto-rows or min-height instead)
 
 ## Enforcement
 

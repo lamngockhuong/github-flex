@@ -282,54 +282,91 @@ closeLightbox()
 
 ### GIF Picker
 
-**Architecture:** Modal UI + API integration + text processing
+**Architecture:** Modal UI + Service Worker proxy + API integration + text processing
+
+**CSP Bypass Mechanism:**
+GitHub's Content Security Policy blocks images from external domains (giphy.com). The extension uses a service worker to proxy image fetches:
+
+```
+Content Script                    Service Worker                  Giphy
+     │                                  │                          │
+     ├─ sendMessage(FETCH_IMAGE, url) ─►│                          │
+     │                                  ├─ fetch(url) ────────────►│
+     │                                  │◄─ ArrayBuffer ───────────┤
+     │                                  ├─ btoa(binary) to base64   │
+     │◄─ sendResponse(base64) ◄────────┤                          │
+     │                                  │                          │
+     ├─ atob(base64) → binary           │                          │
+     ├─ new Blob([binary])              │                          │
+     ├─ URL.createObjectURL(blob)       │                          │
+     └─ img.src = blob: URL             │                          │
+        (allowed by CSP)                │                          │
+```
+
+**Feature Flow:**
 
 ```
 Feature enabled
         ↓
-Observes DOM for comment toolbars
-        ↓
-Detects: .js-toolbar-group (GitHub's comment toolbar)
-        ↓
-Injects GIF button before existing buttons
-        ↓
+Observes DOM for comment toolbars (including React-based editors)
+        ├─► Tries: form ancestor with toolbar
+        ├─► Tries: React containers (CommentBox, MarkdownEditor)
+        ├─► Tries: DOM walk up from textarea
+        ├─► Detects: .toolbar, [role="toolbar"], markdown-toolbar
+        └─► Injects GIF button
+                ↓
 User clicks GIF button
         ↓
 openModal(textarea)
         ├─► Stores reference: this.currentTextarea = textarea
+        ├─► Increments renderGeneration counter (prevents stale callbacks)
         ├─► Creates modal:
-        │       ├─► Search input
-        │       ├─► Results grid
+        │       ├─► Search input (focused)
+        │       ├─► Results grid (3-column, 150px rows)
         │       └─► Close button
-        ├─► Positions near toolbar
-        └─► Focuses search input
+        └─► Appends to document
                 ↓
 User types search query
         ↓
 handleSearchInput(event)
-        ├─► Normalizes Vietnamese: "tieng viet" → "tiếng việt"
-        ├─► Debounces (300ms delay)
+        ├─► Normalizes Vietnamese diacritics: "tieng viet" → "tiếng việt"
+        ├─► Debounces (300ms delay, self-contained timer)
         └─► Calls searchGifs(normalizedQuery)
                 ↓
 searchGifs(query)
-        ├─► Fetches: GET ${GIF_API_URL}?search=${query}
+        ├─► Fetches: GET ${GIF_API_URL}?q=${encodedQuery}
         ├─► Parses JSON response
-        └─► Calls renderResults(gifs)
+        └─► Calls renderGifs(gifs)
                 ↓
-renderResults(gifs)
-        ├─► Clears previous results
+renderGifs(gifs)
+        ├─► Revokes old blob URLs (cleanup)
         ├─► Creates img elements for each GIF
-        └─► Adds click handler: insertGif(gifData)
+        ├─► For each img:
+        │   └─► Calls proxyLoadImage(img, gifUrl, currentGeneration)
+        │       ├─► Sends FETCH_IMAGE to service worker
+        │       ├─► Checks generation before processing
+        │       ├─► Creates blob URL from base64
+        │       └─► Sets img.src = blob URL
+        └─► Adds overlay with Insert/Copy buttons
                 ↓
 User clicks a GIF
         ↓
-insertGif(gifData)
-        ├─► Validates URL: isValidGifUrl(gifData.url)
-        ├─► Escapes title: escapeMarkdown(gifData.title)
-        ├─► Generates markdown: `![${title}](${url})`
-        ├─► Inserts at cursor position in textarea
+insertGif(gifData) or copyGifUrl(gifData)
+        ├─► Validates URL: isValidGifUrl() (only giphy/giphycdn allowed)
+        ├─► Escapes title: escapeMarkdown()
+        ├─► Generates markdown: `![${escapedTitle}](${validatedUrl})`
+        ├─► Inserts at cursor (for insert) or copies to clipboard (for copy)
         ├─► Triggers input event (for GitHub's auto-preview)
-        └─► Closes modal
+        └─► Closes modal and revokes blob URLs
+```
+
+**Vietnamese Normalization:**
+Uses regex-based character mapping instead of split/map/join for better performance:
+```javascript
+const VIET_REGEX = new RegExp(`[${Object.keys(VIET_MAP).join("")}]`, "g");
+function normalizeVietnamese(text) {
+  return text.replace(VIET_REGEX, (ch) => VIET_MAP[ch]);
+}
 ```
 
 **Vietnamese Normalization:**
@@ -584,7 +621,38 @@ fetch(`https://github-gifs.aldilaff6545.workers.dev?search=${query}`);
 - Validate responses (filter inappropriate content if needed)
 - Add CORS headers (allow extension origin)
 
-#### 4. Permissions Minimization
+#### 4. Content Security Policy Bypass (GIF Picker)
+
+GitHub's CSP blocks external images from giphy.com. The extension bypasses this via service worker proxy:
+
+```javascript
+// Service Worker intercepts FETCH_IMAGE messages
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
+  
+  if (!isAllowedImageUrl(message.url)) {
+    sendResponse({ error: "URL not allowed" });
+    return true;
+  }
+  
+  fetch(message.url)  // Service worker can fetch any URL
+    .then(response => response.arrayBuffer())
+    .then(buffer => {
+      // Encode as base64 to avoid ~300% JSON overhead
+      sendResponse({ data: btoa(binary) });
+    })
+    .catch(error => sendResponse({ error: error.message }));
+});
+
+// Content Script creates blob URL (allowed by CSP)
+const blob = new Blob([atob(response.data)], { type: "image/gif" });
+const blobUrl = URL.createObjectURL(blob);
+imgEl.src = blobUrl;  // CSP allows blob: URLs
+```
+
+**Whitelist Validation:** Only `giphy.com` and `giphycdn.com` hostnames allowed (see `isAllowedImageUrl()`).
+
+#### 5. Permissions Minimization
 
 **Requested Permissions:**
 ```json
@@ -605,9 +673,11 @@ fetch(`https://github-gifs.aldilaff6545.workers.dev?search=${query}`);
 
 | Attack Vector            | Risk     | Mitigation                                   |
 | ------------------------ | -------- | -------------------------------------------- |
-| XSS via GIF title        | Medium   | Escape markdown syntax                       |
-| Malicious GIF URL        | Medium   | Whitelist giphy.com domains                  |
+| Malicious GIF URL        | Medium   | Service worker validates (giphy/giphycdn only), content script validates again |
+| XSS via GIF title        | Medium   | Escape markdown syntax (brackets, parens)    |
+| MITM on GIF image fetch  | Low      | Service worker enforces HTTPS only           |
 | MITM on API              | Low      | HTTPS enforced, certificate validation       |
+| Stale async callbacks    | Low      | renderGeneration counter prevents old results |
 | Extension update hijack  | Low      | Chrome Web Store signed updates              |
 | localStorage poisoning   | Low      | Validate/sanitize on read, graceful fallback |
 | chrome.storage quota DoS | Very Low | We use <1% of quota                          |
