@@ -4,17 +4,17 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Mở rộng giao diện GitHub - bố cục rộng, phóng to bảng/hình ảnh, chọn GIF, ẩn/hiện sidebar",
+    "message": "Nâng cấp giao diện GitHub - bố cục rộng, phóng to bảng/ảnh, chọn GIF, ẩn/hiện thanh bên",
     "description": "Extension description"
   },
   "wideLayout": { "message": "Bố cục rộng" },
-  "wideLayoutDesc": { "message": "Mở rộng GitHub ra toàn chiều ngang" },
+  "wideLayoutDesc": { "message": "Mở rộng GitHub ra toàn bộ chiều rộng" },
   "tableExpand": { "message": "Phóng to bảng" },
   "tableExpandDesc": { "message": "Phóng to bảng ra toàn màn hình" },
   "imageLightbox": { "message": "Phóng to hình ảnh" },
-  "imageLightboxDesc": { "message": "Nhấp vào hình để phóng to" },
+  "imageLightboxDesc": { "message": "Nhấp vào hình ảnh để phóng to" },
   "gifPicker": { "message": "Chọn GIF" },
   "gifPickerDesc": { "message": "Thêm nút GIF vào bình luận" },
-  "sidebarToggle": { "message": "Ẩn/hiện Sidebar" },
+  "sidebarToggle": { "message": "Ẩn/hiện thanh bên" },
   "sidebarToggleDesc": { "message": "Ẩn/hiện thanh bên (Alt+M)" }
 }
