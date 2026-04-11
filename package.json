@@ -1,6 +1,6 @@
 {
   "name": "github-flex",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Chrome extension to expand GitHub's interface",
   "private": true,
   "license": "MIT",
