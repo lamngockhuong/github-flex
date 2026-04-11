@@ -356,7 +356,7 @@ Currently in pre-release phase. Contributions welcome after v1.0 launch.
 - Performance improvements
 - New features (discuss in issue first)
 - Documentation improvements
-- Translations (i18n support in v1.1+)
+- Translations (i18n - currently English, Japanese, Vietnamese)
 
 **Contributor Expectations:**
 - Follow code standards in `docs/code-standards.md`
