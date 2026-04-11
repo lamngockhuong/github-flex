@@ -1,29 +1,42 @@
 /* GIF Picker styles */
 
-/* GIF Button */
+/* GIF Button - matches GitHub toolbar icon buttons */
 .ghflex-gif-btn {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  padding: 4px 8px;
-  margin: 0 4px;
-  border: 1px solid var(--color-border-default, #d0d7de);
-  border-radius: 6px;
-  background: var(--color-btn-bg, #f6f8fa);
-  color: var(--color-fg-default, #24292f);
-  font-size: 12px;
-  font-weight: 500;
+  justify-content: center;
+  width: var(--control-medium-size, 2rem);
+  height: var(--control-medium-size, 2rem);
+  padding: 4px;
+  margin: 0;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  box-sizing: border-box;
+  vertical-align: middle;
+  align-self: center;
+  background: transparent;
+  color: var(--fgColor-muted, var(--color-fg-muted, #656d76));
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition:
+    background-color 0.1s ease,
+    color 0.1s ease;
 }
 
 .ghflex-gif-btn:hover {
-  background: var(--color-btn-hover-bg, #f3f4f6);
-  border-color: var(--color-btn-hover-border, #afb8c1);
+  color: var(--fgColor-default, var(--color-fg-default, #1f2328));
+  background-color: var(
+    --button-invisible-bgColor-hover,
+    var(--color-action-list-item-default-hover-bg)
+  );
+  border-color: var(--button-invisible-borderColor-hover, transparent);
 }
 
 .ghflex-gif-btn:active {
-  background: var(--color-btn-active-bg, #ebecf0);
+  color: var(--fgColor-default, var(--color-fg-default, #1f2328));
+  background-color: var(
+    --button-invisible-bgColor-active,
+    var(--color-action-list-item-default-active-bg)
+  );
 }
 
 .ghflex-gif-btn svg {
@@ -127,9 +140,10 @@
 
 /* GIF Content Grid */
 .ghflex-gif-content {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
+  display: grid !important;
+  grid-template-columns: repeat(3, 1fr) !important;
+  grid-auto-rows: 150px !important;
+  gap: 12px !important;
   padding: 20px;
   overflow-y: auto;
   max-height: 500px;
@@ -154,10 +168,10 @@
 
 /* GIF Item */
 .ghflex-gif-item {
-  position: relative;
-  aspect-ratio: 1;
+  position: relative !important;
+  height: 100% !important;
   border-radius: 8px;
-  overflow: hidden;
+  overflow: hidden !important;
   cursor: pointer;
   background: var(--color-canvas-subtle, #f6f8fa);
   transition: transform 0.2s ease;
@@ -168,10 +182,13 @@
 }
 
 .ghflex-gif-item img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
 }
 
 /* GIF Item Overlay */
@@ -199,33 +216,58 @@
 .ghflex-gif-insert-btn,
 .ghflex-gif-copy-btn {
   padding: 6px 16px;
-  border: none;
+  border: 1px solid transparent;
   border-radius: 6px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
-  color: #ffffff;
+  transition: background-color 0.1s ease;
 }
 
 .ghflex-gif-insert-btn {
-  background: #2da44e;
+  background: var(
+    --button-primary-bgColor-rest,
+    var(--color-btn-primary-bg, #1f883d)
+  );
+  color: var(
+    --button-primary-fgColor-rest,
+    var(--color-btn-primary-text, #fff)
+  );
+  border-color: var(--button-primary-borderColor-rest, transparent);
 }
 
 .ghflex-gif-insert-btn:hover {
-  background: #2c974b;
+  background: var(
+    --button-primary-bgColor-hover,
+    var(--color-btn-primary-hover-bg, #1a7f37)
+  );
 }
 
 .ghflex-gif-copy-btn {
-  background: #0969da;
+  background: var(--button-default-bgColor-rest, var(--color-btn-bg, #f6f8fa));
+  color: var(--button-default-fgColor-rest, var(--color-btn-text, #24292f));
+  border-color: var(
+    --button-default-borderColor-rest,
+    var(--color-btn-border, rgba(31, 35, 40, 0.15))
+  );
 }
 
 .ghflex-gif-copy-btn:hover {
-  background: #0860ca;
+  background: var(
+    --button-default-bgColor-hover,
+    var(--color-btn-hover-bg, #f3f4f6)
+  );
 }
 
 .ghflex-gif-copy-btn.ghflex-gif-copied {
-  background: #1f883d;
+  background: var(
+    --button-primary-bgColor-rest,
+    var(--color-btn-primary-bg, #1f883d)
+  );
+  color: var(
+    --button-primary-fgColor-rest,
+    var(--color-btn-primary-text, #fff)
+  );
 }
 
 /* Empty State */
@@ -239,17 +281,6 @@
 
 /* Dark Mode Support */
 @media (prefers-color-scheme: dark) {
-  .ghflex-gif-btn {
-    background: var(--color-btn-bg, #21262d);
-    color: var(--color-fg-default, #c9d1d9);
-    border-color: var(--color-border-default, #30363d);
-  }
-
-  .ghflex-gif-btn:hover {
-    background: var(--color-btn-hover-bg, #30363d);
-    border-color: var(--color-btn-hover-border, #8b949e);
-  }
-
   .ghflex-gif-modal {
     background: var(--color-canvas-default, #0d1117);
     border-color: var(--color-border-default, #30363d);
@@ -283,7 +314,8 @@
   }
 
   .ghflex-gif-content {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
+    grid-auto-rows: 130px !important;
     gap: 8px;
     padding: 16px;
   }
@@ -291,7 +323,8 @@
 
 @media (max-width: 480px) {
   .ghflex-gif-content {
-    grid-template-columns: 1fr;
+    grid-template-columns: 1fr !important;
+    grid-auto-rows: 180px !important;
   }
 
   .ghflex-gif-header h3 {

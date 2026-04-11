@@ -29,3 +29,11 @@ export const TABLE_EXPAND_STORAGE_PREFIX = "ghflex-table-expand";
 // GIF picker API
 export const GIF_API_URL = "https://github-gifs.aldilaff6545.workers.dev";
 export const GIF_DEBOUNCE_DELAY = 300;
+
+// Service worker message actions
+export const MESSAGE_ACTIONS = {
+  FETCH_IMAGE: "fetchImage",
+};
+
+// GitHub toolbar selector (shared between toolbar detection strategies)
+export const TOOLBAR_SELECTOR = '.toolbar, [role="toolbar"], markdown-toolbar';

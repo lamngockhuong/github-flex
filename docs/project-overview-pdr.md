@@ -62,9 +62,11 @@ Enhance GitHub's web interface with productivity features while maintaining nati
   - Search via Cloudflare Worker proxy (https://github-gifs.aldilaff6545.workers.dev)
   - Vietnamese text normalization (tieng viet → tiếng việt)
   - Markdown injection sanitization
-- **Scope:** Comment textareas, issue/PR descriptions
-- **Security:** Whitelist giphy.com and giphycdn.com domains only
+  - Service worker proxy bypasses GitHub CSP for image display
+- **Scope:** Comment textareas, issue/PR descriptions, GitHub Issues (React-based editors)
+- **Security:** Service worker validates URLs (giphy.com/giphycdn.com only), content script validates again, CSP enforced via blob: URLs only
 - **Success Metric:** GIF insertion <5 seconds from search to markdown output
+- **CSP Bypass:** Service worker fetches images with base64 encoding; content script creates blob: URLs (allowed by CSP)
 
 #### FR5: Zen Mode
 - **Description:** Toggle sidebar visibility for focused reading
