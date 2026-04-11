@@ -1,5 +1,19 @@
 # Changelog
 
+## [0.0.5](https://github.com/lamngockhuong/github-flex/compare/v0.0.4...v0.0.5) (2026-04-11)
+
+
+### Features
+
+* **assets:** add Chrome Web Store promotional images ([bf9b9ee](https://github.com/lamngockhuong/github-flex/commit/bf9b9ee6c61c8408e2ae0725e320c9ad856b98c0))
+* **i18n:** add Japanese locale, improve Vietnamese, add PR template ([#8](https://github.com/lamngockhuong/github-flex/issues/8)) ([70c37e0](https://github.com/lamngockhuong/github-flex/commit/70c37e026f0b9b40be38e308e7fc0df729ed5663))
+
+
+### Bug Fixes
+
+* **gif-picker:** bypass GitHub CSP for GIF images ([#9](https://github.com/lamngockhuong/github-flex/issues/9)) ([d3105d9](https://github.com/lamngockhuong/github-flex/commit/d3105d9898abff465c27a6847f82b2f34cdb83bd))
+* **gif-picker:** bypass GitHub CSP for GIF images and improve toolbar detection ([d3105d9](https://github.com/lamngockhuong/github-flex/commit/d3105d9898abff465c27a6847f82b2f34cdb83bd))
+
 ## [0.0.4](https://github.com/lamngockhuong/github-flex/compare/v0.0.3...v0.0.4) (2026-04-08)
 
 
