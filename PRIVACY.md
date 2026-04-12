@@ -33,9 +33,9 @@ No other feature makes any external network request.
 
 ## Permissions
 
-| Permission | Purpose |
-|---|---|
-| `storage` | Save and sync user preferences (feature toggles) |
+| Permission                                       | Purpose                                                                             |
+| ------------------------------------------------ | ----------------------------------------------------------------------------------- |
+| `storage`                                        | Save and sync user preferences (feature toggles)                                    |
 | `host_permissions` (github.com, gist.github.com) | Inject content scripts to modify GitHub's interface; fetch GIF images in background |
 
 ## Third-Party Services

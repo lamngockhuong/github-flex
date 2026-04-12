@@ -102,10 +102,10 @@ Developer Tools (デベロッパーツール)
 Không
 
 **Homepage URL (URL trang chủ):**
-https://github.com/lamngockhuong/github-flex
+<https://github.com/lamngockhuong/github-flex>
 
 **Support URL (URL hỗ trợ):**
-https://github.com/lamngockhuong/github-flex/issues
+<https://github.com/lamngockhuong/github-flex/issues>
 
 **Mature content (Nội dung người lớn):**
 Off (Tắt)
@@ -133,6 +133,7 @@ Yes — the extension fetches GIF image data from a Cloudflare Workers proxy (gi
 ### Data Usage (Sử dụng dữ liệu)
 
 Extension does NOT collect or use any of the following:
+
 - [ ] Thông tin nhận dạng cá nhân
 - [ ] Thông tin sức khỏe
 - [ ] Thông tin thanh toán và tài chính
@@ -144,6 +145,7 @@ Extension does NOT collect or use any of the following:
 - [ ] Nội dung trang web
 
 Check all 3 certifications:
+
 - [x] Tôi không bán hoặc chuyển dữ liệu người dùng cho bên thứ ba, ngoại trừ những trường hợp sử dụng đã được phê duyệt
 - [x] Tôi không sử dụng hoặc chuyển dữ liệu người dùng cho các mục đích không liên quan đến mục đích duy nhất của tiện ích
 - [x] Tôi không sử dụng hoặc chuyển dữ liệu người dùng để xác định khả năng thanh toán nợ hoặc phục vụ mục đích cho vay
