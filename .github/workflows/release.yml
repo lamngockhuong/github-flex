@@ -114,7 +114,7 @@ jobs:
           name: release-assets
 
       - name: Create Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           tag_name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && '-rc' || '' }}
           name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && ' (RC)' || '' }}
