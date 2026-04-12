@@ -4,6 +4,9 @@ dist/
 .DS_Store
 coverage/
 
+# Generated promo PNGs (convert from SVGs for Chrome Web Store)
+assets/*.png
+
 # Claude Code
 .claude/
 .playwright-mcp/

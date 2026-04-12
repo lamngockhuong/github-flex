@@ -21,7 +21,7 @@ const BASE_CONFIG = {
   target: "chrome88",
 };
 
-const LOCALES = ["en", "vi"];
+const LOCALES = ["en", "ja", "vi"];
 const ICON_SIZES = [16, 48, 128];
 
 async function bundleAll(minify = true) {
