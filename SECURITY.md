@@ -21,7 +21,7 @@ This extension runs only on `github.com` pages and:
 
 - Does not collect or transmit user data
 - Stores settings locally via `chrome.storage.sync`
-- Does not make external network requests (except GIF Picker using Tenor API)
+- Does not make external network requests (except GIF Picker using Giphy API)
 - Uses Content Security Policy compliant approaches
 
 ## Response
