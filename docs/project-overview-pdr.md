@@ -3,7 +3,7 @@
 ## Project Identity
 
 **Name:** GitHub Flex
-**Type:** Chrome Extension (Manifest V3)
+**Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox)
 **Version:** 1.0.0
 **License:** MIT
 **Repository:** https://github.com/lamngockhuong/github-flex
@@ -87,8 +87,10 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 #### NFR2: Compatibility
 - **Chrome Version:** 88+ (Manifest V3 baseline)
+- **Firefox Version:** 112+ (Manifest V3 support)
 - **GitHub:** github.com and gist.github.com
 - **Conflict Handling:** Graceful degradation if GitHub updates DOM structure
+- **Cross-browser API:** webextension-polyfill abstracts browser-specific APIs
 
 #### NFR3: Reliability
 - **Error Handling:** Silent failure with console logging
@@ -110,9 +112,9 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 ## Technical Constraints
 
 ### Browser APIs
-- Chrome Extension Manifest V3 only
-- No background page (service worker model)
-- chrome.storage.sync for cross-device settings
+- Manifest V3 for Chrome 88+ and Firefox 112+
+- Chrome: service_worker background model; Firefox: background scripts
+- browser.storage.sync for cross-device settings (via webextension-polyfill)
 - localStorage for per-page ephemeral state
 
 ### GitHub Integration
@@ -169,7 +171,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 ## Out of Scope (v1.0)
 
-- Firefox/Safari support (Manifest V3 only)
+- Safari support (Manifest V3 limited to Chrome/Firefox)
 - GitHub Enterprise compatibility
 - Offline GIF library
 - Settings import/export
@@ -204,7 +206,8 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - vitest 4.1.3 + @vitest/coverage-v8 (testing)
 
 ### Runtime
-- Chrome 88+ (Manifest V3)
+- Chrome 88+ or Firefox 112+ (Manifest V3)
+- webextension-polyfill 0.12.0+
 - Cloudflare Worker at https://github-gifs.aldilaff6545.workers.dev
 
 ### System

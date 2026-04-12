@@ -33,6 +33,7 @@ export const GIF_DEBOUNCE_DELAY = 300;
 // Service worker message actions
 export const MESSAGE_ACTIONS = {
   FETCH_IMAGE: "fetchImage",
+  FETCH_GIFS: "fetchGifs",
 };
 
 // GitHub toolbar selector (shared between toolbar detection strategies)

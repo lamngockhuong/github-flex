@@ -2,33 +2,35 @@
 
 ## High-Level Overview
 
-GitHub Flex is a Chrome Manifest V3 extension that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration—pure client-side enhancement.
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration—pure client-side enhancement. Uses webextension-polyfill to abstract browser-specific APIs (chrome.* vs browser.*).
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Chrome Browser                       │
-│                                                         │
-│  ┌────────────────────────────────────────────────────┐ │
-│  │              github.com (SPA)                      │ │
-│  │  ┌──────────────────────────────────────────────┐  │ │
-│  │  │         Content Script (main.js)             │  │ │
-│  │  │  ┌────────────────────────────────────────┐  │  │ │
-│  │  │  │ Feature Modules (5 independent units)  │  │  │ │
-│  │  │  │  • Wide Layout                         │  │  │ │
-│  │  │  │  • Table Expand                        │  │  │ │
-│  │  │  │  • Image Lightbox                      │  │  │ │
-│  │  │  │  • GIF Picker                          │  │  │ │
-│  │  │  │  • Zen Mode                            │  │  │ │
-│  │  │  └────────────────────────────────────────┘  │  │ │
-│  │  └──────────────────────────────────────────────┘  │ │
-│  └────────────────────────────────────────────────────┘ │
-│                                                         │
-│  ┌────────────┐  ┌──────────────┐  ┌─────────────────┐  │
-│  │  Popup UI  │  │   Storage    │  │ Service Worker  │  │
-│  │ (settings) │◄─┤chrome.storage├──┤  (lifecycle)    │  │
-│  └────────────┘  │    .sync     │  └─────────────────┘  │
-│                  └──────────────┘                       │
-└─────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────────────────────┐
+│       Chrome Browser (88+) / Firefox Browser (112+)          │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │              github.com (SPA)                          │  │
+│  │  ┌──────────────────────────────────────────────────┐  │  │
+│  │  │         Content Script (main.js)                │  │  │
+│  │  │  ┌────────────────────────────────────────────┐  │  │  │
+│  │  │  │ Feature Modules (5 independent units)      │  │  │  │
+│  │  │  │  • Wide Layout                             │  │  │  │
+│  │  │  │  • Table Expand                            │  │  │  │
+│  │  │  │  • Image Lightbox                          │  │  │  │
+│  │  │  │  • GIF Picker                              │  │  │  │
+│  │  │  │  • Zen Mode                                │  │  │  │
+│  │  │  └────────────────────────────────────────────┘  │  │  │
+│  │  └──────────────────────────────────────────────────┘  │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
+│  │  Popup UI  │  │  Storage     │  │ Service Worker /     │  │
+│  │ (settings) │◄─┤ (browser.*)  │◄─│ Background Scripts   │  │
+│  └────────────┘  │   .sync      │  │ (lifecycle)          │  │
+│                  └──────────────┘  └──────────────────────┘  │
+│                                                              │
+│         webextension-polyfill (browser.* wrapper)           │
+└──────────────────────────────────────────────────────────────┘
                            │
                            │ GIF Search (HTTPS)
                            ▼
@@ -42,19 +44,22 @@ GitHub Flex is a Chrome Manifest V3 extension that enhances GitHub's interface t
 
 ### 1. Extension Components
 
-#### Service Worker (Background)
+#### Service Worker / Background Script
 ```
 src/background/service-worker.js (13 LOC)
 ├── Purpose: Extension lifecycle management
 ├── Runs: On extension install/update
 ├── Capabilities:
-│   ├── Listen to chrome.runtime events
+│   ├── Listen to browser.runtime events (webextension-polyfill)
 │   ├── No DOM access
-│   └── 30-second execution limit
-└── Current Usage: Minimal (logs install events)
+│   └── Chrome: 30-second limit; Firefox: longer timeout
+├── Chrome Mode: service_worker (MV3)
+└── Firefox Mode: background.scripts (MV3)
+
+Current Usage: Minimal (logs install events)
 ```
 
-**Why minimal?** Manifest V3 service workers are event-driven, not long-running. All feature logic lives in content scripts for direct DOM access.
+**Why minimal?** Manifest V3 background contexts are event-driven, not long-running. All feature logic lives in content scripts for direct DOM access. **Browser Abstraction:** webextension-polyfill maps `browser.runtime` to `chrome.runtime` on Chrome, providing unified API.
 
 #### Content Script (Injected)
 ```
@@ -70,10 +75,10 @@ src/content/main.js (55 LOC)
 
 **Execution Flow:**
 1. GitHub page loads
-2. Chrome injects main.js at document_idle
-3. main.js fetches settings
+2. Browser (Chrome/Firefox) injects main.js at document_idle
+3. main.js fetches settings via webextension-polyfill
 4. Calls `feature.enable()` for each enabled feature
-5. Listens for chrome.storage.onChanged events
+5. Listens for browser.storage.onChanged events (polyfilled from chrome.storage)
 
 #### Popup UI (User Settings)
 ```
@@ -88,7 +93,7 @@ src/popup/popup.{html,css,js} (26 LOC JS)
 └── Lifetime: Destroyed when popup closes
 ```
 
-**Why separate from content script?** Popup runs in isolated context—can't directly access GitHub page. Settings flow through chrome.storage API.
+**Why separate from content script?** Popup runs in isolated context—can't directly access GitHub page. Settings flow through browser.storage API (webextension-polyfill).
 
 ### 2. Feature Modules
 
@@ -125,9 +130,9 @@ main.js
 
 ### 3. Data Storage Architecture
 
-#### Chrome Storage Sync (Global Settings)
+#### Browser Storage Sync (Global Settings)
 ```
-chrome.storage.sync
+browser.storage.sync (webextension-polyfill)
 └── "settings" (object)
     ├── wideLayout: true
     ├── tableExpand: true
@@ -137,16 +142,17 @@ chrome.storage.sync
 ```
 
 **Characteristics:**
-- Syncs across devices (Chrome signed-in users)
+- Syncs across devices (Chrome/Firefox signed-in users)
 - 100KB quota (we use ~0.1KB)
 - Async API (Promise-based)
 - Cached in `shared/storage.js` to avoid repeated reads
+- webextension-polyfill abstracts chrome.storage.sync to browser.storage.sync
 
 **Access Pattern:**
 ```
-Popup writes → chrome.storage.sync.set()
+Popup writes → browser.storage.sync.set() [polyfilled]
                         ↓
-            chrome.storage.onChanged event
+            browser.storage.onChanged event [polyfilled]
                         ↓
             Content script receives change
                         ↓
@@ -467,13 +473,13 @@ const isHidden = stored === "true";
 
 ### Popup ↔ Content Script
 
-**No Direct Messaging:** Uses chrome.storage as message bus
+**No Direct Messaging:** Uses browser.storage as message bus (webextension-polyfill)
 
 ```
 ┌──────────┐                  ┌──────────────────┐                  ┌────────────────┐
-│  Popup   │                  │ chrome.storage   │                  │ Content Script │
+│  Popup   │                  │ browser.storage  │                  │ Content Script │
 │          │                  │      .sync       │                  │                │
-│  User    │──set(settings)──►│                  │──onChanged event►│  Receives      │
+│  User    │──set(settings)──►│ (polyfilled)     │──onChanged event►│  Receives      │
 │  toggles │                  │  {settings: {}}  │                  │  new settings  │
 │  feature │                  │                  │                  │                │
 │          │◄─get(settings)───│                  │                  │                │
@@ -481,10 +487,11 @@ const isHidden = stored === "true";
 └──────────┘                  └──────────────────┘                  └────────────────┘
 ```
 
-**Why Not chrome.runtime.sendMessage?**
-- chrome.storage provides built-in persistence
+**Why Not browser.runtime.sendMessage?**
+- browser.storage provides built-in persistence
 - onChanged event broadcasts to all tabs automatically
 - No need to maintain active message ports
+- webextension-polyfill ensures compatibility across Chrome and Firefox
 
 ### Feature ↔ Shared Utilities
 
@@ -623,11 +630,11 @@ fetch(`https://github-gifs.aldilaff6545.workers.dev?search=${query}`);
 
 #### 4. Content Security Policy Bypass (GIF Picker)
 
-GitHub's CSP blocks external images from giphy.com. The extension bypasses this via service worker proxy:
+GitHub's CSP blocks external images from giphy.com. The extension bypasses this via service worker/background script proxy:
 
 ```javascript
-// Service Worker intercepts FETCH_IMAGE messages
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+// Background (Service Worker / Background Scripts) intercepts FETCH_IMAGE messages
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
   
   if (!isAllowedImageUrl(message.url)) {
@@ -635,7 +642,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     return true;
   }
   
-  fetch(message.url)  // Service worker can fetch any URL
+  fetch(message.url)  // Background context can fetch any URL
     .then(response => response.arrayBuffer())
     .then(buffer => {
       // Encode as base64 to avoid ~300% JSON overhead
@@ -650,7 +657,7 @@ const blobUrl = URL.createObjectURL(blob);
 imgEl.src = blobUrl;  // CSP allows blob: URLs
 ```
 
-**Whitelist Validation:** Only `giphy.com` and `giphycdn.com` hostnames allowed (see `isAllowedImageUrl()`).
+**Whitelist Validation:** Only `giphy.com` and `giphycdn.com` hostnames allowed (see `isAllowedImageUrl()`). **Browser API:** webextension-polyfill maps browser.runtime to chrome.runtime on Chrome.
 
 #### 5. Permissions Minimization
 
@@ -814,36 +821,46 @@ try {
 
 ## Build Architecture
 
-### esbuild Pipeline
+### esbuild Pipeline (Dual-Browser)
 
 ```
 Source Files (src/)
         ↓
-    [esbuild]
-        ├─► Bundle: src/content/main.js → dist/content/main.js
-        ├─► Bundle: src/popup/popup.js → dist/popup/popup.js
-        └─► Options: { format: "iife", target: "chrome88", minify: true }
+    [esbuild for both browsers]
+        ├─► Chrome build (target: chrome88)
+        │   ├─► Bundle: src/content/main.js → dist/chrome/content/main.js
+        │   ├─► Bundle: src/popup/popup.js → dist/chrome/popup/popup.js
+        │   └─► Manifest: background.service_worker
+        │
+        └─► Firefox build (target: firefox112)
+            ├─► Bundle: src/content/main.js → dist/firefox/content/main.js
+            ├─► Bundle: src/popup/popup.js → dist/firefox/popup/popup.js
+            └─► Manifest: background.scripts (array) + browser_specific_settings
         ↓
-Static Files (copy)
-        ├─► src/popup/popup.html → dist/popup/popup.html
-        ├─► src/popup/popup.css → dist/popup/popup.css
-        ├─► src/content/styles/*.css → dist/content/styles/*.css
-        ├─► src/background/service-worker.js → dist/background/service-worker.js
-        ├─► icons/* → dist/icons/*
-        └─► _locales/{en,ja,vi}/* → dist/_locales/{en,ja,vi}/*
+Static Files (copy to both dist/chrome/ and dist/firefox/)
+        ├─► src/popup/popup.html → dist/{chrome,firefox}/popup/popup.html
+        ├─► src/popup/popup.css → dist/{chrome,firefox}/popup/popup.css
+        ├─► src/content/styles/*.css → dist/{chrome,firefox}/content/styles/*.css
+        ├─► src/background/service-worker.js → dist/{chrome,firefox}/background/service-worker.js
+        ├─► icons/* → dist/{chrome,firefox}/icons/*
+        └─► _locales/{en,ja,vi}/* → dist/{chrome,firefox}/_locales/{en,ja,vi}/*
         ↓
-Manifest Processing
-        ├─► Read: manifest.json
-        ├─► Modify paths: "src/..." → "..."
-        └─► Write: dist/manifest.json
+Manifest Processing (browser-specific)
+        ├─► Chrome: Read manifest.json → Modify for Chrome 88+ → Write dist/chrome/manifest.json
+        └─► Firefox: Read manifest.json → Modify for Firefox 112+ + gecko settings → Write dist/firefox/manifest.json
         ↓
-    dist/ (ready to load in Chrome)
+    dist/chrome/ and dist/firefox/ (ready to load in respective browsers)
 ```
+
+**Build Commands:**
+- `pnpm build` — Build both Chrome and Firefox
+- `pnpm build:chrome` — Chrome only
+- `pnpm build:firefox` — Firefox only
 
 ### Watch Mode
 
 ```bash
-pnpm dev  # Starts file watcher
+pnpm dev  # Starts file watcher for both browsers (unminified)
 ```
 
 **Watched Paths:**
@@ -853,7 +870,9 @@ pnpm dev  # Starts file watcher
 
 **Debouncing:** 100ms delay after last file change before rebuild.
 
-**Hot Reload:** Manual (reload extension at chrome://extensions/ or refresh GitHub page).
+**Output:** Watches rebuild both dist/chrome/ and dist/firefox/ simultaneously.
+
+**Hot Reload:** Manual (reload extension in chrome://extensions/ or about:debugging, or refresh GitHub page).
 
 ## Testing Architecture
 
@@ -944,34 +963,34 @@ src/features/gif-picker.test.js  ← Colocated tests
 
 ### Installation Flow
 ```
-User installs extension
+User installs extension (from Chrome Web Store or Firefox Add-ons)
         ↓
-Chrome extracts dist/ contents
+Browser (Chrome/Firefox) extracts dist/{chrome,firefox}/ contents
         ↓
 Validates manifest.json
         ↓
-Registers content scripts, service worker, popup
+Registers content scripts, background context, popup
         ↓
 Grants permissions (storage, github.com hosts)
         ↓
-Service worker fires: chrome.runtime.onInstalled
+Background fires: browser.runtime.onInstalled
         ↓
 Logs: "[GitHub Flex] Extension installed"
         ↓
 User navigates to github.com
         ↓
-Chrome injects: dist/content/main.js at document_idle
+Browser injects: dist/{chrome,firefox}/content/main.js at document_idle
         ↓
-Content script initializes features
+Content script initializes features via webextension-polyfill
 ```
 
 ### Update Flow
 ```
-Chrome detects new version in Web Store
+Browser detects new version in store (Chrome Web Store / Firefox Add-ons)
         ↓
-Downloads new dist/
+Downloads new dist/{chrome,firefox}/
         ↓
-Service worker fires: chrome.runtime.onInstalled (reason: "update")
+Background fires: browser.runtime.onInstalled (reason: "update")
         ↓
 Reloads extension (all tabs reload content scripts on next navigation)
         ↓
@@ -980,13 +999,13 @@ Users see new features/fixes without manual action
 
 ### Uninstallation
 ```
-User removes extension
+User removes extension (from Chrome/Firefox)
         ↓
-Chrome removes all extension files
+Browser removes all extension files
         ↓
-Clears chrome.storage.sync data (settings lost)
+Clears browser.storage.sync data (settings lost)
         ↓
-localStorage data persists (ghflex-* keys remain)
+localStorage data persists (ghflex-* keys remain on GitHub.com)
         ↓
 No cleanup needed (pure client-side, no server state)
 ```
@@ -1014,7 +1033,6 @@ No cleanup needed (pure client-side, no server state)
 - **Performance Dashboard:** Show memory/CPU usage in popup
 
 ### Considered (v2.0)
-- **Firefox Support:** Port to Manifest V2 (Firefox doesn't fully support V3)
 - **GitHub Enterprise:** Add host_permissions for custom domains
 - **Theme Sync:** Detect GitHub theme (light/dark) and adjust extension styles
 - **More Locales:** Expand language support beyond English, Japanese, and Vietnamese

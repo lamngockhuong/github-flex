@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import { getSettings } from "../shared/storage.js";
 import { gifPicker } from "./features/gif-picker.js";
 import { imageLightbox } from "./features/image-lightbox.js";
@@ -38,7 +39,7 @@ async function init() {
     }
 
     // Listen for setting changes from popup
-    chrome.storage.onChanged.addListener((changes, area) => {
+    browser.storage.onChanged.addListener((changes, area) => {
       if (area !== "sync") return;
 
       const settingsChange = changes.settings?.newValue;

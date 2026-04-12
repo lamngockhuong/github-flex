@@ -1,4 +1,6 @@
 // Early injection script - runs at document_start to prevent FOUC
+// Uses chrome.storage directly (no polyfill) to minimize bundle size for this timing-critical path.
+// Both Chrome and Firefox MV3 (101+) support chrome.storage.sync natively.
 // Note: STORAGE_KEY duplicated from constants.js (cannot import in isolated content script)
 
 const STORAGE_KEY = "settings";

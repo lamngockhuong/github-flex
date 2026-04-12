@@ -1,4 +1,5 @@
 // GIF Picker feature - insert GIFs into comments
+import browser from "webextension-polyfill";
 import {
   GIF_API_URL,
   GIF_DEBOUNCE_DELAY,
@@ -181,11 +182,11 @@ function debounce(func, delay) {
 // Fetch image via service worker to bypass page CSP restrictions.
 // GitHub's CSP blocks giphy.com images, but allows blob: URLs.
 function proxyLoadImage(imgEl, url, generation) {
-  chrome.runtime.sendMessage(
-    { action: MESSAGE_ACTIONS.FETCH_IMAGE, url },
-    (response) => {
+  browser.runtime
+    .sendMessage({ action: MESSAGE_ACTIONS.FETCH_IMAGE, url })
+    .then((response) => {
       if (generation !== renderGeneration) return;
-      if (chrome.runtime.lastError || !response || response.error) return;
+      if (!response || response.error) return;
       const binary = atob(response.data);
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) {
@@ -195,8 +196,8 @@ function proxyLoadImage(imgEl, url, generation) {
       const blobUrl = URL.createObjectURL(blob);
       blobUrls.add(blobUrl);
       imgEl.src = blobUrl;
-    },
-  );
+    })
+    .catch(() => {});
 }
 
 function revokeBlobUrls() {
@@ -220,19 +221,20 @@ function isValidGifUrl(url) {
   }
 }
 
-// Fetch GIFs from API
+// Fetch GIFs via background script to bypass page CSP connect-src restrictions.
+// Firefox content scripts are subject to the page's CSP, unlike Chrome.
 async function fetchGifs(query) {
   try {
     const normalizedQuery = normalizeVietnamese(query);
     const url = `${GIF_API_URL}?q=${encodeURIComponent(normalizedQuery)}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+    const response = await browser.runtime.sendMessage({
+      action: MESSAGE_ACTIONS.FETCH_GIFS,
+      url,
+    });
+    if (!response || response.error) {
+      throw new Error(response?.error || "No response");
     }
-
-    const data = await response.json();
-    return data.data || [];
+    return response.data;
   } catch (error) {
     console.error("[GIF Picker] Failed to fetch GIFs:", error);
     return [];
@@ -582,7 +584,7 @@ function injectStyles() {
   const link = document.createElement("link");
   link.id = STYLE_IDS.GIF_PICKER;
   link.rel = "stylesheet";
-  link.href = chrome.runtime.getURL("content/styles/gif-picker.css");
+  link.href = browser.runtime.getURL("content/styles/gif-picker.css");
   document.head.appendChild(link);
 }
 

@@ -1,7 +1,33 @@
 // Service worker for GitHub Flex
+import browser from "webextension-polyfill";
 import { MESSAGE_ACTIONS } from "../shared/constants.js";
 
 const ALLOWED_IMAGE_HOSTS = ["giphy.com", "giphycdn.com"];
+const ALLOWED_API_HOST = "github-gifs.aldilaff6545.workers.dev";
+
+function isAllowedApiUrl(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === "https:" && parsed.hostname === ALLOWED_API_HOST;
+  } catch {
+    return false;
+  }
+}
+
+// Proxy GIF API requests to bypass page CSP connect-src restrictions
+function fetchGifApi(url) {
+  if (!isAllowedApiUrl(url)) {
+    return Promise.resolve({ error: "URL not allowed" });
+  }
+
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) throw new Error(`HTTP ${response.status}`);
+      return response.json();
+    })
+    .then((data) => ({ data: data.data || [] }))
+    .catch((error) => ({ error: error.message }));
+}
 
 function isAllowedImageUrl(url) {
   try {
@@ -15,28 +41,31 @@ function isAllowedImageUrl(url) {
   }
 }
 
-chrome.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     console.log("[GitHub Flex] Installed");
   } else if (details.reason === "update") {
     console.log(
       "[GitHub Flex] Updated to",
-      chrome.runtime.getManifest().version,
+      browser.runtime.getManifest().version,
     );
   }
 });
 
-// Proxy image fetches to bypass page CSP restrictions.
-// Uses base64 encoding to avoid the ~300% overhead of JSON number arrays.
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
+// Proxy fetches to bypass page CSP restrictions on Firefox.
+// Firefox content scripts are subject to the page's CSP, unlike Chrome.
+// Returns a Promise (required by webextension-polyfill, works on both browsers).
+browser.runtime.onMessage.addListener((message, _sender) => {
+  if (message.action === MESSAGE_ACTIONS.FETCH_GIFS) {
+    return fetchGifApi(message.url);
+  }
+  if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return;
 
   if (!isAllowedImageUrl(message.url)) {
-    sendResponse({ error: "URL not allowed" });
-    return true;
+    return Promise.resolve({ error: "URL not allowed" });
   }
 
-  fetch(message.url)
+  return fetch(message.url)
     .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.arrayBuffer();
@@ -47,11 +76,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       for (let i = 0; i < bytes.length; i++) {
         binary += String.fromCharCode(bytes[i]);
       }
-      sendResponse({ data: btoa(binary) });
+      return { data: btoa(binary) };
     })
     .catch((error) => {
-      sendResponse({ error: error.message });
+      return { error: error.message };
     });
-
-  return true;
 });

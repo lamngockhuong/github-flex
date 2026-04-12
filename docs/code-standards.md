@@ -218,7 +218,7 @@ disable() {
 - Example: `localStorage.getItem("ghflex-zen-hidden")`
 
 **Global Settings (persistent):**
-- Use `chrome.storage.sync` via `shared/storage.js`
+- Use `browser.storage.sync` via `shared/storage.js` (webextension-polyfill)
 - Centralized in `SETTINGS_DEFAULTS` constant
 
 **Cache Pattern:**
@@ -227,11 +227,13 @@ let cachedSettings = null;
 
 export async function getSettings() {
   if (cachedSettings) return cachedSettings;
-  const result = await chrome.storage.sync.get(STORAGE_KEYS.SETTINGS);
+  const result = await browser.storage.sync.get(STORAGE_KEYS.SETTINGS);
   cachedSettings = { ...SETTINGS_DEFAULTS, ...result.settings };
   return cachedSettings;
 }
 ```
+
+**Browser API Note:** webextension-polyfill maps `browser.*` to `chrome.*` on Chrome, providing unified cross-browser API.
 
 ### Event Handling
 
@@ -322,7 +324,7 @@ injectStyles() {
   const link = document.createElement("link");
   link.id = STYLE_ID;
   link.rel = "stylesheet";
-  link.href = chrome.runtime.getURL("content/styles/feature.css");
+  link.href = browser.runtime.getURL("content/styles/feature.css");
   document.head.appendChild(link);
 }
 
@@ -330,6 +332,8 @@ removeStyles() {
   document.getElementById(STYLE_ID)?.remove();
 }
 ```
+
+**Browser API Note:** `browser.runtime.getURL()` from webextension-polyfill works identically to `chrome.runtime.getURL()`.
 
 **Rules:**
 - Use `<link>` tags, not inline `<style>` (CSP compliance)
@@ -678,7 +682,7 @@ transition: all 1s ease-in-out;
 **Content Scripts:**
 - Run in isolated world (can access DOM, not page JavaScript)
 - Import ES modules
-- Use `chrome.runtime.getURL()` for resources
+- Use `browser.runtime.getURL()` for resources (webextension-polyfill)
 
 **Permissions:**
 - Request minimal permissions
@@ -686,13 +690,13 @@ transition: all 1s ease-in-out;
 
 ### Storage API
 
-**chrome.storage.sync:**
+**browser.storage.sync (via webextension-polyfill):**
 ```javascript
 // ✓ Good (use wrapper)
 import { getSettings, saveSettings } from "./shared/storage.js";
 
 // ✗ Bad (direct access, no caching)
-chrome.storage.sync.get("settings", (result) => { ... });
+browser.storage.sync.get("settings", (result) => { ... });
 ```
 
 **localStorage:**
@@ -700,29 +704,29 @@ chrome.storage.sync.get("settings", (result) => { ... });
 // ✓ Good (per-page state)
 localStorage.setItem("ghflex-zen-hidden", "true");
 
-// ✗ Bad (global settings, should use chrome.storage)
+// ✗ Bad (global settings, should use browser.storage)
 localStorage.setItem("settings", JSON.stringify(settings));
 ```
 
 ### Message Passing
 
-**Content Script ↔ Service Worker (GIF Picker Image Proxy):**
+**Content Script ↔ Background (Service Worker / Background Scripts):**
 
-Service worker validates and fetches GIF images, bypassing GitHub's CSP. Base64 encoding avoids JSON number array overhead (~300% overhead).
+Background context validates and fetches GIF images, bypassing GitHub's CSP. Base64 encoding avoids JSON number array overhead (~300% overhead).
 
 ```javascript
 // Content Script
-chrome.runtime.sendMessage(
+browser.runtime.sendMessage(
   { action: MESSAGE_ACTIONS.FETCH_IMAGE, url: gifUrl },
   (response) => {
-    if (chrome.runtime.lastError || response.error) return;
+    if (browser.runtime.lastError || response.error) return;
     const blob = new Blob([atob(response.data)], { type: "image/gif" });
     imgEl.src = URL.createObjectURL(blob);
   }
 );
 
-// Service Worker
-chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
+// Background (Service Worker / Background Scripts)
+browser.runtime.onMessage.addListener((msg, sender, sendResponse) => {
   if (msg.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
   if (!isAllowedImageUrl(msg.url)) {
     sendResponse({ error: "Not allowed" });
@@ -736,7 +740,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
 });
 ```
 
-**Rules:** Validate URLs in both places; use base64; return `true` for async.
+**Rules:** Validate URLs in both places; use base64; return `true` for async. **Browser API:** webextension-polyfill maps `browser.runtime` to `chrome.runtime` on Chrome.
 
 ## Security Standards
 

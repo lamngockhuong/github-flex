@@ -1,5 +1,5 @@
 // Sidebar Toggle feature - hide/show sidebar
-
+import browser from "webextension-polyfill";
 import { ICONS } from "../../shared/icons.js";
 
 const STORAGE_KEY = "ghflex-sidebar-hidden";
@@ -213,7 +213,7 @@ class SidebarToggle {
     const link = document.createElement("link");
     link.id = STYLE_ID;
     link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("content/styles/sidebar-toggle.css");
+    link.href = browser.runtime.getURL("content/styles/sidebar-toggle.css");
     document.head.appendChild(link);
   }
 

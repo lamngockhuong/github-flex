@@ -20,13 +20,14 @@
 - [x] Zen Mode - Sidebar toggle with Alt+M (295 LOC)
 
 #### Technical Achievements
-- [x] Chrome Manifest V3 architecture
+- [x] Manifest V3 architecture (Chrome 88+, Firefox 112+)
+- [x] webextension-polyfill for cross-browser API compatibility
 - [x] Feature toggle pattern (enable/disable without reload)
 - [x] MutationObserver for SPA navigation
-- [x] chrome.storage.sync for cross-device settings
+- [x] browser.storage.sync for cross-device settings
 - [x] localStorage for per-page state persistence
-- [x] Build system (esbuild with watch mode)
-- [x] Linting/formatting (Biome)
+- [x] Dual-browser build system (esbuild with Chrome/Firefox outputs)
+- [x] Linting/formatting (Biome + web-ext for Firefox)
 - [x] Test framework setup (Vitest)
 
 #### External Services
@@ -78,36 +79,38 @@
 - [ ] Zip dist/ for Web Store upload
 - [ ] Test sideloaded production build
 
-### Phase 3: Chrome Web Store Launch 📅 (Planned)
+### Phase 3: Store Launches 📅 (In Progress)
 **Timeline:** May 2026
-**Status:** 0% Complete
+**Status:** 50% Complete (Chrome Web Store submitted, Firefox Add-ons pending)
 
 #### Pre-Launch Checklist
-- [ ] Developer account registration ($5 one-time fee)
-- [ ] Verify all manifest requirements met
-- [ ] Prepare store listing:
-  - [ ] Title: "GitHub Flex - Interface Enhancements"
-  - [ ] Short description (132 chars max)
-  - [ ] Detailed description (with feature bullets)
-  - [ ] Category: Productivity
-  - [ ] Language: English
-- [ ] Upload screenshots and promo images
-- [ ] Set visibility: Public
-- [ ] Submit for review
+- [x] Chrome Web Store developer account ($5 one-time fee)
+- [x] Firefox Add-ons developer account (free)
+- [x] Verify manifest requirements (both browsers)
+- [x] Prepare Chrome Web Store listing
+- [ ] Prepare Firefox Add-ons listing:
+  - [ ] Name, summary, description
+  - [ ] Category: Developer Tools
+  - [ ] Screenshots and promotional images
+  - [ ] Permissions justification
+- [x] Upload screenshots and promo images
+- [ ] Set visibility: Public (both stores)
+- [ ] Submit for review (both stores)
 
 #### Launch Activities
-- [ ] Monitor review status (1-3 days typical)
-- [ ] Address any rejection feedback
+- [ ] Monitor review status (Chrome: 1-3 days, Firefox: 3-5 days typical)
+- [ ] Address any rejection feedback (from either store)
 - [ ] Announce on:
-  - [ ] GitHub repository README
+  - [ ] GitHub repository README (add Firefox badge)
   - [ ] Personal blog/portfolio
-  - [ ] Relevant subreddits (r/chrome, r/github)
+  - [ ] Relevant communities (r/chrome, r/firefox, r/github)
   - [ ] Twitter/X (if applicable)
 
 #### Post-Launch Monitoring
-- [ ] Track install count (Chrome Developer Dashboard)
-- [ ] Monitor user reviews
+- [ ] Track install count (Chrome Developer Dashboard + Firefox Add-ons)
+- [ ] Monitor user reviews (both stores)
 - [ ] Address critical bugs within 24 hours
+- [ ] Maintain version parity between Chrome/Firefox
 - [ ] Collect feature requests (GitHub Issues)
 
 ### Phase 4: Enhancements & Community 📅 (Planned)
@@ -150,15 +153,9 @@
 **Timeline:** Q4 2026+
 **Status:** 0% Complete
 
-#### Firefox Support
-- [ ] Port to Manifest V2 (Firefox doesn't fully support V3)
-- [ ] Test on Firefox Developer Edition
-- [ ] Submit to Firefox Add-ons
-- [ ] Maintain parity between Chrome/Firefox versions
-
 #### Safari Support (if feasible)
 - [ ] Evaluate Safari Extension requirements
-- [ ] Convert manifest format
+- [ ] Convert manifest format (Safari Web Extensions use different API)
 - [ ] Test on Safari Technology Preview
 - [ ] Submit to App Store (requires Apple Developer account)
 
@@ -224,12 +221,13 @@ Technical:
 ## Success Metrics
 
 ### v1.0 Launch Goals (3 months post-release)
-- **Installs:** 100+ weekly active users
-- **Rating:** 4.0+ stars on Chrome Web Store
-- **Reviews:** 10+ positive reviews
+- **Installs:** 100+ weekly active users (combined Chrome + Firefox)
+- **Rating:** 4.0+ stars (both Chrome Web Store and Firefox Add-ons)
+- **Reviews:** 10+ positive reviews (combined)
 - **Issues:** <5 open bugs
 - **Performance:** <5% CPU usage on active GitHub pages
 - **Crash Rate:** <0.1% sessions
+- **Cross-browser Parity:** Chrome and Firefox versions feature-complete
 
 ### v1.1 Growth Goals (6 months post-release)
 - **Installs:** 500+ weekly active users
@@ -240,10 +238,10 @@ Technical:
 
 ### Long-Term Vision (1+ year)
 - **Installs:** 5,000+ weekly active users
-- **Platforms:** Chrome, Firefox, Safari
+- **Platforms:** Chrome, Firefox (established), Safari (if feasible)
 - **Community:** Active GitHub Discussions or Discord
 - **Sustainability:** Sponsorships covering hosting costs (GIF API)
-- **Recognition:** Featured on Chrome Web Store, GitHub blog, or developer communities
+- **Recognition:** Featured on Chrome Web Store, Firefox Add-ons, GitHub blog, or developer communities
 
 ## Risk Management
 
@@ -282,20 +280,23 @@ Technical:
 
 ### Platform Dependencies
 - **Chrome:** Browser engine (frequent updates, breaking changes possible)
+- **Firefox:** Browser engine (frequent updates, breaking changes possible)
 - **GitHub:** Host platform (DOM structure changes frequently)
 - **Chrome Web Store:** Distribution platform (review process, policies)
+- **Firefox Add-ons:** Distribution platform (review process, policies)
 
 ## Communication Plan
 
 ### Release Announcements
 - **GitHub Releases:** Detailed changelog with links
 - **Chrome Web Store:** "What's New" section
-- **Repository README:** Version badge and feature list
-- **Social Media:** Twitter/X, LinkedIn, Reddit (if appropriate)
+- **Firefox Add-ons:** "What's New" section
+- **Repository README:** Version badges (Chrome + Firefox), feature list
+- **Social Media:** Twitter/X, LinkedIn, Reddit (r/chrome, r/firefox, r/github)
 
 ### User Feedback Channels
 - **Primary:** GitHub Issues (bug reports, feature requests)
-- **Secondary:** Chrome Web Store reviews (monitor and respond)
+- **Secondary:** Store reviews (Chrome Web Store + Firefox Add-ons - monitor and respond)
 - **Future:** GitHub Discussions or Discord (community support)
 
 ### Developer Updates

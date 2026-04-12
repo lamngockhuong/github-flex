@@ -1,5 +1,5 @@
 // Table Expand feature - expandable tables with fullscreen option
-
+import browser from "webextension-polyfill";
 import { ICONS } from "../../shared/icons.js";
 
 const STYLE_ID = "ghflex-table-expand-styles";
@@ -202,7 +202,7 @@ export const tableExpand = {
     const link = document.createElement("link");
     link.id = STYLE_ID;
     link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("content/styles/table-expand.css");
+    link.href = browser.runtime.getURL("content/styles/table-expand.css");
     document.head.appendChild(link);
   },
 

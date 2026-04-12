@@ -80,10 +80,15 @@ jobs:
 
       - run: pnpm run build
 
-      - name: Create ZIP
+      - name: Lint Firefox manifest
+        run: pnpm run lint:firefox
+
+      - name: Create ZIP files
         run: |
-          cd dist
-          zip -r ../github-flex-v${{ needs.prepare.outputs.version }}.zip .
+          cd dist/chrome
+          zip -r ../../github-flex-chrome-v${{ needs.prepare.outputs.version }}.zip .
+          cd ../firefox
+          zip -r ../../github-flex-firefox-v${{ needs.prepare.outputs.version }}.zip .
 
       - name: Generate checksums
         run: sha256sum github-flex-*.zip > checksums.txt
