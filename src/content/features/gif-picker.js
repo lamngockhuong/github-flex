@@ -221,19 +221,20 @@ function isValidGifUrl(url) {
   }
 }
 
-// Fetch GIFs from API
+// Fetch GIFs via background script to bypass page CSP connect-src restrictions.
+// Firefox content scripts are subject to the page's CSP, unlike Chrome.
 async function fetchGifs(query) {
   try {
     const normalizedQuery = normalizeVietnamese(query);
     const url = `${GIF_API_URL}?q=${encodeURIComponent(normalizedQuery)}`;
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+    const response = await browser.runtime.sendMessage({
+      action: MESSAGE_ACTIONS.FETCH_GIFS,
+      url,
+    });
+    if (!response || response.error) {
+      throw new Error(response?.error || "No response");
     }
-
-    const data = await response.json();
-    return data.data || [];
+    return response.data;
   } catch (error) {
     console.error("[GIF Picker] Failed to fetch GIFs:", error);
     return [];
