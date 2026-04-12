@@ -3,8 +3,9 @@
 [![Version](https://img.shields.io/github/v/release/lamngockhuong/github-flex)](https://github.com/lamngockhuong/github-flex/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/ckoaleikkahfopnnggfnhmlgekgihdgj)
+[![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
 
-A Chrome extension that enhances GitHub's interface with productivity features.
+A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface with productivity features.
 
 <p align="center">
   <img src="assets/promo-banner-1280x800.svg" alt="GitHub Flex" width="640" />
@@ -33,6 +34,10 @@ A Chrome extension that enhances GitHub's interface with productivity features.
 
 Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-flex/ckoaleikkahfopnnggfnhmlgekgihdgj).
 
+### Firefox Add-ons
+
+Install directly from [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/github-flex/).
+
 ### From Source
 
 ```bash
@@ -42,20 +47,32 @@ pnpm install
 pnpm build
 ```
 
-Then load in Chrome:
+Then load in your browser:
+
+**Chrome:**
 
 1. Open `chrome://extensions/`
 2. Enable **Developer mode** (top right)
 3. Click **Load unpacked**
-4. Select the `dist/` folder
+4. Select the `dist/chrome/` folder
+
+**Firefox:**
+
+1. Open `about:debugging#/runtime/this-firefox`
+2. Click **Load Temporary Add-on**
+3. Select any file in the `dist/firefox/` folder
 
 ## Development
 
 ```bash
-pnpm dev        # Build with watch mode
-pnpm lint       # Check code style
-pnpm lint:fix   # Auto-fix issues
-pnpm test       # Run tests
+pnpm dev              # Build both browsers with watch mode
+pnpm build            # Production build for both browsers
+pnpm build:chrome     # Build Chrome only
+pnpm build:firefox    # Build Firefox only
+pnpm lint             # Check code style
+pnpm lint:fix         # Auto-fix issues
+pnpm lint:firefox     # Lint Firefox build with web-ext
+pnpm test             # Run tests
 ```
 
 ## Languages
@@ -68,7 +85,8 @@ The extension automatically displays in the browser's language if supported.
 
 ## Tech Stack
 
-- Chrome Manifest V3
+- Manifest V3 (Chrome 88+, Firefox 112+)
+- webextension-polyfill (cross-browser API compatibility)
 - Vanilla JavaScript (ES Modules)
 - esbuild (bundler)
 - Biome (linter/formatter)

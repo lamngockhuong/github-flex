@@ -50,3 +50,9 @@ jobs:
 
       - name: Run tests
         run: pnpm run test
+
+      - name: Build extension
+        run: pnpm run build
+
+      - name: Lint Firefox manifest
+        run: pnpm run lint:firefox

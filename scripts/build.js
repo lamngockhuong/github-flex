@@ -5,8 +5,21 @@ import { fileURLToPath } from "url";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
-const DIST = join(ROOT, "dist");
 const isWatch = process.argv.includes("--watch");
+
+const BROWSERS = ["chrome", "firefox"];
+const BROWSER_TARGETS = {
+  chrome: "chrome88",
+  firefox: "firefox112",
+};
+
+// Allow building a single browser via --chrome or --firefox flags
+const requestedBrowser = BROWSERS.find((b) => process.argv.includes(`--${b}`));
+const activeBrowsers = requestedBrowser ? [requestedBrowser] : BROWSERS;
+
+function getDistDir(browser) {
+  return join(ROOT, "dist", browser);
+}
 
 const ENTRY_POINTS = [
   { entry: "src/content/main.js", out: "content/main.js" },
@@ -15,22 +28,19 @@ const ENTRY_POINTS = [
   { entry: "src/background/service-worker.js", out: "background/service-worker.js" },
 ];
 
-const BASE_CONFIG = {
-  bundle: true,
-  format: "iife",
-  target: "chrome88",
-};
-
 const LOCALES = ["en", "ja", "vi"];
 const ICON_SIZES = [16, 48, 128];
 
-async function bundleAll(minify = true) {
+async function bundleAll(browser, minify = true) {
+  const dist = getDistDir(browser);
   await Promise.all(
     ENTRY_POINTS.map(({ entry, out }) =>
       esbuild.build({
-        ...BASE_CONFIG,
+        bundle: true,
+        format: "iife",
+        target: BROWSER_TARGETS[browser],
         entryPoints: [join(ROOT, entry)],
-        outfile: join(DIST, out),
+        outfile: join(dist, out),
         minify,
       })
     )
@@ -55,57 +65,89 @@ function minifyHTML(html) {
     .trim();
 }
 
-async function copyStaticFiles(minify = true) {
-  mkdirSync(join(DIST, "popup"), { recursive: true });
-  mkdirSync(join(DIST, "background"), { recursive: true });
+async function copyStaticFiles(browser, minify = true) {
+  const dist = getDistDir(browser);
+  mkdirSync(join(dist, "popup"), { recursive: true });
+  mkdirSync(join(dist, "background"), { recursive: true });
 
   let html = readFileSync(join(ROOT, "src/popup/popup.html"), "utf8");
   if (minify) html = minifyHTML(html);
-  writeFileSync(join(DIST, "popup/popup.html"), html);
+  writeFileSync(join(dist, "popup/popup.html"), html);
 
-  await processCSS(join(ROOT, "src/popup/popup.css"), join(DIST, "popup/popup.css"), minify);
+  await processCSS(join(ROOT, "src/popup/popup.css"), join(dist, "popup/popup.css"), minify);
 
-  mkdirSync(join(DIST, "content/styles"), { recursive: true });
+  mkdirSync(join(dist, "content/styles"), { recursive: true });
   const cssFiles = readdirSync(join(ROOT, "src/content/styles")).filter((f) => f.endsWith(".css"));
   await Promise.all(
     cssFiles.map((file) =>
-      processCSS(join(ROOT, "src/content/styles", file), join(DIST, "content/styles", file), minify)
+      processCSS(join(ROOT, "src/content/styles", file), join(dist, "content/styles", file), minify)
     )
   );
 }
 
-function copyAssets(minify = true) {
+function copyAssets(browser, minify = true) {
+  const dist = getDistDir(browser);
   const jsonFormat = minify ? undefined : 2;
 
   for (const locale of LOCALES) {
     const srcPath = join(ROOT, "_locales", locale, "messages.json");
-    const destDir = join(DIST, "_locales", locale);
+    const destDir = join(dist, "_locales", locale);
     mkdirSync(destDir, { recursive: true });
     const json = JSON.parse(readFileSync(srcPath, "utf8"));
     writeFileSync(join(destDir, "messages.json"), JSON.stringify(json, null, jsonFormat));
   }
 
-  mkdirSync(join(DIST, "icons"), { recursive: true });
+  mkdirSync(join(dist, "icons"), { recursive: true });
   for (const size of ICON_SIZES) {
-    cpSync(join(ROOT, `icons/icon-${size}.png`), join(DIST, `icons/icon-${size}.png`));
+    cpSync(join(ROOT, `icons/icon-${size}.png`), join(dist, `icons/icon-${size}.png`));
   }
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8"));
-  manifest.background.service_worker = "background/service-worker.js";
+
+  // Common path rewrites
   manifest.action.default_popup = "popup/popup.html";
   manifest.content_scripts[0].css = ["content/styles/wide-layout.css"];
   manifest.content_scripts[0].js = ["content/early-inject.js"];
   manifest.content_scripts[1].js = ["content/main.js"];
   manifest.web_accessible_resources[0].resources = ["content/styles/*.css"];
-  writeFileSync(join(DIST, "manifest.json"), JSON.stringify(manifest, null, jsonFormat));
+
+  if (browser === "chrome") {
+    manifest.background = {
+      service_worker: "background/service-worker.js",
+      type: "module",
+    };
+  } else if (browser === "firefox") {
+    manifest.background = {
+      scripts: ["background/service-worker.js"],
+      type: "module",
+    };
+    manifest.browser_specific_settings = {
+      gecko: {
+        id: "github-flex@khuong.dev",
+        strict_min_version: "112.0",
+      },
+    };
+  }
+
+  writeFileSync(join(dist, "manifest.json"), JSON.stringify(manifest, null, jsonFormat));
 }
 
-mkdirSync(DIST, { recursive: true });
+async function buildAll(minify = true) {
+  await Promise.all(
+    activeBrowsers.map(async (browser) => {
+      mkdirSync(getDistDir(browser), { recursive: true });
+      await Promise.all([
+        bundleAll(browser, minify),
+        copyStaticFiles(browser, minify),
+      ]);
+      copyAssets(browser, minify);
+    })
+  );
+}
 
 const minify = !isWatch;
-await Promise.all([bundleAll(minify), copyStaticFiles(minify)]);
-copyAssets(minify);
-console.log("Build complete: dist/");
+await buildAll(minify);
+console.log(`Build complete: ${activeBrowsers.map((b) => `dist/${b}/`).join(", ")}`);
 
 if (isWatch) {
   console.log("Watching for changes...");
@@ -113,8 +155,8 @@ if (isWatch) {
   let debounceTimer;
   const rebuild = async () => {
     try {
-      await Promise.all([bundleAll(false), copyStaticFiles(false)]);
-      console.log(`[${new Date().toLocaleTimeString()}] Rebuilt`);
+      await buildAll(false);
+      console.log(`[${new Date().toLocaleTimeString()}] Rebuilt (${activeBrowsers.join(" + ")})`);
     } catch (e) {
       console.error("Build error:", e);
     }

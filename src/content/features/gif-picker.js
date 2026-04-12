@@ -1,4 +1,5 @@
 // GIF Picker feature - insert GIFs into comments
+import browser from "webextension-polyfill";
 import {
   GIF_API_URL,
   GIF_DEBOUNCE_DELAY,
@@ -181,11 +182,11 @@ function debounce(func, delay) {
 // Fetch image via service worker to bypass page CSP restrictions.
 // GitHub's CSP blocks giphy.com images, but allows blob: URLs.
 function proxyLoadImage(imgEl, url, generation) {
-  chrome.runtime.sendMessage(
-    { action: MESSAGE_ACTIONS.FETCH_IMAGE, url },
-    (response) => {
+  browser.runtime
+    .sendMessage({ action: MESSAGE_ACTIONS.FETCH_IMAGE, url })
+    .then((response) => {
       if (generation !== renderGeneration) return;
-      if (chrome.runtime.lastError || !response || response.error) return;
+      if (!response || response.error) return;
       const binary = atob(response.data);
       const bytes = new Uint8Array(binary.length);
       for (let i = 0; i < binary.length; i++) {
@@ -195,8 +196,8 @@ function proxyLoadImage(imgEl, url, generation) {
       const blobUrl = URL.createObjectURL(blob);
       blobUrls.add(blobUrl);
       imgEl.src = blobUrl;
-    },
-  );
+    })
+    .catch(() => {});
 }
 
 function revokeBlobUrls() {
@@ -582,7 +583,7 @@ function injectStyles() {
   const link = document.createElement("link");
   link.id = STYLE_IDS.GIF_PICKER;
   link.rel = "stylesheet";
-  link.href = chrome.runtime.getURL("content/styles/gif-picker.css");
+  link.href = browser.runtime.getURL("content/styles/gif-picker.css");
   document.head.appendChild(link);
 }
 

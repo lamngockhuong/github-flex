@@ -1,4 +1,5 @@
 // Image Lightbox feature - click to zoom images with pan support
+import browser from "webextension-polyfill";
 
 const STYLE_ID = "ghflex-image-lightbox-styles";
 const MIN_IMAGE_SIZE = 200;
@@ -305,7 +306,7 @@ export const imageLightbox = {
     const link = document.createElement("link");
     link.id = STYLE_ID;
     link.rel = "stylesheet";
-    link.href = chrome.runtime.getURL("content/styles/image-lightbox.css");
+    link.href = browser.runtime.getURL("content/styles/image-lightbox.css");
     document.head.appendChild(link);
   },
 

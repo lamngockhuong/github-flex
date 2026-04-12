@@ -1,4 +1,5 @@
 // Service worker for GitHub Flex
+import browser from "webextension-polyfill";
 import { MESSAGE_ACTIONS } from "../shared/constants.js";
 
 const ALLOWED_IMAGE_HOSTS = ["giphy.com", "giphycdn.com"];
@@ -15,28 +16,28 @@ function isAllowedImageUrl(url) {
   }
 }
 
-chrome.runtime.onInstalled.addListener((details) => {
+browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     console.log("[GitHub Flex] Installed");
   } else if (details.reason === "update") {
     console.log(
       "[GitHub Flex] Updated to",
-      chrome.runtime.getManifest().version,
+      browser.runtime.getManifest().version,
     );
   }
 });
 
 // Proxy image fetches to bypass page CSP restrictions.
 // Uses base64 encoding to avoid the ~300% overhead of JSON number arrays.
-chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
-  if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
+// Returns a Promise (required by webextension-polyfill, works on both Chrome and Firefox).
+browser.runtime.onMessage.addListener((message, _sender) => {
+  if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return;
 
   if (!isAllowedImageUrl(message.url)) {
-    sendResponse({ error: "URL not allowed" });
-    return true;
+    return Promise.resolve({ error: "URL not allowed" });
   }
 
-  fetch(message.url)
+  return fetch(message.url)
     .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.arrayBuffer();
@@ -47,11 +48,9 @@ chrome.runtime.onMessage.addListener((message, _sender, sendResponse) => {
       for (let i = 0; i < bytes.length; i++) {
         binary += String.fromCharCode(bytes[i]);
       }
-      sendResponse({ data: btoa(binary) });
+      return { data: btoa(binary) };
     })
     .catch((error) => {
-      sendResponse({ error: error.message });
+      return { error: error.message };
     });
-
-  return true;
 });

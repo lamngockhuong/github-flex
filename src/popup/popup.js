@@ -1,3 +1,4 @@
+import browser from "webextension-polyfill";
 import { getSettings, saveSetting } from "../shared/storage.js";
 
 const SETTING_KEYS = [
@@ -12,7 +13,7 @@ const SETTING_KEYS = [
 function applyI18n() {
   document.querySelectorAll("[data-i18n]").forEach((el) => {
     const key = el.getAttribute("data-i18n");
-    const message = chrome.i18n.getMessage(key);
+    const message = browser.i18n.getMessage(key);
     if (message) el.textContent = message;
   });
 }
@@ -32,7 +33,7 @@ async function init() {
   }
 
   // Set version from manifest
-  const version = chrome.runtime.getManifest().version;
+  const version = browser.runtime.getManifest().version;
   const versionEl = document.getElementById("app-version");
   if (versionEl) {
     versionEl.textContent = `v${version}`;
