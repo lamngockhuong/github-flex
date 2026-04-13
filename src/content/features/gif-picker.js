@@ -244,8 +244,10 @@ async function fetchGifs(query) {
 
 // Create GIF button for toolbar
 function createGifButton() {
+  const buttonId = `ghflex-gif-btn-${crypto.randomUUID()}`;
   const button = document.createElement("button");
   button.type = "button";
+  button.id = buttonId;
   button.className = "ghflex-gif-btn";
   button.setAttribute("aria-label", "Add GIF");
   setTrustedHTML(
@@ -260,6 +262,15 @@ function createGifButton() {
       <path d="M15.5 15H16.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </svg>`,
   );
+
+  const tooltip = document.createElement("tool-tip");
+  tooltip.setAttribute("for", buttonId);
+  tooltip.setAttribute("popover", "manual");
+  tooltip.setAttribute("data-direction", "s");
+  tooltip.setAttribute("data-type", "label");
+  tooltip.className = "sr-only position-absolute";
+  tooltip.textContent = "Add GIF";
+  button.appendChild(tooltip);
 
   return button;
 }
