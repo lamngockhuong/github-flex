@@ -2,7 +2,7 @@
 
 [![Version](https://img.shields.io/github/v/release/lamngockhuong/github-flex)](https://github.com/lamngockhuong/github-flex/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/ckoaleikkahfopnnggfnhmlgekgihdgj)
+[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc)
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
 
 A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface with productivity features.
@@ -32,7 +32,7 @@ A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface wi
 
 ### Chrome Web Store
 
-Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-flex/ckoaleikkahfopnnggfnhmlgekgihdgj).
+Install directly from the [Chrome Web Store](https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc).
 
 ### Firefox Add-ons
 

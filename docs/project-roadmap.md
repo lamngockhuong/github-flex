@@ -9,10 +9,12 @@
 ## Project Milestones
 
 ### Phase 1: Core Features ✓ (Complete)
+
 **Timeline:** Jan 2026 - Mar 2026
 **Status:** 100% Complete
 
 #### Delivered Features
+
 - [x] Wide Layout - Full viewport expansion (36 LOC)
 - [x] Table Expand - Expandable tables with fullscreen (211 LOC)
 - [x] Image Lightbox - Click-to-zoom with pan (316 LOC)
@@ -20,6 +22,7 @@
 - [x] Zen Mode - Sidebar toggle with Alt+M (295 LOC)
 
 #### Technical Achievements
+
 - [x] Manifest V3 architecture (Chrome 88+, Firefox 112+)
 - [x] webextension-polyfill for cross-browser API compatibility
 - [x] Feature toggle pattern (enable/disable without reload)
@@ -31,15 +34,18 @@
 - [x] Test framework setup (Vitest)
 
 #### External Services
+
 - [x] Cloudflare Worker GIF API proxy deployed
 - [x] Vietnamese text normalization (50+ mappings)
 - [x] URL validation and markdown sanitization
 
 ### Phase 2: Polish & Release 🔄 (Current)
+
 **Timeline:** Apr 2026 - May 2026
 **Status:** 40% Complete
 
 #### Documentation
+
 - [x] Project overview and PDR (`project-overview-pdr.md`)
 - [x] Codebase summary (`codebase-summary.md`)
 - [x] Code standards (`code-standards.md`)
@@ -50,6 +56,7 @@
 - [ ] Contributor guidelines
 
 #### Testing
+
 - [ ] Unit tests for storage utilities
 - [ ] Unit tests for GIF picker (URL validation, sanitization)
 - [ ] Unit tests for table expand state persistence
@@ -59,6 +66,7 @@
 - [ ] Target: 70% code coverage
 
 #### Quality Assurance
+
 - [ ] Cross-browser testing (Chrome 88+, latest stable)
 - [ ] Performance profiling (memory, CPU on active pages)
 - [ ] Accessibility audit (keyboard navigation, ARIA)
@@ -66,6 +74,7 @@
 - [ ] Code review checklist finalization
 
 #### Packaging
+
 - [ ] Icon design (16/48/128px)
 - [ ] Promo images (1400x560, 440x280, 920x680, 640x400)
 - [ ] Screenshot capture (5 images showing features)
@@ -73,40 +82,43 @@
 - [ ] Chrome Web Store listing draft
 
 #### Release Preparation
+
 - [ ] Version bump to 1.0.0
 - [ ] Changelog finalization
 - [ ] Build production bundle (`pnpm build`)
 - [ ] Zip dist/ for Web Store upload
 - [ ] Test sideloaded production build
 
-### Phase 3: Store Launches 📅 (In Progress)
-**Timeline:** May 2026
-**Status:** 50% Complete (Chrome Web Store submitted, Firefox Add-ons pending)
+### Phase 3: Store Launches 🔄 (In Progress)
+
+**Timeline:** Apr - May 2026
+**Status:** 70% Complete (Chrome Web Store published, Firefox Add-ons published)
 
 #### Pre-Launch Checklist
+
 - [x] Chrome Web Store developer account ($5 one-time fee)
 - [x] Firefox Add-ons developer account (free)
 - [x] Verify manifest requirements (both browsers)
 - [x] Prepare Chrome Web Store listing
-- [ ] Prepare Firefox Add-ons listing:
-  - [ ] Name, summary, description
-  - [ ] Category: Developer Tools
-  - [ ] Screenshots and promotional images
-  - [ ] Permissions justification
+- [x] Prepare Firefox Add-ons listing
 - [x] Upload screenshots and promo images
-- [ ] Set visibility: Public (both stores)
-- [ ] Submit for review (both stores)
+- [x] Set visibility: Public (both stores)
+- [x] Submit for review (both stores)
+- [x] Chrome Web Store published: <https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc>
+- [x] Firefox Add-ons published: <https://addons.mozilla.org/en-US/firefox/addon/github-flex/>
 
 #### Launch Activities
-- [ ] Monitor review status (Chrome: 1-3 days, Firefox: 3-5 days typical)
-- [ ] Address any rejection feedback (from either store)
+
+- [x] Monitor review status (Chrome: 1-3 days, Firefox: 3-5 days typical)
+- [x] Address any rejection feedback (from either store)
 - [ ] Announce on:
-  - [ ] GitHub repository README (add Firefox badge)
+  - [x] GitHub repository README (Chrome + Firefox badges)
   - [ ] Personal blog/portfolio
   - [ ] Relevant communities (r/chrome, r/firefox, r/github)
   - [ ] Twitter/X (if applicable)
 
 #### Post-Launch Monitoring
+
 - [ ] Track install count (Chrome Developer Dashboard + Firefox Add-ons)
 - [ ] Monitor user reviews (both stores)
 - [ ] Address critical bugs within 24 hours
@@ -114,10 +126,12 @@
 - [ ] Collect feature requests (GitHub Issues)
 
 ### Phase 4: Enhancements & Community 📅 (Planned)
+
 **Timeline:** Jun 2026 - Q3 2026
 **Status:** 0% Complete
 
 #### High-Priority Features
+
 - [ ] Keyboard shortcuts configuration UI
 - [ ] Settings export/import (JSON file)
 - [ ] Theme support (detect GitHub dark mode, adjust styles)
@@ -126,6 +140,7 @@
 - [ ] File tree pinning (sticky file navigation)
 
 #### Performance Optimizations
+
 - [ ] Intersection Observer for lazy feature activation
 - [ ] Virtual scrolling for GIF picker results
 - [ ] Throttled MutationObserver on large pages
@@ -133,6 +148,7 @@
 - [ ] Compressed CSS (minification)
 
 #### Developer Experience
+
 - [ ] Automated E2E tests (Puppeteer/Playwright)
 - [ ] CI/CD pipeline (GitHub Actions)
   - [ ] Lint on PR
@@ -143,6 +159,7 @@
 - [ ] Issue templates (bug report, feature request)
 
 #### Community Building
+
 - [ ] Publish on Product Hunt
 - [ ] Create demo video (YouTube)
 - [ ] Write blog post: "Building a Chrome Extension in 2026"
@@ -150,22 +167,26 @@
 - [ ] Consider sponsorships/donations (GitHub Sponsors)
 
 ### Phase 5: Platform Expansion 📅 (Future)
+
 **Timeline:** Q4 2026+
 **Status:** 0% Complete
 
 #### Safari Support (if feasible)
+
 - [ ] Evaluate Safari Extension requirements
 - [ ] Convert manifest format (Safari Web Extensions use different API)
 - [ ] Test on Safari Technology Preview
 - [ ] Submit to App Store (requires Apple Developer account)
 
 #### GitHub Enterprise
+
 - [ ] Add host_permissions configuration UI
 - [ ] Allow users to specify custom GitHub domains
 - [ ] Test on GitHub Enterprise demo
 - [ ] Document enterprise setup
 
 #### Mobile (low priority)
+
 - [ ] Investigate Chrome Android extension support
 - [ ] If supported: port and test
 - [ ] If not: consider bookmarklet alternative
@@ -173,9 +194,11 @@
 ## Version History
 
 ### v1.0.0 (Target: May 2026)
+
 **First Public Release**
 
 Features:
+
 - Wide Layout
 - Table Expand with fullscreen
 - Image Lightbox with zoom/pan
@@ -183,12 +206,14 @@ Features:
 - Zen Mode with Alt+M shortcut
 
 Technical:
+
 - Chrome Manifest V3
 - Vanilla JavaScript (zero runtime dependencies)
 - Feature toggle architecture
 - Cloudflare Worker GIF API proxy
 
 ### v0.1.0 (Mar 2026)
+
 **Internal Alpha**
 
 - Initial feature implementations
@@ -198,6 +223,7 @@ Technical:
 ## Feature Backlog
 
 ### Under Consideration
+
 | Feature          | Priority | Complexity | Est. LOC | Notes                           |
 | ---------------- | -------- | ---------- | -------- | ------------------------------- |
 | Code folding     | High     | Medium     | ~150     | Collapse long code blocks       |
@@ -210,6 +236,7 @@ Technical:
 | Link preview     | Low      | High       | ~400     | Hover to preview linked issues  |
 
 ### Rejected Features
+
 | Feature                         | Reason                               |
 | ------------------------------- | ------------------------------------ |
 | GitHub API integration          | Requires auth, increases complexity  |
@@ -221,6 +248,7 @@ Technical:
 ## Success Metrics
 
 ### v1.0 Launch Goals (3 months post-release)
+
 - **Installs:** 100+ weekly active users (combined Chrome + Firefox)
 - **Rating:** 4.0+ stars (both Chrome Web Store and Firefox Add-ons)
 - **Reviews:** 10+ positive reviews (combined)
@@ -230,6 +258,7 @@ Technical:
 - **Cross-browser Parity:** Chrome and Firefox versions feature-complete
 
 ### v1.1 Growth Goals (6 months post-release)
+
 - **Installs:** 500+ weekly active users
 - **Rating:** 4.5+ stars
 - **Contributions:** 3+ external contributors
@@ -237,6 +266,7 @@ Technical:
 - **Documentation:** Complete user guide with video tutorials
 
 ### Long-Term Vision (1+ year)
+
 - **Installs:** 5,000+ weekly active users
 - **Platforms:** Chrome, Firefox (established), Safari (if feasible)
 - **Community:** Active GitHub Discussions or Discord
@@ -267,18 +297,21 @@ Technical:
 ## Dependencies
 
 ### Critical External Services
+
 - **Cloudflare Worker:** GIF API proxy
   - Uptime: 99.9% (Cloudflare SLA)
   - Cost: Free tier (100k requests/day)
   - Backup: None (feature degrades gracefully)
 
 ### Development Tools
+
 - **esbuild:** Bundler (MIT license)
 - **Biome:** Linter/formatter (MIT license)
 - **Vitest:** Test framework (MIT license)
 - **pnpm:** Package manager (MIT license)
 
 ### Platform Dependencies
+
 - **Chrome:** Browser engine (frequent updates, breaking changes possible)
 - **Firefox:** Browser engine (frequent updates, breaking changes possible)
 - **GitHub:** Host platform (DOM structure changes frequently)
@@ -288,6 +321,7 @@ Technical:
 ## Communication Plan
 
 ### Release Announcements
+
 - **GitHub Releases:** Detailed changelog with links
 - **Chrome Web Store:** "What's New" section
 - **Firefox Add-ons:** "What's New" section
@@ -295,11 +329,13 @@ Technical:
 - **Social Media:** Twitter/X, LinkedIn, Reddit (r/chrome, r/firefox, r/github)
 
 ### User Feedback Channels
+
 - **Primary:** GitHub Issues (bug reports, feature requests)
 - **Secondary:** Store reviews (Chrome Web Store + Firefox Add-ons - monitor and respond)
 - **Future:** GitHub Discussions or Discord (community support)
 
 ### Developer Updates
+
 - **Changelog:** Updated with every release (`docs/project-changelog.md`)
 - **Commit Messages:** Conventional Commits format
 - **PRs:** Require description, linked issue, screenshots (if UI change)
@@ -307,18 +343,21 @@ Technical:
 ## Maintenance Commitment
 
 ### Active Development (Current - Q3 2026)
+
 - **Frequency:** Weekly updates
 - **Bug Fixes:** Within 48 hours for critical, 1 week for non-critical
 - **Feature Requests:** Triage within 1 week, implement based on priority
 - **Support:** Respond to issues within 24 hours
 
 ### Maintenance Mode (Q4 2026+)
+
 - **Frequency:** Monthly or as-needed updates
 - **Bug Fixes:** Within 1 week for critical, best-effort for non-critical
 - **Feature Requests:** Community contributions welcome, slower review
 - **Support:** Best-effort response within 1 week
 
 ### Long-Term Sustainability
+
 - **Open Source:** MIT license, forks encouraged
 - **Documentation:** Comprehensive guides for contributors
 - **Succession Plan:** Identify co-maintainers by end of 2026
@@ -327,6 +366,7 @@ Technical:
 ## Lessons Learned (Ongoing)
 
 ### What Worked Well
+
 - **Feature Toggle Pattern:** Easy to enable/disable without reload
 - **Vanilla JavaScript:** Zero dependencies, minimal bundle size
 - **MutationObserver:** Reliable SPA navigation detection
@@ -334,6 +374,7 @@ Technical:
 - **Biome:** Fast linting/formatting, better than ESLint+Prettier
 
 ### Challenges Faced
+
 - **GitHub DOM Changes:** Frequent updates require regular testing
 - **GIF Picker Complexity:** 575 LOC for single feature (too large?)
 - **Vietnamese Normalization:** Manual mapping tedious, consider library
@@ -341,6 +382,7 @@ Technical:
 - **Documentation Timing:** Should have written docs during development, not after
 
 ### Future Improvements
+
 - **Automated Testing:** Invest in E2E tests early
 - **Incremental Documentation:** Update docs with each feature
 - **Modular GIF Picker:** Split into API, UI, state modules
@@ -350,9 +392,11 @@ Technical:
 ## Contributing
 
 ### How to Contribute
+
 Currently in pre-release phase. Contributions welcome after v1.0 launch.
 
 **Future Contribution Areas:**
+
 - Bug fixes (always welcome)
 - Performance improvements
 - New features (discuss in issue first)
@@ -360,6 +404,7 @@ Currently in pre-release phase. Contributions welcome after v1.0 launch.
 - Translations (i18n - currently English, Japanese, Vietnamese)
 
 **Contributor Expectations:**
+
 - Follow code standards in `docs/code-standards.md`
 - Write tests for new features
 - Update documentation
@@ -369,8 +414,8 @@ Currently in pre-release phase. Contributions welcome after v1.0 launch.
 ## Contact
 
 **Maintainer:** Lam Ngoc Khuong
-**Repository:** https://github.com/lamngockhuong/github-flex
-**Issues:** https://github.com/lamngockhuong/github-flex/issues
+**Repository:** <https://github.com/lamngockhuong/github-flex>
+**Issues:** <https://github.com/lamngockhuong/github-flex/issues>
 **License:** MIT
 
 ## Changelog
@@ -380,6 +425,7 @@ See `docs/project-changelog.md` for detailed version history.
 ## Appendix: Technical Debt
 
 ### Known Issues (Non-Blocking)
+
 - GIF Picker module too large (575 LOC) - consider splitting
 - No E2E tests - manual testing only
 - Vietnamese normalization hardcoded - investigate libraries
@@ -387,6 +433,7 @@ See `docs/project-changelog.md` for detailed version history.
 - CSS not minified - bundle size could be smaller
 
 ### Improvement Opportunities
+
 - Use Intersection Observer for performance (lazy feature activation)
 - Cache GIF search results (reduce API calls)
 - Implement virtual scrolling for large result sets
@@ -394,6 +441,7 @@ See `docs/project-changelog.md` for detailed version history.
 - Create performance benchmarks for regression detection
 
 ### Technical Choices to Revisit
+
 - localStorage for state - consider chrome.storage.local for sync issues
 - MutationObserver debounce timing - tune based on user feedback
 - GIF API proxy - evaluate alternatives if Cloudflare limits hit
@@ -402,5 +450,5 @@ See `docs/project-changelog.md` for detailed version history.
 
 ---
 
-**Last Updated:** 2026-04-08
+**Last Updated:** 2026-04-13
 **Next Review:** 2026-05-01 (post-documentation phase)
