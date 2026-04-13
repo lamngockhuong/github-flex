@@ -40,11 +40,17 @@ class SidebarToggle {
     for (const selector of SIDEBAR_SELECTORS) {
       const element = document.querySelector(selector);
       if (element) {
-        // Skip .Layout-sidebar if it's a left navigation sidebar (not metadata)
+        // Left-positioned sidebars are navigation, not metadata - hiding them breaks page navigation
         if (selector === ".Layout-sidebar") {
           const parent = element.closest(".Layout");
           if (parent?.classList.contains("Layout--sidebarPosition-start")) {
-            continue; // Skip left-positioned sidebars (navigation)
+            continue;
+          }
+        }
+        // PR diff pages use PaneWrapper for split diff view, not metadata - hiding it breaks layout
+        if (selector === SIDEBAR_SELECTORS[0]) {
+          if (element.className.includes("DiffComparisonViewer")) {
+            continue;
           }
         }
         return element;
