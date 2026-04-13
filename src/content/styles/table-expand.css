@@ -76,7 +76,10 @@
 
 .ghflex-table-fullscreen-content {
   padding: 24px;
+  padding-top: 60px; /* Space for close button */
   min-height: 100%;
+  width: fit-content;
+  min-width: 100%;
 }
 
 .ghflex-table-fullscreen-close {
@@ -112,7 +115,7 @@
 .ghflex-table-fullscreen-table {
   width: max-content !important;
   max-width: none !important;
-  margin: 0 auto;
+  margin: 0 !important;
   border-collapse: collapse;
   border-spacing: 0;
 }
