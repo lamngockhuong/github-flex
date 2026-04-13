@@ -18,7 +18,7 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 │  │  │  │  • Table Expand                            │  │  │  │
 │  │  │  │  • Image Lightbox                          │  │  │  │
 │  │  │  │  • GIF Picker                              │  │  │  │
-│  │  │  │  • Zen Mode                                │  │  │  │
+│  │  │  │  • Sidebar Toggle                          │  │  │  │
 │  │  │  └────────────────────────────────────────────┘  │  │  │
 │  │  └──────────────────────────────────────────────────┘  │  │
 │  └────────────────────────────────────────────────────────┘  │
@@ -47,17 +47,17 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 #### Service Worker / Background Script
 
 ```
-src/background/service-worker.js (13 LOC)
-├── Purpose: Extension lifecycle management
-├── Runs: On extension install/update
+src/background/service-worker.js (110 LOC)
+├── Purpose: Extension lifecycle management, context menu, proxy services
+├── Runs: On extension install/update, on message from content script
 ├── Capabilities:
 │   ├── Listen to browser.runtime events (webextension-polyfill)
-│   ├── No DOM access
+│   ├── Context menu management (quick links to Website, GitHub, Issues, Changelog)
+│   ├── GIF API proxy (bypass Firefox CSP for API requests)
+│   ├── Image proxy (base64 encode GIF images for CSP bypass)
 │   └── Chrome: 30-second limit; Firefox: longer timeout
 ├── Chrome Mode: service_worker (MV3)
 └── Firefox Mode: background.scripts (MV3)
-
-Current Usage: Minimal (logs install events)
 ```
 
 **Why minimal?** Manifest V3 background contexts are event-driven, not long-running. All feature logic lives in content scripts for direct DOM access. **Browser Abstraction:** webextension-polyfill maps `browser.runtime` to `chrome.runtime` on Chrome, providing unified API.
@@ -65,7 +65,7 @@ Current Usage: Minimal (logs install events)
 #### Content Script (Injected)
 
 ```
-src/content/main.js (55 LOC)
+src/content/main.js (70 LOC)
 ├── Injection: document_idle on github.com/* and gist.github.com/*
 ├── Responsibilities:
 │   ├── Load settings from chrome.storage.sync
@@ -86,7 +86,7 @@ src/content/main.js (55 LOC)
 #### Popup UI (User Settings)
 
 ```
-src/popup/popup.{html,css,js} (26 LOC JS)
+src/popup/popup.{html,css,js} (43 LOC JS)
 ├── Trigger: User clicks extension icon
 ├── UI: 5 checkboxes (one per feature)
 ├── Flow:
@@ -129,7 +129,8 @@ main.js
   ├─► tableExpand     ─┤
   ├─► imageLightbox   ─┼─► shared/storage.js
   ├─► gifPicker       ─┤    shared/constants.js
-  └─► zenMode         ─┘    shared/icons.js
+  └─► sidebarToggle   ─┘    shared/icons.js
+                            shared/dom.js
 
 (No horizontal dependencies between features)
 ```
@@ -145,7 +146,7 @@ browser.storage.sync (webextension-polyfill)
     ├── tableExpand: true
     ├── imageLightbox: true
     ├── gifPicker: true
-    └── zenMode: true
+    └── sidebarToggle: true
 ```
 
 **Characteristics:**
@@ -442,7 +443,7 @@ function escapeMarkdown(text) {
 - Enables rate limiting (prevents abuse)
 - Single point of control for API changes
 
-### Zen Mode
+### Sidebar Toggle
 
 **Architecture:** Keyboard shortcut + localStorage persistence
 

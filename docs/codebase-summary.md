@@ -2,12 +2,12 @@
 
 ## Overview
 
-GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) enhancing GitHub's interface with 5 productivity features. Built with vanilla JavaScript, zero runtime dependencies, ~576 LOC total.
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) enhancing GitHub's interface with 5 productivity features. Built with vanilla JavaScript, zero runtime dependencies, ~2100 LOC total.
 
 ## Project Statistics
 
 - **Total Files:** ~15 source files
-- **Total LOC:** ~576 lines
+- **Total LOC:** ~2100 lines
 - **Languages:** JavaScript (ES Modules), CSS, HTML
 - **Bundle Output:** 3 entry points (early-inject, content script, popup)
 - **External Services:** 1 (GIF API proxy)
@@ -18,30 +18,31 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) enhancin
 github-flex/
 ├── src/
 │   ├── background/
-│   │   └── service-worker.js          # Extension lifecycle events (13 LOC)
+│   │   └── service-worker.js          # Extension lifecycle, context menu, image proxy (110 LOC)
 │   ├── content/
-│   │   ├── main.js                    # Feature initialization (55 LOC)
-│   │   ├── early-inject.js            # FOUC prevention (document_start)
+│   │   ├── main.js                    # Feature initialization (70 LOC)
+│   │   ├── early-inject.js            # FOUC prevention (document_start) (17 LOC)
 │   │   ├── features/
-│   │   │   ├── wide-layout.js         # Full viewport width (21 LOC)
-│   │   │   ├── table-expand.js        # Expandable tables (211 LOC)
-│   │   │   ├── image-lightbox.js      # Image zoom overlay (316 LOC)
-│   │   │   ├── gif-picker.js          # GIF search modal (575 LOC)
-│   │   │   └── zen-mode.js            # Sidebar toggle (295 LOC)
+│   │   │   ├── wide-layout.js         # Full viewport width (20 LOC)
+│   │   │   ├── table-expand.js        # Expandable tables (227 LOC)
+│   │   │   ├── image-lightbox.js      # Image zoom overlay (318 LOC)
+│   │   │   ├── gif-picker.js          # GIF search modal (656 LOC)
+│   │   │   └── sidebar-toggle.js      # Sidebar toggle with Alt+M (335 LOC)
 │   │   └── styles/
 │   │       ├── wide-layout.css
 │   │       ├── table-expand.css
 │   │       ├── image-lightbox.css
 │   │       ├── gif-picker.css
-│   │       └── zen-mode.css
+│   │       └── sidebar-toggle.css
 │   ├── popup/
 │   │   ├── popup.html                 # Settings UI
 │   │   ├── popup.css                  # Popup styles
-│   │   └── popup.js                   # Toggle handlers (26 LOC)
+│   │   └── popup.js                   # Toggle handlers (43 LOC)
 │   └── shared/
-│       ├── constants.js               # Settings defaults, keys (32 LOC)
-│       ├── storage.js                 # chrome.storage wrapper (35 LOC)
-│       └── icons.js                   # SVG icon strings
+│       ├── constants.js               # Settings defaults, keys, external links (57 LOC)
+│       ├── storage.js                 # chrome.storage wrapper (33 LOC)
+│       ├── dom.js                     # Safe DOM utilities for Firefox compliance (18 LOC)
+│       └── icons.js                   # SVG icon strings (21 LOC)
 ├── scripts/
 │   └── build.js                       # esbuild bundler (93 LOC)
 ├── _locales/
@@ -114,10 +115,12 @@ github-flex/
   DOM ready → load settings → render checkboxes → listen for changes → save to storage
   ```
 
-#### 3. Service Worker (`src/background/service-worker.js`)
+#### 4. Service Worker (`src/background/service-worker.js`)
 
 - **When:** Extension install/update AND on message from content script
-- **Install/Update:** Logs extension lifecycle events
+- **Install/Update:** Logs extension lifecycle events, creates context menus
+- **Context Menu:** Adds quick links (Website, GitHub, Report Issue, Changelog) to extension icon right-click menu
+- **GIF API Proxy:** Intercepts FETCH_GIFS messages, proxies requests to Cloudflare Worker (Firefox CSP bypass)
 - **Image Proxy:** Intercepts FETCH_IMAGE messages, fetches GIF images, encodes as base64
   - Validates URLs (only giphy.com/giphycdn.com allowed)
   - Returns base64-encoded image data to bypass GitHub CSP
@@ -196,7 +199,7 @@ export const featureName = {
 - **API:** `GET https://github-gifs.aldilaff6545.workers.dev/?q={query}`
 - **Proxy:** Service worker fetches images, encodes base64, content script creates blob URLs
 
-#### Zen Mode (`zen-mode.js`)
+#### Sidebar Toggle (`sidebar-toggle.js`)
 
 - **Pattern:** Class toggle + keyboard shortcut
 - **Mechanism:**
@@ -236,10 +239,27 @@ GIF_DEBOUNCE_DELAY = 300;
 // Service worker message actions
 MESSAGE_ACTIONS = {
   FETCH_IMAGE: "fetchImage",
+  FETCH_GIFS: "fetchGifs",
 };
 
 // Toolbar detection selector
 TOOLBAR_SELECTOR = '.toolbar, [role="toolbar"], markdown-toolbar';
+
+// External links for context menu and popup
+EXT_LINKS = {
+  website: "https://github-flex.khuong.dev",
+  github: "https://github.com/lamngockhuong/github-flex",
+  issues: "https://github.com/lamngockhuong/github-flex/issues",
+  changelog: "https://github.com/lamngockhuong/github-flex/blob/main/CHANGELOG.md",
+};
+
+// Context menu items
+CONTEXT_MENU_ITEMS = [
+  { key: "website", title: "Website" },
+  { key: "github", title: "GitHub" },
+  { key: "issues", title: "Report Issue" },
+  { key: "changelog", title: "Changelog" },
+];
 ```
 
 #### `shared/storage.js`
@@ -270,7 +290,28 @@ SVG icon strings exported as constants:
 - `FULLSCREEN_ICON` - Square frame (table fullscreen)
 - `GIF_ICON` - "GIF" text badge
 - `COLLAPSE_ICON` - Contract arrows (table collapse)
-- `ZEN_ICON` - Eye symbol (zen mode)
+- `SIDEBAR_ICON` - Eye symbol (sidebar toggle)
+
+#### `shared/dom.js`
+
+Safe DOM utilities to avoid innerHTML (flagged by Firefox add-on linter):
+
+```javascript
+const parser = new DOMParser();
+const cache = new Map();
+
+// Parse trusted HTML string and set as element content.
+// Caches parsed results for repeated strings (e.g. icon toggles).
+// Use only with static/hardcoded HTML - never with external data.
+export function setTrustedHTML(element, html) {
+  let template = cache.get(html);
+  if (!template) {
+    template = parser.parseFromString(html, "text/html").body;
+    cache.set(html, template);
+  }
+  element.replaceChildren(...template.cloneNode(true).childNodes);
+}
+```
 
 ### Build System
 
@@ -326,12 +367,12 @@ User clicks checkbox in popup
 - Table Expand: on/off
 - Image Lightbox: on/off
 - GIF Picker: on/off
-- Zen Mode: on/off
+- Sidebar Toggle: on/off
 
 **localStorage (per-page state):**
 
 - Table Expand: `ghflex-table-expand-state` → `{ "pathname:table-0": true, ... }`
-- Zen Mode: `ghflex-zen-hidden` → `true` | `false`
+- Sidebar Toggle: `ghflex-sidebar-hidden` → `true` | `false`
 
 ### GitHub SPA Navigation
 
@@ -631,10 +672,11 @@ pnpm dev         # Watch mode (auto-rebuild)
 
 ### Permissions Justification
 
-| Permission       | Purpose                | Scope                            |
-| ---------------- | ---------------------- | -------------------------------- |
-| storage          | Save user settings     | chrome.storage.sync API          |
-| host_permissions | Inject content scripts | github.com, gist.github.com only |
+| Permission       | Purpose                       | Scope                            |
+| ---------------- | ----------------------------- | -------------------------------- |
+| storage          | Save user settings            | chrome.storage.sync API          |
+| contextMenus     | Quick links on extension icon | Extension action context menu    |
+| host_permissions | Inject content scripts        | github.com, gist.github.com only |
 
 ## Known Limitations
 
@@ -682,19 +724,22 @@ pnpm dev         # Watch mode (auto-rebuild)
 
 ## Code Ownership
 
-| Component      | Primary File      | LOC | Complexity                      |
-| -------------- | ----------------- | --- | ------------------------------- |
-| GIF Picker     | gif-picker.js     | 575 | High (API, state, sanitization) |
-| Image Lightbox | image-lightbox.js | 316 | Medium (transforms, events)     |
-| Zen Mode       | zen-mode.js       | 295 | Medium (keyboard, persistence)  |
-| Table Expand   | table-expand.js   | 211 | Medium (state, observer)        |
-| Build System   | build.js          | 93  | Low (straightforward esbuild)   |
-| Main Entry     | main.js           | 55  | Low (initialization logic)      |
-| Wide Layout    | wide-layout.js    | 36  | Low (CSS-only)                  |
-| Storage        | storage.js        | 35  | Low (wrapper functions)         |
-| Constants      | constants.js      | 32  | Low (static config)             |
-| Popup          | popup.js          | 26  | Low (checkbox handlers)         |
-| Service Worker | service-worker.js | 13  | Low (minimal logic)             |
+| Component      | Primary File      | LOC | Complexity                          |
+| -------------- | ----------------- | --- | ----------------------------------- |
+| GIF Picker     | gif-picker.js     | 656 | High (API, state, sanitization)     |
+| Sidebar Toggle | sidebar-toggle.js | 335 | Medium (keyboard, persistence)      |
+| Image Lightbox | image-lightbox.js | 318 | Medium (transforms, events)         |
+| Table Expand   | table-expand.js   | 227 | Medium (state, observer)            |
+| Build System   | build.js          | 178 | Medium (esbuild, multi-browser)     |
+| Service Worker | service-worker.js | 110 | Medium (context menu, image proxy)  |
+| Main Entry     | main.js           | 70  | Low (initialization logic)          |
+| Constants      | constants.js      | 57  | Low (static config, external links) |
+| Popup          | popup.js          | 43  | Low (checkbox handlers)             |
+| Storage        | storage.js        | 33  | Low (wrapper functions)             |
+| Icons          | icons.js          | 21  | Low (SVG strings)                   |
+| Wide Layout    | wide-layout.js    | 20  | Low (CSS-only)                      |
+| DOM Utils      | dom.js            | 18  | Low (Firefox compliance)            |
+| Early Inject   | early-inject.js   | 17  | Low (FOUC prevention)               |
 
 Most complex feature: **GIF Picker** (API integration, Vietnamese normalization, security validation)
 Simplest feature: **Wide Layout** (pure CSS)
