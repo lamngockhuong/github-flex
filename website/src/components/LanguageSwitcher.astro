@@ -10,9 +10,9 @@ const alternateLocales = getAlternateLocales(locale);
 const currentPath = Astro.url.pathname;
 ---
 
-<div class="relative">
+<div class="relative" data-lang-switcher>
   <button
-    id="lang-toggle"
+    data-lang-toggle
     class="flex items-center gap-1 px-2 py-1 text-sm text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors rounded-lg hover:bg-card-light dark:hover:bg-card-dark"
     aria-label="Change language"
   >
@@ -23,8 +23,8 @@ const currentPath = Astro.url.pathname;
   </button>
 
   <div
-    id="lang-menu"
-    class="hidden absolute right-0 mt-2 py-2 w-32 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg"
+    data-lang-menu
+    class="hidden absolute right-0 mt-2 py-2 w-32 bg-card-light dark:bg-card-dark border border-border-light dark:border-border-dark rounded-lg shadow-lg z-50"
   >
     <!-- Current locale -->
     <span class="block px-4 py-2 text-sm text-primary dark:text-primary-light font-medium">
@@ -43,15 +43,23 @@ const currentPath = Astro.url.pathname;
 </div>
 
 <script>
-  const toggle = document.getElementById('lang-toggle');
-  const menu = document.getElementById('lang-menu');
+  document.querySelectorAll('[data-lang-switcher]').forEach(switcher => {
+    const toggle = switcher.querySelector('[data-lang-toggle]');
+    const menu = switcher.querySelector('[data-lang-menu]');
 
-  toggle?.addEventListener('click', (e) => {
-    e.stopPropagation();
-    menu?.classList.toggle('hidden');
+    toggle?.addEventListener('click', (e) => {
+      e.stopPropagation();
+      // Close other menus first
+      document.querySelectorAll('[data-lang-menu]').forEach(m => {
+        if (m !== menu) m.classList.add('hidden');
+      });
+      menu?.classList.toggle('hidden');
+    });
   });
 
   document.addEventListener('click', () => {
-    menu?.classList.add('hidden');
+    document.querySelectorAll('[data-lang-menu]').forEach(menu => {
+      menu.classList.add('hidden');
+    });
   });
 </script>

@@ -19,6 +19,13 @@ pnpm lint:firefox     # Lint Firefox build with web-ext
 pnpm lint:fix         # Auto-fix linting issues
 pnpm test             # Run tests
 pnpm test:watch       # Run tests in watch mode
+
+# Website (landing page)
+cd website
+pnpm install          # Install website dependencies
+pnpm dev              # Dev server at localhost:4321
+pnpm build            # Production build → dist/
+pnpm preview          # Preview production build
 ```
 
 ## Loading the Extension
@@ -73,6 +80,14 @@ Custom esbuild script (`scripts/build.js`) bundles content script and popup JS t
 - `manifest.json`: Extension manifest (source, paths updated in dist)
 - `src/shared/constants.js`: Default settings, storage keys, CSS IDs
 - `src/shared/storage.js`: Cached settings getter/setter with sync storage
+
+### Website (Landing Page)
+
+- **Framework:** Astro 5.x + Tailwind CSS 4.x
+- **i18n:** Static routes (`/`, `/ja/`, `/vi/`) with `useTranslations()` helper
+- **Components:** `website/src/components/` (Header, Footer, LandingPage, etc.)
+- **Hosting:** Cloudflare Pages at https://github-flex.khuong.dev
+- **Constants:** `website/src/constants.ts` (store URLs, GitHub URL)
 
 ## Adding a New Feature
 

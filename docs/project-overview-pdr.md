@@ -3,10 +3,11 @@
 ## Project Identity
 
 **Name:** GitHub Flex
-**Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox)
+**Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox) + Landing Page
 **Version:** 0.0.6
 **License:** MIT
 **Repository:** <https://github.com/lamngockhuong/github-flex>
+**Website:** <https://github-flex.khuong.dev>
 
 ## Product Vision
 
@@ -213,6 +214,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - Documentation
 - Test coverage
 - Chrome Web Store submission
+- Landing page (Astro + i18n) ✓
 
 ### Phase 3: Enhancements (Future)
 
@@ -234,6 +236,12 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - Chrome 88+ or Firefox 112+ (Manifest V3)
 - webextension-polyfill 0.12.0+
 - Cloudflare Worker at <https://github-gifs.aldilaff6545.workers.dev>
+
+### Website (Landing Page)
+
+- Astro 5.x (SSG framework)
+- Tailwind CSS 4.x (styling)
+- Cloudflare Pages (hosting)
 
 ### System
 

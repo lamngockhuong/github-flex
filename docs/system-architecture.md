@@ -1062,6 +1062,83 @@ localStorage data persists (ghflex-* keys remain on GitHub.com)
 No cleanup needed (pure client-side, no server state)
 ```
 
+## Website Architecture
+
+### Landing Page (Astro)
+
+**URL:** https://github-flex.khuong.dev
+**Framework:** Astro 5.x + Tailwind CSS 4.x
+**Hosting:** Cloudflare Pages
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                    Landing Page (SSG)                        │
+│                                                              │
+│  ┌────────────┐  ┌─────────────┐  ┌───────────────────────┐  │
+│  │   Header   │  │   i18n      │  │   Theme Toggle        │  │
+│  │ (nav/logo) │  │ (EN/JA/VI)  │  │ (dark/light)          │  │
+│  └────────────┘  └─────────────┘  └───────────────────────┘  │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │                    LandingPage                         │  │
+│  │  • Hero (install buttons)                              │  │
+│  │  • Features (5 feature cards)                          │  │
+│  │  • Screenshots (extension demo)                        │  │
+│  │  • How It Works (3 steps)                              │  │
+│  │  • FAQ (accordion)                                     │  │
+│  └────────────────────────────────────────────────────────┘  │
+│                                                              │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │                     Footer                             │  │
+│  │  • CTA (Chrome/Firefox buttons)                        │  │
+│  │  • Links (Product, Resources, Install)                 │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### i18n Architecture
+
+**Pattern:** Static route per locale (no runtime negotiation)
+
+```
+/           → English (default)
+/ja/        → Japanese
+/vi/        → Vietnamese
+```
+
+**Translation Flow:**
+```
+pages/index.astro
+  └── imports useTranslations('en')
+        └── returns t object with nested keys
+              └── t.header.features → "Features"
+
+pages/ja/index.astro
+  └── imports useTranslations('ja')
+        └── t.header.features → "機能"
+```
+
+**File Structure:**
+- `i18n/translations.ts` - All locale strings (EN/JA/VI)
+- `i18n/utils.ts` - `useTranslations(locale)` helper
+- `constants.ts` - Shared URLs (Chrome Store, Firefox, GitHub)
+
+### Build & Deploy
+
+**Commands:**
+```bash
+cd website
+pnpm install     # Install dependencies
+pnpm dev         # Dev server (localhost:4321)
+pnpm build       # SSG build → dist/
+pnpm preview     # Preview production build
+```
+
+**CI/CD:** GitHub Actions → Cloudflare Pages
+- Trigger: Push to `main` branch
+- Build: `pnpm build` in `website/` directory
+- Output: Static HTML to Cloudflare edge network
+
 ## Monitoring & Observability
 
 ### No Built-In Telemetry
