@@ -123,6 +123,9 @@ Enhance GitHub's interface with productivity features: wide layout, table expand
 **storage:**
 Store user preferences (feature on/off toggles) and sync settings across devices via Chrome Sync.
 
+**contextMenus:**
+Display quick links (Website, GitHub, Report Issue, Changelog) when right-clicking on the extension icon in the toolbar for easy access to support resources.
+
 **host_permissions - github.com, gist.github.com:**
 Inject content scripts to modify GitHub's interface (add wide layout, lightbox, GIF picker, sidebar toggle features). Also used to fetch GIF images via background service worker to bypass GitHub's Content Security Policy.
 
