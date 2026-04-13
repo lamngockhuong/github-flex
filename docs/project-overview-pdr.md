@@ -73,7 +73,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - **Success Metric:** GIF insertion <5 seconds from search to markdown output
 - **CSP Bypass:** Service worker fetches images with base64 encoding; content script creates blob: URLs (allowed by CSP)
 
-#### FR5: Zen Mode
+#### FR5: Sidebar Toggle
 
 - **Description:** Toggle sidebar visibility for focused reading
 - **Features:**
@@ -207,7 +207,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - Table Expand ✓
 - Image Lightbox ✓
 - GIF Picker ✓
-- Zen Mode ✓
+- Sidebar Toggle ✓
 
 ### Phase 2: Polish (Current)
 
