@@ -50,6 +50,31 @@ github-flex/
 │   └── vi/messages.json               # i18n strings (Vietnamese)
 ├── icons/                             # Extension icons (16/48/128px)
 ├── manifest.json                      # Chrome extension config
+├── website/                           # Landing page (Astro)
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── Header.astro           # Navigation with i18n
+│   │   │   ├── Footer.astro           # CTA + links
+│   │   │   ├── LandingPage.astro      # Main sections
+│   │   │   ├── ThemeToggle.astro      # Dark/light mode
+│   │   │   ├── LanguageSwitcher.astro # EN/JA/VI switcher
+│   │   │   └── BackToTop.astro        # Scroll button
+│   │   ├── i18n/
+│   │   │   ├── index.ts               # i18n exports
+│   │   │   ├── translations.ts        # EN/JA/VI strings
+│   │   │   └── utils.ts               # useTranslations helper
+│   │   ├── layouts/
+│   │   │   └── BaseLayout.astro       # HTML wrapper
+│   │   ├── pages/
+│   │   │   ├── index.astro            # English (default)
+│   │   │   ├── ja/index.astro         # Japanese
+│   │   │   └── vi/index.astro         # Vietnamese
+│   │   ├── styles/
+│   │   │   └── global.css             # Tailwind + theme vars
+│   │   └── constants.ts               # Store URLs, GitHub URL
+│   ├── public/                        # Static assets (logos, screenshots)
+│   ├── astro.config.mjs               # Astro + Tailwind config
+│   └── package.json                   # Website dependencies
 ├── package.json
 ├── biome.json                         # Linter config
 └── vitest.config.js                   # Test config
