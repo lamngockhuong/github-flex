@@ -2,7 +2,7 @@
 
 ## High-Level Overview
 
-GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration—pure client-side enhancement. Uses webextension-polyfill to abstract browser-specific APIs (chrome.* vs browser.*).
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration—pure client-side enhancement. Uses webextension-polyfill to abstract browser-specific APIs (chrome._vs browser._).
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -11,7 +11,7 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 │  ┌────────────────────────────────────────────────────────┐  │
 │  │              github.com (SPA)                          │  │
 │  │  ┌──────────────────────────────────────────────────┐  │  │
-│  │  │         Content Script (main.js)                │  │  │
+│  │  │         Content Script (main.js)                 │  │  │
 │  │  │  ┌────────────────────────────────────────────┐  │  │  │
 │  │  │  │ Feature Modules (5 independent units)      │  │  │  │
 │  │  │  │  • Wide Layout                             │  │  │  │
@@ -29,7 +29,7 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 │  └────────────┘  │   .sync      │  │ (lifecycle)          │  │
 │                  └──────────────┘  └──────────────────────┘  │
 │                                                              │
-│         webextension-polyfill (browser.* wrapper)           │
+│         webextension-polyfill (browser.* wrapper)            │
 └──────────────────────────────────────────────────────────────┘
                            │
                            │ GIF Search (HTTPS)
@@ -45,6 +45,7 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 ### 1. Extension Components
 
 #### Service Worker / Background Script
+
 ```
 src/background/service-worker.js (13 LOC)
 ├── Purpose: Extension lifecycle management
@@ -62,6 +63,7 @@ Current Usage: Minimal (logs install events)
 **Why minimal?** Manifest V3 background contexts are event-driven, not long-running. All feature logic lives in content scripts for direct DOM access. **Browser Abstraction:** webextension-polyfill maps `browser.runtime` to `chrome.runtime` on Chrome, providing unified API.
 
 #### Content Script (Injected)
+
 ```
 src/content/main.js (55 LOC)
 ├── Injection: document_idle on github.com/* and gist.github.com/*
@@ -74,6 +76,7 @@ src/content/main.js (55 LOC)
 ```
 
 **Execution Flow:**
+
 1. GitHub page loads
 2. Browser (Chrome/Firefox) injects main.js at document_idle
 3. main.js fetches settings via webextension-polyfill
@@ -81,6 +84,7 @@ src/content/main.js (55 LOC)
 5. Listens for browser.storage.onChanged events (polyfilled from chrome.storage)
 
 #### Popup UI (User Settings)
+
 ```
 src/popup/popup.{html,css,js} (26 LOC JS)
 ├── Trigger: User clicks extension icon
@@ -100,6 +104,7 @@ src/popup/popup.{html,css,js} (26 LOC JS)
 Each feature is a self-contained module with zero cross-dependencies.
 
 #### Module Interface
+
 ```javascript
 {
   enabled: boolean,         // Current activation state
@@ -117,6 +122,7 @@ Each feature is a self-contained module with zero cross-dependencies.
 ```
 
 #### Dependency Graph
+
 ```
 main.js
   ├─► wideLayout      ─┐
@@ -131,6 +137,7 @@ main.js
 ### 3. Data Storage Architecture
 
 #### Browser Storage Sync (Global Settings)
+
 ```
 browser.storage.sync (webextension-polyfill)
 └── "settings" (object)
@@ -142,6 +149,7 @@ browser.storage.sync (webextension-polyfill)
 ```
 
 **Characteristics:**
+
 - Syncs across devices (Chrome/Firefox signed-in users)
 - 100KB quota (we use ~0.1KB)
 - Async API (Promise-based)
@@ -149,6 +157,7 @@ browser.storage.sync (webextension-polyfill)
 - webextension-polyfill abstracts chrome.storage.sync to browser.storage.sync
 
 **Access Pattern:**
+
 ```
 Popup writes → browser.storage.sync.set() [polyfilled]
                         ↓
@@ -160,6 +169,7 @@ Popup writes → browser.storage.sync.set() [polyfilled]
 ```
 
 #### LocalStorage (Per-Page State)
+
 ```
 localStorage (per-origin, github.com)
 ├── "ghflex-zen-hidden": "true"
@@ -167,6 +177,7 @@ localStorage (per-origin, github.com)
 ```
 
 **Characteristics:**
+
 - Per-page ephemeral state (doesn't sync)
 - Synchronous API
 - Survives page reload, not browser restart
@@ -237,6 +248,7 @@ Debounced processTables() runs (100ms delay)
 ```
 
 **State Key Pattern:** `pathname:table-index`
+
 - Example: `/user/repo/blob/main/README.md:table-0`
 - Ensures state isolation per-page
 
@@ -368,6 +380,7 @@ insertGif(gifData) or copyGifUrl(gifData)
 
 **Vietnamese Normalization:**
 Uses regex-based character mapping instead of split/map/join for better performance:
+
 ```javascript
 const VIET_REGEX = new RegExp(`[${Object.keys(VIET_MAP).join("")}]`, "g");
 function normalizeVietnamese(text) {
@@ -376,6 +389,7 @@ function normalizeVietnamese(text) {
 ```
 
 **Vietnamese Normalization:**
+
 ```javascript
 const vietnameseMap = {
   "tieng viet": "tiếng việt",
@@ -394,15 +408,23 @@ function normalizeVietnamese(text) {
 ```
 
 **Security Validation:**
+
 ```javascript
 function isValidGifUrl(url) {
   try {
     const parsed = new URL(url);
-    const allowedHosts = ["giphy.com", "media.giphy.com", "media0.giphy.com",
-                          "media1.giphy.com", "media2.giphy.com", "media3.giphy.com",
-                          "media4.giphy.com"];
-    return allowedHosts.some(host =>
-      parsed.hostname === host || parsed.hostname.endsWith(`.${host}`)
+    const allowedHosts = [
+      "giphy.com",
+      "media.giphy.com",
+      "media0.giphy.com",
+      "media1.giphy.com",
+      "media2.giphy.com",
+      "media3.giphy.com",
+      "media4.giphy.com",
+    ];
+    return allowedHosts.some(
+      (host) =>
+        parsed.hostname === host || parsed.hostname.endsWith(`.${host}`),
     );
   } catch {
     return false;
@@ -415,6 +437,7 @@ function escapeMarkdown(text) {
 ```
 
 **Why Cloudflare Worker?**
+
 - Hides Giphy API key (not exposed in extension source)
 - Enables rate limiting (prevents abuse)
 - Single point of control for API changes
@@ -458,6 +481,7 @@ Checks if sidebar exists on new page
 ```
 
 **State Persistence:**
+
 ```javascript
 // Save
 localStorage.setItem("ghflex-zen-hidden", String(isHidden));
@@ -488,6 +512,7 @@ const isHidden = stored === "true";
 ```
 
 **Why Not browser.runtime.sendMessage?**
+
 - browser.storage provides built-in persistence
 - onChanged event broadcasts to all tabs automatically
 - No need to maintain active message ports
@@ -510,6 +535,7 @@ wideLayout.js (imports nothing)
 ```
 
 **Why No Circular Dependencies?**
+
 - Easier to reason about data flow
 - Prevents initialization order issues
 - Simplifies testing (mock shared utilities)
@@ -527,7 +553,7 @@ document.body.addEventListener("click", (e) => {
 });
 
 // ✗ Bad: Must re-bind on every DOM change
-document.querySelectorAll(".ghflex-gif-btn").forEach(btn => {
+document.querySelectorAll(".ghflex-gif-btn").forEach((btn) => {
   btn.addEventListener("click", handleGifButtonClick);
 });
 ```
@@ -544,8 +570,8 @@ this.observer = new MutationObserver((mutations) => {
 });
 
 this.observer.observe(document.body, {
-  childList: true,  // Watch for added/removed nodes
-  subtree: true,    // Watch entire tree, not just direct children
+  childList: true, // Watch for added/removed nodes
+  subtree: true, // Watch entire tree, not just direct children
 });
 ```
 
@@ -556,11 +582,13 @@ this.observer.observe(document.body, {
 ### Threat Model
 
 **In Scope:**
+
 - XSS via unsanitized user input (GIF titles, search queries)
 - MITM on GIF API requests (enforced HTTPS)
 - Malicious URLs in generated markdown (domain whitelist)
 
 **Out of Scope:**
+
 - GitHub account compromise (extension has no auth)
 - Browser/OS vulnerabilities (Chrome's responsibility)
 - Phishing (extension doesn't collect credentials)
@@ -568,6 +596,7 @@ this.observer.observe(document.body, {
 ### Defense Layers
 
 #### 1. Content Security Policy
+
 ```
 Default Manifest V3 CSP (no overrides):
 - script-src 'self'
@@ -578,6 +607,7 @@ Default Manifest V3 CSP (no overrides):
 #### 2. Input Validation (GIF Picker)
 
 **URL Whitelist:**
+
 ```javascript
 const ALLOWED_HOSTS = [
   "giphy.com",
@@ -588,8 +618,8 @@ const ALLOWED_HOSTS = [
 
 function isValidGifUrl(url) {
   const parsed = new URL(url); // Throws if invalid
-  return ALLOWED_HOSTS.some(host =>
-    parsed.hostname === host || parsed.hostname.endsWith(`.${host}`)
+  return ALLOWED_HOSTS.some(
+    (host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`),
   );
 }
 ```
@@ -597,6 +627,7 @@ function isValidGifUrl(url) {
 **Why Whitelist Over Blacklist?** Blacklists can be bypassed (`evil.giphy.com.evil.com`). Whitelist explicitly allows only known-good domains.
 
 **Markdown Sanitization:**
+
 ```javascript
 function escapeMarkdown(text) {
   return text.replace(/[[\]()]/g, "\\$&");
@@ -611,18 +642,21 @@ function escapeMarkdown(text) {
 #### 3. API Proxy (Cloudflare Worker)
 
 **Direct Giphy API Call (Insecure):**
+
 ```javascript
 // ✗ API key exposed in extension source
 fetch(`https://api.giphy.com/v1/gifs/search?api_key=SECRET&q=${query}`);
 ```
 
 **Proxied Through Worker (Secure):**
+
 ```javascript
 // ✓ API key stored in Cloudflare Worker environment variable
 fetch(`https://github-gifs.aldilaff6545.workers.dev?search=${query}`);
 ```
 
 **Worker Responsibilities:**
+
 - Store API key securely (not in client code)
 - Rate limit requests (prevent abuse)
 - Validate responses (filter inappropriate content if needed)
@@ -636,25 +670,25 @@ GitHub's CSP blocks external images from giphy.com. The extension bypasses this 
 // Background (Service Worker / Background Scripts) intercepts FETCH_IMAGE messages
 browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return false;
-  
+
   if (!isAllowedImageUrl(message.url)) {
     sendResponse({ error: "URL not allowed" });
     return true;
   }
-  
-  fetch(message.url)  // Background context can fetch any URL
-    .then(response => response.arrayBuffer())
-    .then(buffer => {
+
+  fetch(message.url) // Background context can fetch any URL
+    .then((response) => response.arrayBuffer())
+    .then((buffer) => {
       // Encode as base64 to avoid ~300% JSON overhead
       sendResponse({ data: btoa(binary) });
     })
-    .catch(error => sendResponse({ error: error.message }));
+    .catch((error) => sendResponse({ error: error.message }));
 });
 
 // Content Script creates blob URL (allowed by CSP)
 const blob = new Blob([atob(response.data)], { type: "image/gif" });
 const blobUrl = URL.createObjectURL(blob);
-imgEl.src = blobUrl;  // CSP allows blob: URLs
+imgEl.src = blobUrl; // CSP allows blob: URLs
 ```
 
 **Whitelist Validation:** Only `giphy.com` and `giphycdn.com` hostnames allowed (see `isAllowedImageUrl()`). **Browser API:** webextension-polyfill maps browser.runtime to chrome.runtime on Chrome.
@@ -662,6 +696,7 @@ imgEl.src = blobUrl;  // CSP allows blob: URLs
 #### 5. Permissions Minimization
 
 **Requested Permissions:**
+
 ```json
 {
   "permissions": ["storage"],
@@ -670,6 +705,7 @@ imgEl.src = blobUrl;  // CSP allows blob: URLs
 ```
 
 **Not Requested:**
+
 - `tabs`: Don't need tab information
 - `activeTab`: Only inject on GitHub, not all tabs
 - `webRequest`: Don't intercept network traffic
@@ -678,16 +714,16 @@ imgEl.src = blobUrl;  // CSP allows blob: URLs
 
 ### Attack Surface Analysis
 
-| Attack Vector            | Risk     | Mitigation                                   |
-| ------------------------ | -------- | -------------------------------------------- |
+| Attack Vector            | Risk     | Mitigation                                                                     |
+| ------------------------ | -------- | ------------------------------------------------------------------------------ |
 | Malicious GIF URL        | Medium   | Service worker validates (giphy/giphycdn only), content script validates again |
-| XSS via GIF title        | Medium   | Escape markdown syntax (brackets, parens)    |
-| MITM on GIF image fetch  | Low      | Service worker enforces HTTPS only           |
-| MITM on API              | Low      | HTTPS enforced, certificate validation       |
-| Stale async callbacks    | Low      | renderGeneration counter prevents old results |
-| Extension update hijack  | Low      | Chrome Web Store signed updates              |
-| localStorage poisoning   | Low      | Validate/sanitize on read, graceful fallback |
-| chrome.storage quota DoS | Very Low | We use <1% of quota                          |
+| XSS via GIF title        | Medium   | Escape markdown syntax (brackets, parens)                                      |
+| MITM on GIF image fetch  | Low      | Service worker enforces HTTPS only                                             |
+| MITM on API              | Low      | HTTPS enforced, certificate validation                                         |
+| Stale async callbacks    | Low      | renderGeneration counter prevents old results                                  |
+| Extension update hijack  | Low      | Chrome Web Store signed updates                                                |
+| localStorage poisoning   | Low      | Validate/sanitize on read, graceful fallback                                   |
+| chrome.storage quota DoS | Very Low | We use <1% of quota                                                            |
 
 ## Performance Architecture
 
@@ -698,6 +734,7 @@ imgEl.src = blobUrl;  // CSP allows blob: URLs
 **Minification:** Production only (dev uses unminified for debugging)
 
 **Current Sizes:**
+
 - content/main.js: ~15KB minified
 - popup/popup.js: ~3KB minified
 - Total CSS: ~8KB uncompressed
@@ -707,6 +744,7 @@ imgEl.src = blobUrl;  // CSP allows blob: URLs
 ### Runtime Optimization
 
 #### Lazy Initialization
+
 ```javascript
 // ✓ Features only activate when enabled
 for (const [key, feature] of Object.entries(features)) {
@@ -716,10 +754,11 @@ for (const [key, feature] of Object.entries(features)) {
 }
 
 // ✗ All features initialize regardless of settings
-features.forEach(feature => feature.initialize());
+features.forEach((feature) => feature.initialize());
 ```
 
 #### Debounced DOM Processing
+
 ```javascript
 // ✓ Batch multiple mutations into single process
 this.observer = new MutationObserver(() => {
@@ -732,15 +771,17 @@ this.observer = new MutationObserver(() => this.process());
 ```
 
 #### Event Delegation
+
 ```javascript
 // ✓ One listener for all current + future elements
 document.body.addEventListener("click", handler);
 
 // ✗ N listeners for N elements (memory leak on SPA nav)
-elements.forEach(el => el.addEventListener("click", handler));
+elements.forEach((el) => el.addEventListener("click", handler));
 ```
 
 #### Cached Settings
+
 ```javascript
 let cachedSettings = null;
 
@@ -758,6 +799,7 @@ export async function getSettings() {
 ### Memory Management
 
 #### Cleanup on disable()
+
 ```javascript
 disable() {
   // Remove listeners
@@ -784,6 +826,7 @@ disable() {
 ### Principle: Fail Gracefully
 
 **User-Facing Errors:**
+
 ```javascript
 // API failure → Show message, don't crash
 try {
@@ -796,6 +839,7 @@ try {
 ```
 
 **Internal Errors:**
+
 ```javascript
 // State corruption → Fallback to defaults
 try {
@@ -813,6 +857,7 @@ try {
 
 **Format:** `[GitHub Flex] {message}`
 **Levels:**
+
 - `console.log`: Successful initialization
 - `console.warn`: Non-critical issues (feature disabled due to missing DOM)
 - `console.error`: Failures that affect functionality
@@ -853,6 +898,7 @@ Manifest Processing (browser-specific)
 ```
 
 **Build Commands:**
+
 - `pnpm build` — Build both Chrome and Firefox
 - `pnpm build:chrome` — Chrome only
 - `pnpm build:firefox` — Firefox only
@@ -864,6 +910,7 @@ pnpm dev  # Starts file watcher for both browsers (unminified)
 ```
 
 **Watched Paths:**
+
 - `src/**/*`
 - `manifest.json`
 - `scripts/build.js` (rebuild on build script change)
@@ -882,6 +929,7 @@ pnpm dev  # Starts file watcher for both browsers (unminified)
 **Coverage:** @vitest/coverage-v8 (Istanbul-compatible)
 
 ### Test Structure
+
 ```
 src/features/gif-picker.js
 src/features/gif-picker.test.js  ← Colocated tests
@@ -892,17 +940,20 @@ src/features/gif-picker.test.js  ← Colocated tests
 ### Test Patterns
 
 **Unit Tests (current priority):**
+
 - Storage utilities (`getSettings`, `saveSettings`)
 - URL validation (`isValidGifUrl`)
 - Markdown sanitization (`escapeMarkdown`)
 - Vietnamese normalization (`normalizeVietnamese`)
 
 **Integration Tests (future):**
+
 - Feature enable/disable lifecycle
 - MutationObserver behavior
 - Event delegation
 
 **E2E Tests (out of scope for v1):**
+
 - Selenium/Puppeteer on actual GitHub pages
 - Too brittle (GitHub DOM changes frequently)
 
@@ -910,30 +961,25 @@ src/features/gif-picker.test.js  ← Colocated tests
 
 ### Distribution
 
-**Current:** Manual sideloading
-**Future:** Chrome Web Store
+**Chrome Web Store:** <https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc>
+**Firefox Add-ons:** <https://addons.mozilla.org/en-US/firefox/addon/github-flex/>
 
-#### Sideload Process
-1. Build: `pnpm build`
-2. Open: `chrome://extensions/`
-3. Enable: Developer mode
-4. Load: "Load unpacked" → select `dist/`
+#### From Source (Sideload)
 
-#### Chrome Web Store Process (future)
 1. Build: `pnpm build`
-2. Zip: `dist/` folder
-3. Upload: Chrome Developer Dashboard
-4. Review: Google approval (1-3 days)
-5. Publish: Available to users
+2. Chrome: `chrome://extensions/` → Enable Developer mode → Load unpacked → select `dist/chrome/`
+3. Firefox: `about:debugging#/runtime/this-firefox` → Load Temporary Add-on → select file in `dist/firefox/`
 
 ### Version Management
 
 **Semantic Versioning:**
+
 - MAJOR: Breaking changes (manifest updates, feature removal)
 - MINOR: New features (new enhancement)
 - PATCH: Bug fixes (no new functionality)
 
 **Example:**
+
 - `1.0.0`: Initial release
 - `1.1.0`: Add new feature (e.g., code folding)
 - `1.0.1`: Fix GIF picker bug
@@ -943,6 +989,7 @@ src/features/gif-picker.test.js  ← Colocated tests
 ### Current Constraints
 
 **Not Issues Yet (v1.0):**
+
 - Performance on pages with >100 tables
 - Memory usage in tabs open for >1 hour
 - API rate limits (Cloudflare Worker has limits)
@@ -950,11 +997,13 @@ src/features/gif-picker.test.js  ← Colocated tests
 ### Future Scaling Strategies
 
 **If Performance Degrades:**
+
 1. **Intersection Observer:** Only process visible tables, lazy-load others
 2. **Virtual Scrolling:** For GIF picker results (>100 GIFs)
 3. **Throttled Observers:** Increase debounce delay on large pages
 
 **If API Limits Hit:**
+
 1. **Client-Side Caching:** Cache GIF search results (localStorage)
 2. **Request Batching:** Send fewer, larger requests
 3. **CDN:** Host popular GIFs directly (avoid API calls)
@@ -962,6 +1011,7 @@ src/features/gif-picker.test.js  ← Colocated tests
 ## Extension Lifecycle
 
 ### Installation Flow
+
 ```
 User installs extension (from Chrome Web Store or Firefox Add-ons)
         ↓
@@ -985,6 +1035,7 @@ Content script initializes features via webextension-polyfill
 ```
 
 ### Update Flow
+
 ```
 Browser detects new version in store (Chrome Web Store / Firefox Add-ons)
         ↓
@@ -998,6 +1049,7 @@ Users see new features/fixes without manual action
 ```
 
 ### Uninstallation
+
 ```
 User removes extension (from Chrome/Firefox)
         ↓
@@ -1017,27 +1069,32 @@ No cleanup needed (pure client-side, no server state)
 **Privacy First:** Zero data collection, no analytics, no tracking.
 
 **Debugging:**
+
 - Users check: Browser console (F12 on GitHub page)
 - Logs prefixed: `[GitHub Flex]`
 - Errors logged: console.error with stack traces
 
 **Issue Reporting:**
-- GitHub Issues: https://github.com/lamngockhuong/github-flex/issues
+
+- GitHub Issues: <https://github.com/lamngockhuong/github-flex/issues>
 - Include: Browser version, console logs, reproduction steps
 
 ## Future Architecture Enhancements
 
 ### Planned (v1.1)
+
 - **Configurable Shortcuts:** Allow users to customize keyboard shortcuts
 - **Settings Export/Import:** JSON file for sharing configurations
 - **Performance Dashboard:** Show memory/CPU usage in popup
 
 ### Considered (v2.0)
+
 - **GitHub Enterprise:** Add host_permissions for custom domains
 - **Theme Sync:** Detect GitHub theme (light/dark) and adjust extension styles
 - **More Locales:** Expand language support beyond English, Japanese, and Vietnamese
 
 ### Out of Scope
+
 - **Backend Services:** Extension remains fully client-side
 - **GitHub API Integration:** DOM manipulation only, no authenticated requests
 - **Mobile Support:** Chrome Android doesn't support extensions
