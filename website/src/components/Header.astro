@@ -1,0 +1,110 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+import { GITHUB_URL } from '../constants';
+import ThemeToggle from './ThemeToggle.astro';
+import LanguageSwitcher from './LanguageSwitcher.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+
+const navItems = [
+  { href: '#features', label: t.header.features },
+  { href: '#screenshots', label: t.header.screenshots },
+  { href: '#how-it-works', label: t.header.howItWorks },
+  { href: '#faq', label: t.header.faq },
+];
+---
+
+<header class="fixed top-0 left-0 right-0 z-50 bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-md border-b border-border-light dark:border-border-dark">
+  <nav class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16">
+      <!-- Logo -->
+      <a href={locale === 'en' ? '/' : `/${locale}/`} class="flex items-center gap-2">
+        <img src="/logo.svg" alt="GitHub Flex" class="w-8 h-8" />
+        <span class="font-bold text-lg text-primary dark:text-primary-light">GitHub Flex</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <div class="hidden md:flex items-center gap-6">
+        {navItems.map(item => (
+          <a
+            href={item.href}
+            class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors"
+          >
+            {item.label}
+          </a>
+        ))}
+        <a
+          href="{GITHUB_URL}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors"
+        >
+          {t.header.github}
+        </a>
+        <LanguageSwitcher locale={locale} />
+        <ThemeToggle />
+      </div>
+
+      <!-- Mobile Menu Button -->
+      <div class="flex md:hidden items-center gap-2">
+        <LanguageSwitcher locale={locale} />
+        <ThemeToggle />
+        <button
+          id="mobile-menu-btn"
+          class="p-2 text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light"
+          aria-label="Toggle menu"
+          aria-expanded="false"
+        >
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Navigation -->
+    <div id="mobile-menu" class="hidden md:hidden pb-4">
+      <div class="flex flex-col gap-2">
+        {navItems.map(item => (
+          <a
+            href={item.href}
+            class="px-4 py-2 text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light hover:bg-card-light dark:hover:bg-card-dark rounded-lg transition-colors"
+          >
+            {item.label}
+          </a>
+        ))}
+        <a
+          href="{GITHUB_URL}"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="px-4 py-2 text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light hover:bg-card-light dark:hover:bg-card-dark rounded-lg transition-colors"
+        >
+          {t.header.github}
+        </a>
+      </div>
+    </div>
+  </nav>
+</header>
+
+<script>
+  const menuBtn = document.getElementById('mobile-menu-btn');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  menuBtn?.addEventListener('click', () => {
+    const isHidden = mobileMenu?.classList.toggle('hidden');
+    menuBtn.setAttribute('aria-expanded', String(!isHidden));
+  });
+
+  // Close menu when clicking a link
+  mobileMenu?.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+      mobileMenu.classList.add('hidden');
+      menuBtn?.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>

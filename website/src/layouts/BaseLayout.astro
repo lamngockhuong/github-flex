@@ -1,0 +1,94 @@
+---
+import '../styles/global.css';
+import { getLocalizedPath, getLocales, type Locale } from '../i18n';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import BackToTop from '../components/BackToTop.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  locale?: Locale;
+}
+
+const {
+  title,
+  description = 'Browser extension with wide layout, expandable tables/images, GIF picker, and sidebar toggle for GitHub.',
+  image = '/og-image.svg',
+  locale = (Astro.currentLocale || 'en') as Locale,
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const currentPath = Astro.url.pathname;
+const locales = getLocales();
+
+const ogLocaleMap: Record<Locale, string> = {
+  en: 'en_US',
+  vi: 'vi_VN',
+  ja: 'ja_JP',
+};
+---
+
+<!doctype html>
+<html lang={locale} class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- SEO -->
+    <title>{title} | GitHub Flex</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- hreflang for i18n -->
+    {locales.map(lang => (
+      <link
+        rel="alternate"
+        hreflang={lang}
+        href={new URL(getLocalizedPath(currentPath, lang), Astro.site)}
+      />
+    ))}
+    <link rel="alternate" hreflang="x-default" href={new URL(getLocalizedPath(currentPath, 'en'), Astro.site)} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:title" content={`${title} | GitHub Flex`} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL(image, Astro.site)} />
+    <meta property="og:locale" content={ogLocaleMap[locale]} />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={`${title} | GitHub Flex`} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={new URL(image, Astro.site)} />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+    <!-- Theme -->
+    <meta name="theme-color" content="#8957e5" />
+  </head>
+  <body
+    class="bg-background-light dark:bg-background-dark text-text dark:text-text-dark min-h-screen font-sans"
+  >
+    <Header locale={locale} />
+    <main>
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <BackToTop />
+    <script is:inline>
+      const theme =
+        localStorage.getItem('theme') ||
+        (window.matchMedia('(prefers-color-scheme: dark)').matches
+          ? 'dark'
+          : 'light');
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    </script>
+  </body>
+</html>

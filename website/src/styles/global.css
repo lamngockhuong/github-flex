@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+/* Enable class-based dark mode */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* GitHub Flex brand colors - purple to match extension icon */
+  --color-primary: #8957e5;
+  --color-primary-hover: #7c3aed;
+  --color-primary-light: #a78bfa;
+  --color-secondary: #0969DA;
+  --color-secondary-light: #58A6FF;
+
+  --color-background-light: #F6F8FA;
+  --color-background-dark: #0D1117;
+  --color-card-light: #FFFFFF;
+  --color-card-dark: #161B22;
+
+  --color-text: #24292F;
+  --color-text-muted: #57606A;
+  --color-text-dark: #C9D1D9;
+  --color-text-muted-dark: #8B949E;
+
+  --color-border-light: #D0D7DE;
+  --color-border-dark: #30363D;
+
+  --color-success: #238636;
+  --color-success-light: #3FB950;
+  --color-danger: #CF222E;
+  --color-danger-light: #F85149;
+
+  /* Font family */
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans", Helvetica, Arial, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-light);
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-border-dark);
+}

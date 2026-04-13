@@ -1,0 +1,124 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800">
+  <defs>
+    <linearGradient id="bgGradient" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="50%" style="stop-color:#161b22"/>
+      <stop offset="100%" style="stop-color:#3d1f6d"/>
+    </linearGradient>
+    <radialGradient id="purpleGlow" cx="70%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#8957e5;stop-opacity:0.15"/>
+      <stop offset="100%" style="stop-color:#8957e5;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="800" fill="url(#bgGradient)"/>
+  <rect width="1280" height="800" fill="url(#purpleGlow)"/>
+
+  <!-- Visual: Sidebar toggle demonstration -->
+  <g transform="translate(80, 80)">
+    <!-- Before: With sidebar -->
+    <g transform="translate(0, 0)">
+      <text x="220" y="0" font-family="system-ui, sans-serif" font-size="16" fill="#8b949e" text-anchor="middle">With Sidebar</text>
+      <rect x="0" y="20" width="440" height="280" rx="8" fill="#161b22" stroke="#30363d" stroke-width="2"/>
+      <!-- Header -->
+      <rect x="0" y="20" width="440" height="36" rx="8" fill="#21262d"/>
+      <rect x="0" y="48" width="440" height="8" fill="#21262d"/>
+
+      <!-- Sidebar -->
+      <rect x="300" y="70" width="130" height="220" rx="4" fill="#21262d" stroke="#30363d" stroke-width="1"/>
+      <text x="365" y="95" font-family="system-ui, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">About</text>
+      <rect x="310" y="105" width="110" height="8" rx="2" fill="#30363d"/>
+      <rect x="310" y="118" width="90" height="8" rx="2" fill="#30363d"/>
+      <text x="365" y="150" font-family="system-ui, sans-serif" font-size="11" fill="#8b949e" text-anchor="middle">Languages</text>
+      <rect x="310" y="160" width="100" height="8" rx="2" fill="#30363d"/>
+      <rect x="310" y="173" width="80" height="8" rx="2" fill="#30363d"/>
+
+      <!-- Main content (narrow) -->
+      <rect x="15" y="70" width="275" height="220" rx="4" fill="#0d1117"/>
+      <rect x="30" y="90" width="200" height="12" rx="2" fill="#30363d"/>
+      <rect x="30" y="110" width="240" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="125" width="220" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="140" width="235" height="8" rx="2" fill="#30363d"/>
+    </g>
+
+    <!-- Arrow and keyboard shortcut -->
+    <g transform="translate(490, 140)">
+      <path d="M0 0 L60 0 L50 -10 M60 0 L50 10" fill="none" stroke="#a371f7" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- Alt+M badge -->
+      <rect x="5" y="25" width="55" height="24" rx="4" fill="#8957e5"/>
+      <text x="32" y="42" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#ffffff" text-anchor="middle">Alt+M</text>
+    </g>
+
+    <!-- After: Without sidebar -->
+    <g transform="translate(600, 0)">
+      <text x="260" y="0" font-family="system-ui, sans-serif" font-size="16" fill="#a371f7" text-anchor="middle">Without Sidebar</text>
+      <rect x="0" y="20" width="520" height="280" rx="8" fill="#161b22" stroke="#8957e5" stroke-width="2"/>
+      <!-- Header -->
+      <rect x="0" y="20" width="520" height="36" rx="8" fill="#21262d"/>
+      <rect x="0" y="48" width="520" height="8" fill="#21262d"/>
+
+      <!-- Toggle button -->
+      <g transform="translate(480, 75)">
+        <rect x="0" y="0" width="28" height="28" rx="4" fill="#8957e5"/>
+        <!-- Sidebar icon -->
+        <rect x="6" y="8" width="6" height="12" rx="1" fill="#ffffff"/>
+        <rect x="14" y="8" width="8" height="2" rx="1" fill="#ffffff"/>
+        <rect x="14" y="13" width="8" height="2" rx="1" fill="#ffffff"/>
+        <rect x="14" y="18" width="8" height="2" rx="1" fill="#ffffff"/>
+      </g>
+
+      <!-- Main content (full width) -->
+      <rect x="15" y="70" width="490" height="220" rx="4" fill="#0d1117" stroke="#8957e5" stroke-width="1"/>
+      <rect x="30" y="90" width="400" height="12" rx="2" fill="#30363d"/>
+      <rect x="30" y="110" width="450" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="125" width="420" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="140" width="440" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="155" width="400" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="170" width="430" height="8" rx="2" fill="#30363d"/>
+      <rect x="30" y="185" width="380" height="8" rx="2" fill="#30363d"/>
+
+      <text x="260" y="240" font-family="system-ui, sans-serif" font-size="12" fill="#a371f7" text-anchor="middle">More reading space</text>
+    </g>
+  </g>
+
+  <!-- Bottom section: Text content -->
+  <g transform="translate(0, 440)">
+    <!-- Main headline -->
+    <text x="640" y="100" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#ffffff" text-anchor="middle">
+      Sidebar Toggle
+    </text>
+
+    <!-- Subheadline -->
+    <text x="640" y="160" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e" text-anchor="middle">
+      Hide the sidebar for distraction-free reading (Alt+M)
+    </text>
+
+    <!-- Feature badges -->
+    <g transform="translate(465, 200)">
+      <rect x="0" y="0" width="100" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="50" y="24" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle">Alt+M</text>
+
+      <rect x="115" y="0" width="100" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="165" y="24" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle">One Click</text>
+
+      <rect x="230" y="0" width="120" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="290" y="24" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle">Focus Mode</text>
+    </g>
+
+    <!-- Logo bottom right -->
+    <g transform="translate(1100, 260)">
+      <rect width="36" height="36" rx="5" fill="#8957e5"/>
+      <g transform="translate(8, 8) scale(0.75)" fill="#ffffff">
+        <path d="m12.301 0h.093c2.242 0 4.34.613 6.137 1.68l-.055-.031c1.871 1.094 3.386 2.609 4.449 4.422l.031.058c1.04 1.769 1.654 3.896 1.654 6.166 0 5.406-3.483 10-8.327 11.658l-.087.026c-.063.02-.135.031-.209.031-.162 0-.312-.054-.433-.144l.002.001c-.128-.115-.208-.281-.208-.466v-.014q0-.048.008-1.226t.008-2.154c.007-.075.011-.161.011-.249 0-.792-.323-1.508-.844-2.025.618-.061 1.176-.163 1.718-.305l-.076.017c.573-.16 1.073-.373 1.537-.642l-.031.017c.508-.28.938-.636 1.292-1.058l.006-.007c.372-.476.663-1.036.84-1.645l.009-.035c.209-.683.329-1.468.329-2.281 0-.045 0-.091-.001-.136v.007c0-.022.001-.047.001-.072 0-1.248-.482-2.383-1.269-3.23l.003.003c.168-.44.265-.948.265-1.479 0-.649-.145-1.263-.404-1.814l.011.026c-.115-.022-.246-.035-.381-.035-.334 0-.649.078-.929.216l.012-.005c-.568.21-1.054.448-1.512.726l.038-.022-.609.384c-.922-.264-1.981-.416-3.075-.416s-2.153.152-3.157.436l.081-.02q-.256-.176-.681-.433c-.373-.214-.814-.421-1.272-.595l-.066-.022c-.293-.154-.64-.244-1.009-.244-.124 0-.246.01-.364.03l.013-.002c-.248.524-.393 1.139-.393 1.788 0 .531.097 1.04.275 1.509l-.01-.029c-.785.844-1.266 1.979-1.266 3.227v.076c-.001.039-.001.084-.001.13 0 .809.12 1.591.344 2.327l-.015-.057c.189.643.476 1.202.85 1.693l-.009-.013c.354.435.782.793 1.267 1.062l.022.011c.432.252.933.465 1.46.614l.046.011c.466.125 1.024.227 1.595.284l.046.004c-.431.428-.718 1-.784 1.638l-.001.012c-.207.101-.448.183-.699.236l-.021.004c-.256.051-.549.08-.85.08h-.066c-.394-.008-.756-.136-1.055-.348l.006.004c-.371-.259-.671-.595-.881-.986l-.007-.015c-.198-.336-.459-.614-.768-.827l-.009-.006c-.225-.169-.49-.301-.776-.38l-.016-.004-.32-.048c-.023-.002-.05-.003-.077-.003-.14 0-.273.028-.394.077l.007-.003q-.128.072-.08.184c.039.086.087.16.145.225l-.001-.001c.061.072.13.135.205.19l.003.002.112.08c.283.148.516.354.693.603l.004.006c.191.237.359.505.494.792l.01.024.16.368c.135.402.38.738.7.981l.005.004c.3.234.662.402 1.057.478l.016.002c.33.064.714.104 1.106.112h.007c.045.002.097.002.15.002.261 0 .517-.021.767-.062l-.027.004.368-.064q0 .609.008 1.418t.008.873v.014c0 .185-.08.351-.208.466-.119.089-.268.143-.431.143-.075 0-.147-.011-.214-.032l.005.001c-4.929-1.689-8.409-6.283-8.409-11.69 0-2.268.612-4.393 1.681-6.219l-.032.058c1.094-1.871 2.609-3.386 4.422-4.449l.058-.031c1.739-1.034 3.835-1.645 6.073-1.645h.098z"/>
+      </g>
+      <g stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M4 10 L4 4 L10 4"/>
+        <path d="M26 4 L32 4 L32 10"/>
+        <path d="M4 26 L4 32 L10 32"/>
+        <path d="M32 26 L32 32 L26 32"/>
+      </g>
+      <text x="46" y="26" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#a371f7">GitHub Flex</text>
+    </g>
+  </g>
+</svg>

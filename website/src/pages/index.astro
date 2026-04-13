@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LandingPage from '../components/LandingPage.astro';
+import { useTranslations } from '../i18n';
+
+const locale = 'en';
+const t = useTranslations(locale);
+---
+
+<BaseLayout title={t.meta.title} description={t.meta.description} locale={locale}>
+  <LandingPage locale={locale} />
+</BaseLayout>

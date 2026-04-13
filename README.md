@@ -5,6 +5,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc)
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
+[![Website](https://img.shields.io/badge/Website-github--flex.khuong.dev-8957e5?logo=astro&logoColor=white)](https://github-flex.khuong.dev)
 
 A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface with productivity features.
 

@@ -1,0 +1,91 @@
+---
+import { useTranslations, type Locale } from '../i18n';
+import { CHROME_STORE_URL, FIREFOX_ADDONS_URL, GITHUB_URL } from '../constants';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useTranslations(locale);
+---
+
+<footer class="bg-card-light dark:bg-card-dark border-t border-border-light dark:border-border-dark">
+  <!-- CTA Section -->
+  <div class="py-16 px-4 sm:px-6 lg:px-8 bg-primary/5 dark:bg-primary-light/5">
+    <div class="max-w-4xl mx-auto text-center">
+      <h2 class="text-3xl sm:text-4xl font-bold text-primary dark:text-primary-light mb-4">
+        {t.footer.cta.title}
+      </h2>
+      <p class="text-text-muted dark:text-text-muted-dark mb-8">
+        {t.footer.cta.subtitle}
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a
+          href={CHROME_STORE_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-primary hover:bg-primary-hover text-white rounded-lg font-semibold transition-colors"
+        >
+          <img src="/chrome-logo.svg" alt="Chrome" class="w-5 h-5" />
+          {t.footer.cta.buttonChrome}
+        </a>
+        <a
+          href={FIREFOX_ADDONS_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center justify-center gap-2 px-6 py-3 bg-[#FF7139] hover:bg-[#E65A2C] text-white rounded-lg font-semibold transition-colors"
+        >
+          <img src="/firefox-logo.svg" alt="Firefox" class="w-5 h-5" />
+          {t.footer.cta.buttonFirefox}
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Links Section -->
+  <div class="py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <!-- Product -->
+        <div>
+          <h3 class="font-semibold text-primary dark:text-primary-light mb-4">{t.footer.sections.product}</h3>
+          <ul class="space-y-2">
+            <li><a href="#features" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.features}</a></li>
+            <li><a href="#how-it-works" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.howItWorks}</a></li>
+            <li><a href="#faq" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.faq}</a></li>
+          </ul>
+        </div>
+
+        <!-- Resources -->
+        <div>
+          <h3 class="font-semibold text-primary dark:text-primary-light mb-4">{t.footer.sections.resources}</h3>
+          <ul class="space-y-2">
+            <li><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.github}</a></li>
+            <li><a href={`${GITHUB_URL}/issues`} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.reportIssue}</a></li>
+          </ul>
+        </div>
+
+        <!-- Install -->
+        <div>
+          <h3 class="font-semibold text-primary dark:text-primary-light mb-4">{t.header.howItWorks}</h3>
+          <ul class="space-y-2">
+            <li><a href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.chromeStore}</a></li>
+            <li><a href={FIREFOX_ADDONS_URL} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.firefoxAddons}</a></li>
+          </ul>
+        </div>
+
+        <!-- Logo -->
+        <div class="flex flex-col items-start">
+          <a href={locale === 'en' ? '/' : `/${locale}/`} class="flex items-center gap-2 mb-4">
+            <img src="/logo.svg" alt="GitHub Flex" class="w-10 h-10" />
+            <span class="font-bold text-xl text-primary dark:text-primary-light">GitHub Flex</span>
+          </a>
+          <p class="text-sm text-text-muted dark:text-text-muted-dark">
+            {t.footer.copyright}
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
