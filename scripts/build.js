@@ -10,7 +10,7 @@ const isWatch = process.argv.includes("--watch");
 const BROWSERS = ["chrome", "firefox"];
 const BROWSER_TARGETS = {
   chrome: "chrome88",
-  firefox: "firefox112",
+  firefox: "firefox140",
 };
 
 // Allow building a single browser via --chrome or --firefox flags
@@ -124,7 +124,7 @@ function copyAssets(browser, minify = true) {
     manifest.browser_specific_settings = {
       gecko: {
         id: "github-flex@khuong.dev",
-        strict_min_version: "112.0",
+        strict_min_version: "142.0",
         data_collection_permissions: {
           required: ["none"],
           optional: [],
