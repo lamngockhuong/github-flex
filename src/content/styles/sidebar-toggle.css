@@ -66,6 +66,8 @@
 .ghflex-sidebar-hidden {
   width: 0 !important;
   min-width: 0 !important;
+  height: 0 !important;
+  min-height: 0 !important;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
@@ -84,7 +86,8 @@
 }
 
 /* Expand main content when PageLayout sidebar is hidden */
-[class*="prc-PageLayout"]:has(
+/* Target only PageLayoutContent, not the root (which includes Header) */
+[class*="prc-PageLayout-PageLayoutContent"]:has(
     [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
   ) {
   grid-template-columns: 1fr !important;
@@ -100,16 +103,18 @@
 }
 
 /* PR/Issue page - expand content wrapper when sidebar hidden */
-[class*="prc-PageLayout-ContentWrapper"]:has(
-    [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+[class*="prc-PageLayout-PageLayoutContent"]
+  [class*="prc-PageLayout-ContentWrapper"]:has(
+    ~ [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
   ) {
   grid-template-columns: 1fr !important;
   display: block !important;
   gap: 0 !important;
 }
 
-/* Generic: any flex/grid parent containing hidden sidebar */
-*:has(> [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden) {
+/* Direct parent of hidden pane - only target content containers */
+[class*="prc-PageLayout-PageLayoutContent"]
+  > div:has(> [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden) {
   grid-template-columns: 1fr !important;
   gap: 0 !important;
 }
@@ -129,9 +134,11 @@
   max-width: 100% !important;
 }
 
-/* Also target when content is before pane */
-*:has(> [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden)
-  > [class*="prc-PageLayout-ContentWrapper"]
+/* Also target when content is before pane - scoped to content area only */
+[class*="prc-PageLayout-PageLayoutContent"]:has(
+    [class*="prc-PageLayout-PaneWrapper"].ghflex-sidebar-hidden
+  )
+  [class*="prc-PageLayout-ContentWrapper"]
   [class*="prc-PageLayout-Content"] {
   max-width: 100% !important;
 }
@@ -143,8 +150,13 @@
   grid-template-columns: 1fr !important;
 }
 
-/* Generic: any parent containing hidden metadata */
-*:has(> [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden) {
+/* Issue viewer parent containing hidden metadata */
+[class*="IssueViewer"]:has(
+    [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ),
+[class*="contentAndSidebar"]:has(
+    > [data-testid="issue-viewer-metadata-container"].ghflex-sidebar-hidden
+  ) {
   grid-template-columns: 1fr !important;
   gap: 0 !important;
 }
@@ -184,7 +196,12 @@
 }
 
 /* Also handle when content comes before sidebar */
-*:has(> #partial-discussion-sidebar.ghflex-sidebar-hidden) > .col-md-9 {
+.discussion-sidebar-container:has(
+  > #partial-discussion-sidebar.ghflex-sidebar-hidden
+)
+> .col-md-9,
+.gutter-condensed:has(> #partial-discussion-sidebar.ghflex-sidebar-hidden)
+  > .col-md-9 {
   width: 100% !important;
   max-width: 100% !important;
   flex: 1 1 100% !important;
