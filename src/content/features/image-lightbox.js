@@ -1,5 +1,6 @@
 // Image Lightbox feature - click to zoom images with pan support
 import browser from "webextension-polyfill";
+import { setTrustedHTML } from "../../shared/dom.js";
 
 const STYLE_ID = "ghflex-image-lightbox-styles";
 const MIN_IMAGE_SIZE = 200;
@@ -87,8 +88,9 @@ export const imageLightbox = {
 
     const overlay = document.createElement("div");
     overlay.id = "ghflex-lightbox";
-    overlay.innerHTML = `
-      <div class="ghflex-lightbox-backdrop"></div>
+    setTrustedHTML(
+      overlay,
+      `<div class="ghflex-lightbox-backdrop"></div>
       <div class="ghflex-lightbox-content">
         <div class="ghflex-lightbox-img-wrapper">
           <img class="ghflex-lightbox-img" src="" alt="" />
@@ -100,8 +102,8 @@ export const imageLightbox = {
           <button class="ghflex-lightbox-btn" data-action="reset" title="Reset (0)">↺</button>
           <button class="ghflex-lightbox-btn ghflex-lightbox-close" data-action="close" title="Close (Esc)">✕</button>
         </div>
-      </div>
-    `;
+      </div>`,
+    );
 
     document.body.appendChild(overlay);
     this.lightbox = overlay;

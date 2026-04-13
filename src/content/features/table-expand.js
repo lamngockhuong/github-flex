@@ -1,5 +1,6 @@
 // Table Expand feature - expandable tables with fullscreen option
 import browser from "webextension-polyfill";
+import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 
 const STYLE_ID = "ghflex-table-expand-styles";
@@ -87,7 +88,7 @@ export const tableExpand = {
           );
           this.expandedState[stateKey] = nowExpanded;
           this.saveState();
-          expandBtn.innerHTML = nowExpanded ? ICONS.unlock : ICONS.lock;
+          setTrustedHTML(expandBtn, nowExpanded ? ICONS.unlock : ICONS.lock);
           expandBtn.title = nowExpanded ? "Collapse" : "Expand";
         },
       );
@@ -112,7 +113,7 @@ export const tableExpand = {
   createButton(icon, title, onClick) {
     const button = document.createElement("button");
     button.className = "ghflex-table-toggle";
-    button.innerHTML = icon;
+    setTrustedHTML(button, icon);
     button.title = title;
     button.addEventListener("click", onClick);
     return button;
@@ -130,7 +131,7 @@ export const tableExpand = {
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "ghflex-table-fullscreen-close";
-    closeBtn.innerHTML = ICONS.exitFullscreen;
+    setTrustedHTML(closeBtn, ICONS.exitFullscreen);
     closeBtn.title = "Exit Fullscreen (Esc)";
     closeBtn.addEventListener("click", () => this.exitFullscreen());
 
