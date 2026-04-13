@@ -6,7 +6,7 @@ const cache = new Map();
 /**
  * Parse trusted HTML string and set as element content.
  * Caches parsed results for repeated strings (e.g. icon toggles).
- * Use only with static/hardcoded HTML — never with external data.
+ * Use only with static/hardcoded HTML - never with external data.
  */
 export function setTrustedHTML(element, html) {
   let template = cache.get(html);

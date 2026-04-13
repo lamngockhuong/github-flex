@@ -1,6 +1,6 @@
 # Privacy Policy
 
-**GitHub Flex** is a Chrome extension that enhances GitHub's interface. Your privacy matters — here's what you need to know.
+**GitHub Flex** is a Chrome extension that enhances GitHub's interface. Your privacy matters - here's what you need to know.
 
 ## Data Collection
 
@@ -26,7 +26,7 @@ The extension stores only your **feature toggle preferences** (e.g., wide layout
 The extension makes **no network requests** except when using the **GIF Picker** feature:
 
 - GIF search queries are sent to a Cloudflare Workers proxy, which fetches results from the Giphy API
-- Only the search query text is transmitted — no user identifiers, tokens, or personal data
+- Only the search query text is transmitted - no user identifiers, tokens, or personal data
 - GIF image data is fetched to bypass GitHub's Content Security Policy
 
 No other feature makes any external network request.

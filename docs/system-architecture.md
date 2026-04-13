@@ -2,7 +2,7 @@
 
 ## High-Level Overview
 
-GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration—pure client-side enhancement. Uses webextension-polyfill to abstract browser-specific APIs (chrome._vs browser._).
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) that enhances GitHub's interface through DOM manipulation and CSS injection. No backend services, no GitHub API integration-pure client-side enhancement. Uses webextension-polyfill to abstract browser-specific APIs (chrome._vs browser._).
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -97,7 +97,7 @@ src/popup/popup.{html,css,js} (26 LOC JS)
 └── Lifetime: Destroyed when popup closes
 ```
 
-**Why separate from content script?** Popup runs in isolated context—can't directly access GitHub page. Settings flow through browser.storage API (webextension-polyfill).
+**Why separate from content script?** Popup runs in isolated context-can't directly access GitHub page. Settings flow through browser.storage API (webextension-polyfill).
 
 ### 2. Feature Modules
 
@@ -183,7 +183,7 @@ localStorage (per-origin, github.com)
 - Survives page reload, not browser restart
 - Used for UI state that shouldn't persist globally
 
-**Why not chrome.storage?** Zen mode and table expand states are contextual to specific pages—no need to sync across devices.
+**Why not chrome.storage?** Zen mode and table expand states are contextual to specific pages-no need to sync across devices.
 
 ## Feature Deep Dives
 
@@ -899,9 +899,9 @@ Manifest Processing (browser-specific)
 
 **Build Commands:**
 
-- `pnpm build` — Build both Chrome and Firefox
-- `pnpm build:chrome` — Chrome only
-- `pnpm build:firefox` — Firefox only
+- `pnpm build` - Build both Chrome and Firefox
+- `pnpm build:chrome` - Chrome only
+- `pnpm build:firefox` - Firefox only
 
 ### Watch Mode
 

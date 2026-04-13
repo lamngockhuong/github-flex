@@ -1,4 +1,4 @@
-# Firefox Add-on Listing — Describe Add-on
+# Firefox Add-on Listing - Describe Add-on
 
 > Reference for the Firefox Developer Hub "Submit a New Add-on" form.
 > URL: <https://addons.mozilla.org/en-US/developers/>
@@ -92,7 +92,7 @@ Select up to 2:
 
 ## Support email
 
-_(optional — leave blank or use personal email)_
+_(optional - leave blank or use personal email)_
 
 ---
 
