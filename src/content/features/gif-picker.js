@@ -7,6 +7,7 @@ import {
   STYLE_IDS,
   TOOLBAR_SELECTOR,
 } from "../../shared/constants.js";
+import { setTrustedHTML } from "../../shared/dom.js";
 
 // Vietnamese diacritics to ASCII conversion map
 const VIET_MAP = {
@@ -247,8 +248,9 @@ function createGifButton() {
   button.type = "button";
   button.className = "ghflex-gif-btn";
   button.setAttribute("aria-label", "Add GIF");
-  button.innerHTML = `
-    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+  setTrustedHTML(
+    button,
+    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
       <path d="M4 4C4 3.44772 4.44772 3 5 3H14H14.5858C14.851 3 15.1054 3.10536 15.2929 3.29289L19.7071 7.70711C19.8946 7.89464 20 8.149 20 8.41421V20C20 20.5523 19.5523 21 19 21H5C4.44772 21 4 20.5523 4 20V4Z" stroke-width="2" stroke-linecap="round"/>
       <path d="M20 8H15V3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M9 13H8C7.44772 13 7 13.4477 7 14V16C7 16.5523 7.44772 17 8 17H8.5C9.05228 17 9.5 16.5523 9.5 16V15.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -256,8 +258,8 @@ function createGifButton() {
       <path d="M12 13V17" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M15 17V13L17 13" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M15.5 15H16.5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-  `;
+    </svg>`,
+  );
 
   return button;
 }
@@ -270,16 +272,17 @@ function createModal() {
   const modal = document.createElement("div");
   modal.className = "ghflex-gif-modal";
 
-  modal.innerHTML = `
-    <div class="ghflex-gif-header">
+  setTrustedHTML(
+    modal,
+    `<div class="ghflex-gif-header">
       <h3>Search GIFs</h3>
       <button class="ghflex-gif-close" aria-label="Close">&times;</button>
     </div>
     <div class="ghflex-gif-search">
       <input type="text" placeholder="Search for GIFs..." class="ghflex-gif-search-input" />
     </div>
-    <div class="ghflex-gif-content"></div>
-  `;
+    <div class="ghflex-gif-content"></div>`,
+  );
 
   overlay.appendChild(modal);
 
@@ -357,7 +360,7 @@ function renderGifs(gifs) {
   if (!content) return;
 
   const gen = ++renderGeneration;
-  content.innerHTML = "";
+  content.replaceChildren();
   revokeBlobUrls();
 
   if (gifs.length === 0) {

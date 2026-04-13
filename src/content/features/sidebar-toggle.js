@@ -1,5 +1,6 @@
 // Sidebar Toggle feature - hide/show sidebar
 import browser from "webextension-polyfill";
+import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 
 const STORAGE_KEY = "ghflex-sidebar-hidden";
@@ -60,7 +61,10 @@ class SidebarToggle {
     button.id = TOGGLE_ID;
     button.type = "button";
     button.setAttribute("aria-label", "Toggle sidebar visibility");
-    button.innerHTML = this.isHidden ? ICONS.showSidebar : ICONS.hideSidebar;
+    setTrustedHTML(
+      button,
+      this.isHidden ? ICONS.showSidebar : ICONS.hideSidebar,
+    );
     button.addEventListener("click", () => this.toggle());
     return button;
   }
@@ -70,9 +74,10 @@ class SidebarToggle {
    */
   updateToggleIcon() {
     if (this.toggleButton) {
-      this.toggleButton.innerHTML = this.isHidden
-        ? ICONS.showSidebar
-        : ICONS.hideSidebar;
+      setTrustedHTML(
+        this.toggleButton,
+        this.isHidden ? ICONS.showSidebar : ICONS.hideSidebar,
+      );
       this.toggleButton.setAttribute(
         "aria-label",
         this.isHidden ? "Show sidebar" : "Hide sidebar",

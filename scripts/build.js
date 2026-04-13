@@ -125,6 +125,10 @@ function copyAssets(browser, minify = true) {
       gecko: {
         id: "github-flex@khuong.dev",
         strict_min_version: "112.0",
+        data_collection_permissions: {
+          required: ["none"],
+          optional: [],
+        },
       },
     };
   }
