@@ -50,8 +50,8 @@ export const imageLightbox = {
     this.isDragging = false;
   },
 
-  processImages() {
-    const images = document.querySelectorAll(".markdown-body img");
+  processImages(container = document) {
+    const images = container.querySelectorAll(".markdown-body img");
     images.forEach((img) => {
       if (img.dataset.ghflexLightbox) return;
 
@@ -274,8 +274,8 @@ export const imageLightbox = {
     this.observer.observe(document.body, { childList: true, subtree: true });
   },
 
-  removeImageTriggers() {
-    document.querySelectorAll(".ghflex-lightbox-trigger").forEach((img) => {
+  removeImageTriggers(container = document) {
+    container.querySelectorAll(".ghflex-lightbox-trigger").forEach((img) => {
       const handler = this.imageClickHandlers.get(img);
       if (handler) {
         img.removeEventListener("click", handler);

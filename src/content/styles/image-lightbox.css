@@ -15,7 +15,7 @@
   display: none;
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 100000;
 }
 
 #ghflex-lightbox.active {

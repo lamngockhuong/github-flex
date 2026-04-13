@@ -2,6 +2,7 @@
 import browser from "webextension-polyfill";
 import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
+import { imageLightbox } from "./image-lightbox.js";
 
 const STYLE_ID = "ghflex-table-expand-styles";
 const STORAGE_KEY = "ghflex-table-expand-state";
@@ -59,6 +60,7 @@ export const tableExpand = {
     const tables = document.querySelectorAll(".markdown-body table");
     tables.forEach((table, index) => {
       if (table.closest(".ghflex-table-wrapper")) return;
+      if (table.closest(".ghflex-table-fullscreen-overlay")) return;
 
       const wrapper = document.createElement("div");
       wrapper.className = "ghflex-table-wrapper";
@@ -127,7 +129,7 @@ export const tableExpand = {
     overlay.className = "ghflex-table-fullscreen-overlay";
 
     const content = document.createElement("div");
-    content.className = "ghflex-table-fullscreen-content";
+    content.className = "ghflex-table-fullscreen-content markdown-body";
 
     const closeBtn = document.createElement("button");
     closeBtn.className = "ghflex-table-fullscreen-close";
@@ -139,17 +141,29 @@ export const tableExpand = {
     const tableClone = table.cloneNode(true);
     tableClone.className = "ghflex-table-fullscreen-table";
 
+    tableClone.querySelectorAll("img[data-ghflex-lightbox]").forEach((img) => {
+      delete img.dataset.ghflexLightbox;
+      img.classList.remove("ghflex-lightbox-trigger");
+    });
+
     content.appendChild(closeBtn);
     content.appendChild(tableClone);
     overlay.appendChild(content);
     document.body.appendChild(overlay);
     document.body.style.overflow = "hidden";
 
+    if (imageLightbox.enabled) {
+      imageLightbox.processImages(content);
+    }
+
     this.fullscreenTable = overlay;
   },
 
   exitFullscreen() {
     if (!this.fullscreenTable) return;
+    if (imageLightbox.enabled) {
+      imageLightbox.removeImageTriggers(this.fullscreenTable);
+    }
     this.fullscreenTable.remove();
     this.fullscreenTable = null;
     document.body.style.overflow = "";
