@@ -77,6 +77,14 @@ pnpm lint:firefox     # Lint Firefox build with web-ext
 pnpm test             # Run tests
 ```
 
+### Publishing to Firefox Add-ons
+
+When submitting a new version to [Firefox Add-ons](https://addons.mozilla.org/), Mozilla requires source code upload because we use esbuild to bundle. Create the source zip with:
+
+```bash
+zip -r github-flex-source.zip src/ scripts/ package.json pnpm-lock.yaml biome.json README.md LICENSE manifest.json
+```
+
 ## Languages
 
 - English (default)
