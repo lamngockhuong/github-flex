@@ -1,6 +1,10 @@
 // Service worker for GitHub Flex
 import browser from "webextension-polyfill";
-import { MESSAGE_ACTIONS } from "../shared/constants.js";
+import {
+  CONTEXT_MENU_ITEMS,
+  EXT_LINKS,
+  MESSAGE_ACTIONS,
+} from "../shared/constants.js";
 
 const ALLOWED_IMAGE_HOSTS = ["giphy.com", "giphycdn.com"];
 const ALLOWED_API_HOST = "github-gifs.aldilaff6545.workers.dev";
@@ -41,7 +45,21 @@ function isAllowedImageUrl(url) {
   }
 }
 
+function createContextMenus() {
+  browser.contextMenus.removeAll().then(() => {
+    for (const { key, title } of CONTEXT_MENU_ITEMS) {
+      browser.contextMenus.create({
+        id: `github-flex-${key}`,
+        title,
+        contexts: ["action"],
+      });
+    }
+  });
+}
+
 browser.runtime.onInstalled.addListener((details) => {
+  createContextMenus();
+
   if (details.reason === "install") {
     console.log("[GitHub Flex] Installed");
   } else if (details.reason === "update") {
@@ -49,6 +67,14 @@ browser.runtime.onInstalled.addListener((details) => {
       "[GitHub Flex] Updated to",
       browser.runtime.getManifest().version,
     );
+  }
+});
+
+browser.contextMenus.onClicked.addListener((info) => {
+  const key = info.menuItemId.replace("github-flex-", "");
+  const url = EXT_LINKS[key];
+  if (url) {
+    browser.tabs.create({ url });
   }
 });
 

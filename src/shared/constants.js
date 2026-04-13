@@ -38,3 +38,20 @@ export const MESSAGE_ACTIONS = {
 
 // GitHub toolbar selector (shared between toolbar detection strategies)
 export const TOOLBAR_SELECTOR = '.toolbar, [role="toolbar"], markdown-toolbar';
+
+// External links for context menu and popup
+export const EXT_LINKS = {
+  website: "https://github-flex.khuong.dev",
+  github: "https://github.com/lamngockhuong/github-flex",
+  issues: "https://github.com/lamngockhuong/github-flex/issues",
+  changelog:
+    "https://github.com/lamngockhuong/github-flex/blob/main/CHANGELOG.md",
+};
+
+// Context menu items (single source of truth)
+export const CONTEXT_MENU_ITEMS = [
+  { key: "website", title: "Website" },
+  { key: "github", title: "GitHub" },
+  { key: "issues", title: "Report Issue" },
+  { key: "changelog", title: "Changelog" },
+];
