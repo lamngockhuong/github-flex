@@ -1,6 +1,7 @@
 # GitHub Flex
 
 [![Version](https://img.shields.io/github/v/release/lamngockhuong/github-flex)](https://github.com/lamngockhuong/github-flex/releases)
+[![CI](https://github.com/lamngockhuong/github-flex/actions/workflows/ci.yml/badge.svg)](https://github.com/lamngockhuong/github-flex/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc)
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
