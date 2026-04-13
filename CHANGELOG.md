@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.6](https://github.com/lamngockhuong/github-flex/compare/v0.0.5...v0.0.6) (2026-04-13)
+
+
+### Features
+
+* add Firefox add-on support ([#19](https://github.com/lamngockhuong/github-flex/issues/19)) ([ae14207](https://github.com/lamngockhuong/github-flex/commit/ae142077ad4eadc3a6bef073c8d86c7ba719cc8d))
+
+
+### Bug Fixes
+
+* bump Firefox strict_min_version to 142.0 for data_collection_permissions support ([70ba0ba](https://github.com/lamngockhuong/github-flex/commit/70ba0bac3ef9ce320fa25d92d842d330bd9a83fa))
+
 ## [0.0.5](https://github.com/lamngockhuong/github-flex/compare/v0.0.4...v0.0.5) (2026-04-11)
 
 
