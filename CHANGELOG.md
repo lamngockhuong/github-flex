@@ -1,5 +1,26 @@
 # Changelog
 
+## [0.0.7](https://github.com/lamngockhuong/github-flex/compare/v0.0.6...v0.0.7) (2026-04-13)
+
+
+### Features
+
+* add context menu and update external links ([#32](https://github.com/lamngockhuong/github-flex/issues/32)) ([7daebd8](https://github.com/lamngockhuong/github-flex/commit/7daebd85777cb03e8f7faff5f5c7ec633932619e))
+* **gif-picker:** add GitHub-style tooltip to GIF button ([#35](https://github.com/lamngockhuong/github-flex/issues/35)) ([102a205](https://github.com/lamngockhuong/github-flex/commit/102a205ded0cbc2d0356c228203161980140e43a))
+* **website:** add multi-language landing page ([#25](https://github.com/lamngockhuong/github-flex/issues/25)) ([31d974d](https://github.com/lamngockhuong/github-flex/commit/31d974d93ca3894cab4da8568f2d25fda6dfadb8))
+
+
+### Bug Fixes
+
+* **ci:** add website build validation and approve pnpm build scripts ([#29](https://github.com/lamngockhuong/github-flex/issues/29)) ([5a2aa55](https://github.com/lamngockhuong/github-flex/commit/5a2aa555d78efe479dd55b493afab41322dae6d2))
+* **ci:** remove hardcoded pnpm version to fix deploy workflow ([#27](https://github.com/lamngockhuong/github-flex/issues/27)) ([de04c46](https://github.com/lamngockhuong/github-flex/commit/de04c4604f73909e063ccbe2bf78c0bdbb19ecad))
+* improve fullscreen table with lightbox integration ([#33](https://github.com/lamngockhuong/github-flex/issues/33)) ([10ceb22](https://github.com/lamngockhuong/github-flex/commit/10ceb22c128a184b6b71356b709a53321c22e0c2))
+* prevent sidebar toggle from affecting PR diff pages and discussion layout ([7ce5e19](https://github.com/lamngockhuong/github-flex/commit/7ce5e1993f39d5aff351cb2cca6f785fb7d1069e))
+* sidebar toggle layout issues on PR diff and discussion pages ([#34](https://github.com/lamngockhuong/github-flex/issues/34)) ([7ce5e19](https://github.com/lamngockhuong/github-flex/commit/7ce5e1993f39d5aff351cb2cca6f785fb7d1069e))
+* **website:** approve build scripts for esbuild and sharp ([#28](https://github.com/lamngockhuong/github-flex/issues/28)) ([c99e777](https://github.com/lamngockhuong/github-flex/commit/c99e777c3f4036062cc25aee34252a7cd28c9ddf))
+* **website:** correct GITHUB_URL syntax and add docs ([#31](https://github.com/lamngockhuong/github-flex/issues/31)) ([ce6a9c8](https://github.com/lamngockhuong/github-flex/commit/ce6a9c8144dfea6a6e9a1c36ee52a1fd2143aa01))
+* **website:** mobile UI fixes and add website documentation ([ce6a9c8](https://github.com/lamngockhuong/github-flex/commit/ce6a9c8144dfea6a6e9a1c36ee52a1fd2143aa01))
+
 ## [0.0.6](https://github.com/lamngockhuong/github-flex/compare/v0.0.5...v0.0.6) (2026-04-13)
 
 
