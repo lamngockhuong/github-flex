@@ -5,7 +5,7 @@ import { setTrustedHTML } from "../../shared/dom.js";
 const STYLE_ID = "ghflex-image-lightbox-styles";
 const MIN_IMAGE_SIZE = 200;
 const ZOOM_MIN = 0.5;
-const ZOOM_MAX = 5;
+const ZOOM_MAX = 10;
 const ZOOM_STEP = 0.25;
 const ZOOM_STEP_WHEEL = 0.1;
 
@@ -67,9 +67,15 @@ export const imageLightbox = {
     });
   },
 
+  isSvg(img) {
+    const src = img.src || "";
+    return /\.svg([?#]|$)/i.test(src) || src.startsWith("data:image/svg");
+  },
+
   attachLightbox(img) {
     if (img.dataset.ghflexLightbox) return;
-    if (img.naturalWidth <= MIN_IMAGE_SIZE) return;
+    const width = this.isSvg(img) ? img.width : img.naturalWidth;
+    if (width <= MIN_IMAGE_SIZE) return;
 
     img.dataset.ghflexLightbox = "true";
     img.classList.add("ghflex-lightbox-trigger");
@@ -77,7 +83,7 @@ export const imageLightbox = {
     const handler = (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.openLightbox(img.src, img.alt);
+      this.openLightbox(img);
     };
 
     this.imageClickHandlers.set(img, handler);
@@ -193,10 +199,19 @@ export const imageLightbox = {
     document.addEventListener("mouseup", this.onMouseUp);
   },
 
-  openLightbox(src, alt) {
+  openLightbox(img) {
     if (!this.lightbox) return;
-    this.lightboxImg.src = src;
-    this.lightboxImg.alt = alt || "";
+    this.lightboxImg.src = img.src;
+    this.lightboxImg.alt = img.alt || "";
+
+    if (this.isSvg(img)) {
+      this.lightboxImg.style.width = `${img.width}px`;
+      this.lightboxImg.style.height = `${img.height}px`;
+    } else {
+      this.lightboxImg.style.width = "";
+      this.lightboxImg.style.height = "";
+    }
+
     this.resetZoom();
     this.lightbox.classList.add("active");
     document.body.style.overflow = "hidden";
