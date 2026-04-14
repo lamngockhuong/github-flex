@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.8](https://github.com/lamngockhuong/github-flex/compare/v0.0.7...v0.0.8) (2026-04-14)
+
+
+### Bug Fixes
+
+* **lightbox:** support SVG images and increase max zoom to 1000% ([#43](https://github.com/lamngockhuong/github-flex/issues/43)) ([9eb8a55](https://github.com/lamngockhuong/github-flex/commit/9eb8a55a724976d3a4ea486e812748f2f70702fa))
+* prevent image redirect when opening lightbox in markdown files ([#41](https://github.com/lamngockhuong/github-flex/issues/41)) ([eae53a6](https://github.com/lamngockhuong/github-flex/commit/eae53a6ec303c7df1f0e65c85bf1271c8fa284af))
+
 ## [0.0.7](https://github.com/lamngockhuong/github-flex/compare/v0.0.6...v0.0.7) (2026-04-13)
 
 
