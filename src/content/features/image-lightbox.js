@@ -76,6 +76,7 @@ export const imageLightbox = {
 
     const handler = (e) => {
       e.preventDefault();
+      e.stopPropagation();
       this.openLightbox(img.src, img.alt);
     };
 
