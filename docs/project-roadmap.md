@@ -2,7 +2,7 @@
 
 ## Current Status
 
-**Version:** 0.0.7
+**Version:** 0.0.9
 **Phase:** Testing & Quality (Phase 4)
 **Next Milestone:** v1.0.0 (stable release)
 
@@ -20,6 +20,7 @@
 - [x] Image Lightbox - Click-to-zoom with pan (318 LOC)
 - [x] GIF Picker - Search and insert GIFs (656 LOC)
 - [x] Sidebar Toggle - Hide/show sidebar with Alt+M (335 LOC)
+- [x] Edit History - Enhanced diff viewer with split/unified/preview modes (890 LOC across 5 files)
 
 #### Technical Achievements
 
@@ -195,7 +196,7 @@
 
 ## Version History
 
-### v0.0.7 (Apr 13, 2026)
+### v0.0.9 (Apr 17, 2026)
 
 **Current Release**
 
@@ -203,18 +204,30 @@ Features:
 
 - Wide Layout
 - Table Expand with fullscreen
-- Image Lightbox with zoom/pan
+- Image Lightbox with zoom/pan (SVG support, max zoom 1000%)
 - GIF Picker with Vietnamese normalization
 - Sidebar Toggle with Alt+M shortcut
+- Edit History enhanced diff viewer (split/unified/preview modes)
 - Context menu with quick links
 - Multi-language landing page (EN/JA/VI)
 
 Technical:
 
 - Chrome & Firefox Manifest V3
-- Vanilla JavaScript (zero runtime dependencies)
+- Vanilla JavaScript (one runtime dependency: `diff`)
 - Feature toggle architecture
 - Cloudflare Worker GIF API proxy
+
+### v0.0.8 (Apr 2026)
+
+- Fix lightbox SVG image support and increase max zoom to 1000%
+- Fix image redirect when opening lightbox in markdown files
+
+### v0.0.7 (Apr 13, 2026)
+
+- 5 core features (Wide Layout, Table Expand, Image Lightbox, GIF Picker, Sidebar Toggle)
+- Context menu with quick links
+- Multi-language landing page (EN/JA/VI)
 
 ### v0.0.1 (Apr 8, 2026)
 
@@ -228,16 +241,16 @@ Technical:
 
 ### Under Consideration
 
-| Feature          | Priority | Complexity | Est. LOC | Notes                           |
-| ---------------- | -------- | ---------- | -------- | ------------------------------- |
-| Code folding     | High     | Medium     | ~150     | Collapse long code blocks       |
-| Sticky file tree | High     | Low        | ~80      | Pin navigation during scroll    |
-| TOC generator    | Medium   | Medium     | ~200     | Auto-generate table of contents |
-| Custom shortcuts | Medium   | High       | ~300     | Configurable keyboard bindings  |
-| Diff expand      | Medium   | Low        | ~100     | Expand wide diffs in PRs        |
-| Issue templates  | Low      | Medium     | ~250     | Quick issue creation            |
-| Emoji picker     | Low      | Low        | ~150     | Similar to GIF picker           |
-| Link preview     | Low      | High       | ~400     | Hover to preview linked issues  |
+| Feature          | Priority | Complexity | Est. LOC | Notes                                                         |
+| ---------------- | -------- | ---------- | -------- | ------------------------------------------------------------- |
+| Code folding     | High     | Medium     | ~150     | Collapse long code blocks                                     |
+| Sticky file tree | High     | Low        | ~80      | Pin navigation during scroll                                  |
+| TOC generator    | Medium   | Medium     | ~200     | Auto-generate table of contents                               |
+| Custom shortcuts | Medium   | High       | ~300     | Configurable keyboard bindings                                |
+| Diff expand      | Low      | Low        | ~100     | Expand wide diffs in PRs (Edit History partially covers this) |
+| Issue templates  | Low      | Medium     | ~250     | Quick issue creation                                          |
+| Emoji picker     | Low      | Low        | ~150     | Similar to GIF picker                                         |
+| Link preview     | Low      | High       | ~400     | Hover to preview linked issues                                |
 
 ### Rejected Features
 
@@ -431,6 +444,7 @@ See `docs/project-changelog.md` for detailed version history.
 ### Known Issues (Non-Blocking)
 
 - GIF Picker module too large (575 LOC) - consider splitting
+- Edit History relies on GitHub's internal CSS module class names (may break on updates)
 - No E2E tests - manual testing only
 - Vietnamese normalization hardcoded - investigate libraries
 - No accessibility features - keyboard nav, ARIA labels
@@ -454,5 +468,5 @@ See `docs/project-changelog.md` for detailed version history.
 
 ---
 
-**Last Updated:** 2026-04-13
+**Last Updated:** 2026-04-17
 **Next Review:** 2026-05-01 (post-testing phase)

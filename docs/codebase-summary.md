@@ -2,15 +2,16 @@
 
 ## Overview
 
-GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) enhancing GitHub's interface with 5 productivity features. Built with vanilla JavaScript, zero runtime dependencies, ~2100 LOC total.
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) enhancing GitHub's interface with 6 productivity features. Built with vanilla JavaScript, one runtime dependency (`diff` for word-level diffing), ~3000 LOC total.
 
 ## Project Statistics
 
-- **Total Files:** ~15 source files
-- **Total LOC:** ~2100 lines
+- **Total Files:** ~20 source files
+- **Total LOC:** ~3000 lines
 - **Languages:** JavaScript (ES Modules), CSS, HTML
 - **Bundle Output:** 3 entry points (early-inject, content script, popup)
 - **External Services:** 1 (GIF API proxy)
+- **Runtime Dependencies:** 1 (`diff` library for word-level diff computation)
 
 ## Directory Structure
 
@@ -27,13 +28,19 @@ github-flex/
 │   │   │   ├── table-expand.js        # Expandable tables (227 LOC)
 │   │   │   ├── image-lightbox.js      # Image zoom overlay (318 LOC)
 │   │   │   ├── gif-picker.js          # GIF search modal (656 LOC)
-│   │   │   └── sidebar-toggle.js      # Sidebar toggle with Alt+M (335 LOC)
+│   │   │   ├── sidebar-toggle.js      # Sidebar toggle with Alt+M (335 LOC)
+│   │   │   ├── edit-history.js        # Edit history main controller (108 LOC)
+│   │   │   ├── edit-history-ui.js     # Enhanced diff overlay UI (349 LOC)
+│   │   │   ├── edit-history-diff.js   # Word-level diff computation (42 LOC)
+│   │   │   ├── edit-history-parser.js # GitHub dialog DOM parser (93 LOC)
+│   │   │   └── edit-history-markdown.js # Safe markdown-to-DOM renderer (298 LOC)
 │   │   └── styles/
 │   │       ├── wide-layout.css
 │   │       ├── table-expand.css
 │   │       ├── image-lightbox.css
 │   │       ├── gif-picker.css
-│   │       └── sidebar-toggle.css
+│   │       ├── sidebar-toggle.css
+│   │       └── edit-history.css       # Enhanced diff viewer styles (435 LOC)
 │   ├── popup/
 │   │   ├── popup.html                 # Settings UI
 │   │   ├── popup.css                  # Popup styles
@@ -108,7 +115,7 @@ github-flex/
 #### 3. Popup (`src/popup/popup.js`)
 
 - **When:** User clicks extension icon
-- **What:** Loads current settings, binds checkbox toggles, saves to chrome.storage.sync
+- **What:** Loads current settings, binds checkbox toggles (6 features), saves to chrome.storage.sync
 - **Flow:**
 
   ```
@@ -210,6 +217,27 @@ export const featureName = {
 - **State:** `{ button: null, boundToggle: null }`
 - **Events:** Click (toggle), keydown (Alt+M)
 
+#### Edit History (`edit-history.js` + 4 submodules)
+
+- **Pattern:** MutationObserver + dialog detection + overlay creation
+- **Mechanism:**
+  1. MutationObserver detects GitHub's edit history dialog opening
+  2. Widens native modal to 90vw (max 1400px) for better readability
+  3. Injects "Split View" button into dialog header
+  4. Parses diff data from GitHub's native DOM (added/removed/changed lines)
+  5. Opens enhanced overlay with three view modes: Split, Unified, Preview
+  6. Word-level diffing via `diff` library (computeWordDiff)
+  7. Preview mode renders markdown with diff highlighting
+- **Submodules:**
+  - `edit-history-parser.js` (93 LOC): Finds dialog, extracts diff data and metadata (author, avatar, timestamp)
+  - `edit-history-ui.js` (349 LOC): Overlay panel with header, toggle group, side-by-side/unified/preview views, synced scrolling, footer stats
+  - `edit-history-diff.js` (42 LOC): Word-level diff computation, side-by-side/unified segment builders, stats (+/- word counts)
+  - `edit-history-markdown.js` (298 LOC): XSS-safe markdown-to-DOM renderer (headers, lists, tables, code blocks, blockquotes, inline formatting)
+- **State:** `{ enabled, observer, pollTimer }`
+- **Events:** MutationObserver (dialog detection), click (button, overlay), keydown (Esc to close)
+- **Default:** Disabled (opt-in via settings)
+- **Security:** No innerHTML with user data; markdown renderer creates DOM elements directly
+
 ### Shared Utilities
 
 #### `shared/constants.js`
@@ -223,6 +251,7 @@ SETTINGS_DEFAULTS = {
   imageLightbox: true,
   gifPicker: true,
   sidebarToggle: true,
+  editHistory: false,
 };
 
 STORAGE_KEYS = { SETTINGS: "settings" };
@@ -231,6 +260,7 @@ STYLE_IDS = {
   TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
   SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
+  EDIT_HISTORY: "ghflex-edit-history-styles",
 };
 
 GIF_API_URL = "https://github-gifs.aldilaff6545.workers.dev";
@@ -286,11 +316,11 @@ export async function saveSettings(settings) {
 
 SVG icon strings exported as constants:
 
-- `EXPAND_ICON` - Diagonal arrows (table expand)
-- `FULLSCREEN_ICON` - Square frame (table fullscreen)
-- `GIF_ICON` - "GIF" text badge
-- `COLLAPSE_ICON` - Contract arrows (table collapse)
-- `SIDEBAR_ICON` - Eye symbol (sidebar toggle)
+- `lock` - Lock icon (table collapsed state)
+- `unlock` - Unlock icon (table expanded state)
+- `hideSidebar` / `showSidebar` - Panel icons (sidebar toggle)
+- `fullscreen` / `exitFullscreen` - Square frame icons (table fullscreen)
+- `close` - X icon (edit history overlay close)
 
 #### `shared/dom.js`
 
@@ -363,11 +393,12 @@ User clicks checkbox in popup
 
 **chrome.storage.sync (global settings):**
 
-- Wide Layout: on/off
-- Table Expand: on/off
-- Image Lightbox: on/off
-- GIF Picker: on/off
-- Sidebar Toggle: on/off
+- Wide Layout: on/off (default: on)
+- Table Expand: on/off (default: on)
+- Image Lightbox: on/off (default: on)
+- GIF Picker: on/off (default: on)
+- Sidebar Toggle: on/off (default: on)
+- Edit History: on/off (default: off)
 
 **localStorage (per-page state):**
 
@@ -629,7 +660,7 @@ pnpm dev         # Watch mode (auto-rebuild)
 
 ### Runtime
 
-- **None** (vanilla JavaScript, Chrome APIs only)
+- **diff** (word-level diff computation for Edit History feature)
 
 ### Development
 
@@ -724,22 +755,24 @@ pnpm dev         # Watch mode (auto-rebuild)
 
 ## Code Ownership
 
-| Component      | Primary File      | LOC | Complexity                          |
-| -------------- | ----------------- | --- | ----------------------------------- |
-| GIF Picker     | gif-picker.js     | 656 | High (API, state, sanitization)     |
-| Sidebar Toggle | sidebar-toggle.js | 335 | Medium (keyboard, persistence)      |
-| Image Lightbox | image-lightbox.js | 318 | Medium (transforms, events)         |
-| Table Expand   | table-expand.js   | 227 | Medium (state, observer)            |
-| Build System   | build.js          | 178 | Medium (esbuild, multi-browser)     |
-| Service Worker | service-worker.js | 110 | Medium (context menu, image proxy)  |
-| Main Entry     | main.js           | 70  | Low (initialization logic)          |
-| Constants      | constants.js      | 57  | Low (static config, external links) |
-| Popup          | popup.js          | 43  | Low (checkbox handlers)             |
-| Storage        | storage.js        | 33  | Low (wrapper functions)             |
-| Icons          | icons.js          | 21  | Low (SVG strings)                   |
-| Wide Layout    | wide-layout.js    | 20  | Low (CSS-only)                      |
-| DOM Utils      | dom.js            | 18  | Low (Firefox compliance)            |
-| Early Inject   | early-inject.js   | 17  | Low (FOUC prevention)               |
+| Component      | Primary File(s)       | LOC | Complexity                             |
+| -------------- | --------------------- | --- | -------------------------------------- |
+| Edit History   | edit-history*.js (×5) | 890 | High (diff, markdown, overlay, parser) |
+| GIF Picker     | gif-picker.js         | 656 | High (API, state, sanitization)        |
+| Sidebar Toggle | sidebar-toggle.js     | 335 | Medium (keyboard, persistence)         |
+| Image Lightbox | image-lightbox.js     | 318 | Medium (transforms, events)            |
+| Table Expand   | table-expand.js       | 227 | Medium (state, observer)               |
+| Build System   | build.js              | 178 | Medium (esbuild, multi-browser)        |
+| Service Worker | service-worker.js     | 110 | Medium (context menu, image proxy)     |
+| Main Entry     | main.js               | 70  | Low (initialization logic)             |
+| Constants      | constants.js          | 57  | Low (static config, external links)    |
+| Popup          | popup.js              | 43  | Low (checkbox handlers)                |
+| Storage        | storage.js            | 33  | Low (wrapper functions)                |
+| Icons          | icons.js              | 21  | Low (SVG strings)                      |
+| Wide Layout    | wide-layout.js        | 20  | Low (CSS-only)                         |
+| DOM Utils      | dom.js                | 18  | Low (Firefox compliance)               |
+| Early Inject   | early-inject.js       | 17  | Low (FOUC prevention)                  |
 
-Most complex feature: **GIF Picker** (API integration, Vietnamese normalization, security validation)
+Most complex feature: **Edit History** (word-level diff, markdown rendering, multi-view overlay, DOM parsing)
+Second most complex: **GIF Picker** (API integration, Vietnamese normalization, security validation)
 Simplest feature: **Wide Layout** (pure CSS)

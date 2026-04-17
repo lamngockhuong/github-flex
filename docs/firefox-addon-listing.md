@@ -29,6 +29,8 @@ Features:
 
 • Sidebar Toggle: Hide or show the GitHub sidebar with a single click or the Alt+M keyboard shortcut. Reclaim horizontal space when you need to focus on content.
 
+• Edit History: Enhanced diff viewer for comment and description edits. Click "Split View" in any edit history dialog to compare changes with word-level highlighting in split, unified, or rendered markdown preview modes.
+
 All features can be individually enabled or disabled from the popup settings. Your preferences sync across devices via browser sync.
 
 Lightweight, open-source, and built with Manifest V3. No data collection, no tracking - just a better GitHub experience.
@@ -49,6 +51,8 @@ Tính năng:
 
 • Ẩn/hiện Sidebar (Sidebar Toggle): Ẩn hoặc hiện sidebar GitHub chỉ với một cú nhấp hoặc phím tắt Alt+M. Lấy lại không gian ngang khi bạn cần tập trung vào nội dung.
 
+• Lịch sử chỉnh sửa (Edit History): Trình xem so sánh nâng cao cho các bản chỉnh sửa bình luận và mô tả. Nhấp "Split View" trong bất kỳ hộp thoại lịch sử chỉnh sửa nào để so sánh thay đổi với tô sáng từng từ ở chế độ chia đôi, hợp nhất, hoặc xem trước markdown.
+
 Tất cả tính năng đều có thể bật/tắt riêng từ cửa sổ cài đặt. Tùy chọn của bạn được đồng bộ qua các thiết bị.
 
 Nhẹ, mã nguồn mở, xây dựng với Manifest V3. Không thu thập dữ liệu, không theo dõi - chỉ là trải nghiệm GitHub tốt hơn.
@@ -68,6 +72,8 @@ GitHub Flexは、日々のワークフローをよりスムーズで効率的に
 • GIFピッカー: コメント、Issue、プルリクエストにGIFを直接挿入。Giphyの膨大なライブラリから検索 - 会話にリアクションと楽しさを追加できます。
 
 • サイドバー切替: ワンクリックまたはAlt+Mキーボードショートカットで、GitHubのサイドバーを表示/非表示。コンテンツに集中したい時に水平スペースを取り戻せます。
+
+• 編集履歴 (Edit History): コメントや説明文の編集履歴を強化された差分ビューアで表示。編集履歴ダイアログで「Split View」をクリックすると、分割・統合・Markdownプレビューモードで単語レベルのハイライト付き比較ができます。
 
 すべての機能はポップアップ設定から個別に有効/無効にできます。設定はブラウザ同期を通じてデバイス間で同期されます。
 
@@ -124,4 +130,4 @@ https://github.com/lamngockhuong/github-flex/blob/main/PRIVACY.md
 
 ## Summary (if separate field)
 
-> Expand GitHub's interface - wide layout, expandable tables/images, GIF picker, sidebar toggle
+> Expand GitHub's interface - wide layout, expandable tables/images, GIF picker, sidebar toggle, edit history diff viewer

@@ -4,7 +4,7 @@
 
 **Name:** GitHub Flex
 **Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox) + Landing Page
-**Version:** 0.0.6
+**Version:** 0.0.9
 **License:** MIT
 **Repository:** <https://github.com/lamngockhuong/github-flex>
 **Website:** <https://github-flex.khuong.dev>
@@ -83,6 +83,24 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - **Scope:** Repository pages with sidebar
 - **Success Metric:** Content area expands to 100% width when sidebar hidden
 
+#### FR6: Edit History
+
+- **Description:** Enhanced diff viewer for comment/issue/PR description edits
+- **Features:**
+  - Widens GitHub's native edit history modal (90vw, max 1400px)
+  - "Split View" button injected into edit history dialog header
+  - Three view modes: Split (side-by-side), Unified (inline), Preview (rendered markdown)
+  - Word-level diff highlighting (added/removed/unchanged)
+  - Synced scrolling between panes in split view
+  - Markdown preview with diff annotations
+  - Word count statistics (+N −N words)
+  - Esc key / backdrop click to close
+- **Scope:** GitHub's edit history dialogs (comments, issues, PRs, discussions)
+- **Constraint:** Relies on GitHub's internal CSS class names; may break on GitHub updates
+- **Default:** Disabled (opt-in via settings)
+- **Success Metric:** Users can compare edits with word-level precision in <2 seconds
+- **Dependencies:** `diff` library (runtime) for word-level diff computation
+
 ### Non-Functional Requirements
 
 #### NFR1: Performance
@@ -115,8 +133,8 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 #### NFR5: Maintainability
 
-- **Code Size:** Individual files <200 LOC (current: 36-316 range)
-- **Dependencies:** Zero runtime dependencies (dev-only: esbuild, biome, vitest)
+- **Code Size:** Individual files <200 LOC target (current: 20-349 range; Edit History split across 5 files)
+- **Dependencies:** One runtime dependency (`diff`); dev-only: esbuild, biome, vitest
 - **Build Time:** <2s full rebuild
 - **Test Coverage:** Critical paths (GIF sanitization, table state persistence)
 
@@ -177,7 +195,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 ### Launch Criteria (v1.0)
 
-- [ ] All 5 features functional on github.com and gist.github.com
+- [ ] All 6 features functional on github.com and gist.github.com
 - [ ] Settings UI in popup toggles features without reload
 - [ ] Zero console errors on top 10 GitHub repos
 - [x] Chrome Web Store listing approved
@@ -208,6 +226,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 - Image Lightbox ✓
 - GIF Picker ✓
 - Sidebar Toggle ✓
+- Edit History ✓
 
 ### Phase 2: Polish (Current)
 
@@ -235,6 +254,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 - Chrome 88+ or Firefox 112+ (Manifest V3)
 - webextension-polyfill 0.12.0+
+- diff (word-level diff computation for Edit History)
 - Cloudflare Worker at <https://github-gifs.aldilaff6545.workers.dev>
 
 ### Website (Landing Page)
@@ -253,10 +273,12 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 | Risk                                    | Likelihood | Impact | Mitigation                                                 |
 | --------------------------------------- | ---------- | ------ | ---------------------------------------------------------- |
 | GitHub DOM changes break features       | High       | High   | Use semantic selectors, regular testing, feature detection |
+| Edit History dialog selectors change    | High       | Medium | Feature disabled by default; relies on CSS module classes  |
 | GIF API proxy downtime                  | Medium     | Low    | Show error message, feature degrades gracefully            |
 | Chrome Web Store rejection              | Low        | High   | Follow all manifest V3 guidelines, minimal permissions     |
 | Performance regression on large pages   | Medium     | Medium | Lazy initialization, debounced observers                   |
 | Security vulnerability in GIF insertion | Low        | High   | Strict URL validation, markdown escaping                   |
+| Large diff overflows memory             | Low        | Medium | Edit History enforces 100KB max diff size limit            |
 
 ## Compliance & Security
 
