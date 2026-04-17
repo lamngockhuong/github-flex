@@ -1,5 +1,5 @@
-// Edit History overlay UI - side-by-side and unified diff views
 import { setTrustedHTML } from "../../shared/dom.js";
+import { ICONS } from "../../shared/icons.js";
 import {
   buildSideBySide,
   buildUnified,
@@ -10,12 +10,19 @@ import { renderMarkdown } from "./edit-history-markdown.js";
 
 const OVERLAY_ID = "ghflex-edit-history";
 let overlay = null;
-let state = { oldText: "", newText: "", meta: null, viewMode: "side" };
+let state = {
+  oldText: "",
+  newText: "",
+  meta: null,
+  viewMode: "side",
+  parts: null,
+};
 let keyHandler = null;
 
 export function createOverlay(oldText, newText, meta) {
   destroyOverlay();
-  state = { oldText, newText, meta, viewMode: "side" };
+  const parts = computeWordDiff(oldText, newText);
+  state = { oldText, newText, meta, viewMode: "side", parts };
 
   overlay = document.createElement("div");
   overlay.id = OVERLAY_ID;
@@ -30,7 +37,7 @@ export function createOverlay(oldText, newText, meta) {
 
   panel.appendChild(buildHeader(meta));
   panel.appendChild(buildBody());
-  panel.appendChild(buildFooter());
+  panel.appendChild(buildFooter(parts));
 
   overlay.appendChild(backdrop);
   overlay.appendChild(panel);
@@ -114,10 +121,7 @@ function buildHeader(meta) {
   const closeBtn = document.createElement("button");
   closeBtn.className = "ghflex-eh-close";
   closeBtn.title = "Close (Esc)";
-  setTrustedHTML(
-    closeBtn,
-    '<svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.749.749 0 0 1 1.275.326.749.749 0 0 1-.215.734L9.06 8l3.22 3.22a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215L8 9.06l-3.22 3.22a.751.751 0 0 1-1.042-.018.751.751 0 0 1-.018-1.042L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"/></svg>',
-  );
+  setTrustedHTML(closeBtn, ICONS.close);
   closeBtn.addEventListener("click", destroyOverlay);
   controls.appendChild(closeBtn);
 
@@ -149,11 +153,13 @@ function buildBody() {
   return body;
 }
 
-function buildFooter() {
+function buildFooter(parts) {
   const footer = document.createElement("div");
   footer.className = "ghflex-eh-footer";
   const stats = document.createElement("span");
   stats.className = "ghflex-eh-stats";
+  const { added, removed } = computeStats(parts);
+  stats.textContent = `+${added} −${removed} words`;
   footer.appendChild(stats);
   const hint = document.createElement("span");
   hint.className = "ghflex-eh-hint";
@@ -168,16 +174,10 @@ function renderDiff() {
   if (!body) return;
   body.replaceChildren();
 
-  const parts = computeWordDiff(state.oldText, state.newText);
-  const stats = computeStats(parts);
-
-  const statsEl = overlay.querySelector(".ghflex-eh-stats");
-  if (statsEl) {
-    statsEl.textContent = `+${stats.added} −${stats.removed} words`;
-  }
+  const { parts } = state;
 
   if (state.viewMode === "preview") {
-    renderPreview(body);
+    renderPreview(body, parts);
   } else if (state.viewMode === "side") {
     renderSideBySide(body, parts);
   } else {
@@ -185,9 +185,7 @@ function renderDiff() {
   }
 }
 
-function renderSideBySide(body, parts) {
-  const { oldSegments, newSegments } = buildSideBySide(parts);
-
+function createSideBySideLayout(body) {
   const container = document.createElement("div");
   container.className = "ghflex-eh-side-container";
 
@@ -196,24 +194,23 @@ function renderSideBySide(body, parts) {
   divider.className = "ghflex-eh-divider";
   const rightPane = createDiffPane("ghflex-eh-diff-right", "New");
 
-  renderSegments(
-    leftPane.querySelector(".ghflex-eh-diff-content"),
-    oldSegments,
-  );
-  renderSegments(
-    rightPane.querySelector(".ghflex-eh-diff-content"),
-    newSegments,
-  );
-
   container.appendChild(leftPane);
   container.appendChild(divider);
   container.appendChild(rightPane);
   body.appendChild(container);
 
-  syncScroll(
-    leftPane.querySelector(".ghflex-eh-diff-content"),
-    rightPane.querySelector(".ghflex-eh-diff-content"),
-  );
+  const leftContent = leftPane.querySelector(".ghflex-eh-diff-content");
+  const rightContent = rightPane.querySelector(".ghflex-eh-diff-content");
+  syncScroll(leftContent, rightContent);
+
+  return { leftContent, rightContent };
+}
+
+function renderSideBySide(body, parts) {
+  const { oldSegments, newSegments } = buildSideBySide(parts);
+  const { leftContent, rightContent } = createSideBySideLayout(body);
+  renderSegments(leftContent, oldSegments);
+  renderSegments(rightContent, newSegments);
 }
 
 function createDiffPane(className, label) {
@@ -309,21 +306,11 @@ function cleanMarkerAttrs(container) {
   }
 }
 
-function renderPreview(body) {
-  const container = document.createElement("div");
-  container.className = "ghflex-eh-side-container";
-
-  const leftPane = createDiffPane("ghflex-eh-diff-left", "Old");
-  const divider = document.createElement("div");
-  divider.className = "ghflex-eh-divider";
-  const rightPane = createDiffPane("ghflex-eh-diff-right", "New");
-
-  const leftContent = leftPane.querySelector(".ghflex-eh-diff-content");
-  const rightContent = rightPane.querySelector(".ghflex-eh-diff-content");
+function renderPreview(body, parts) {
+  const { leftContent, rightContent } = createSideBySideLayout(body);
   leftContent.classList.add("ghflex-eh-preview", "markdown-body");
   rightContent.classList.add("ghflex-eh-preview", "markdown-body");
 
-  const parts = computeWordDiff(state.oldText, state.newText);
   const { oldText, newText } = buildAnnotatedTexts(parts);
   renderMarkdown(leftContent, oldText);
   renderMarkdown(rightContent, newText);
@@ -331,13 +318,6 @@ function renderPreview(body) {
   cleanMarkerAttrs(rightContent);
   highlightMarkers(leftContent, "ghflex-eh-word-removed");
   highlightMarkers(rightContent, "ghflex-eh-word-added");
-
-  container.appendChild(leftPane);
-  container.appendChild(divider);
-  container.appendChild(rightPane);
-  body.appendChild(container);
-
-  syncScroll(leftContent, rightContent);
 }
 
 function renderSegments(container, segments) {
@@ -349,9 +329,9 @@ function renderSegments(container, segments) {
   }
 }
 
-let scrolling = false;
 function syncScroll(left, right) {
   if (!left || !right) return;
+  let scrolling = false;
   left.addEventListener("scroll", () => {
     if (scrolling) return;
     scrolling = true;

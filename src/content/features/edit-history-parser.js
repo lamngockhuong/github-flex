@@ -1,5 +1,3 @@
-// Parse GitHub's EditHistoryDialog DOM to extract old/new text and metadata
-
 const SELECTORS = {
   dialog: '[class*="EditHistoryDialog-module__EditHistoryDialogContainer"]',
   header: '[class*="EditHistoryDialogHeader-module"]',
@@ -10,7 +8,7 @@ const SELECTORS = {
   borderChanged: '[class*="borderStylingChanged"]',
   wordAdded: '[class*="wordStylingAdded"]',
   wordRemoved: '[class*="wordStylingRemoved"]',
-  avatar: '[class*="userAvatar"] , [data-component="Avatar"]',
+  avatar: '[class*="userAvatar"],[data-component="Avatar"]',
   username: '[class*="usernameBold"], [class*="EditHistoryDialogHeader"] a',
   timestamp: "relative-time",
 };
@@ -26,7 +24,6 @@ export function parseMeta(dialog) {
   return {
     avatarUrl: avatar?.src || "",
     author: username?.textContent?.trim() || "",
-    timestamp: time?.getAttribute("datetime") || time?.textContent || "",
     displayTime: time?.textContent || "",
   };
 }

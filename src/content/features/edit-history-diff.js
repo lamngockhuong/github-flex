@@ -1,4 +1,3 @@
-// Diff computation using jsdiff library
 import { diffWords } from "diff";
 
 export function computeWordDiff(oldText, newText) {

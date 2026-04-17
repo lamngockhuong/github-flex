@@ -1,4 +1,3 @@
-// Edit History feature - enhanced diff viewer for GitHub comment/issue edits
 import browser from "webextension-polyfill";
 import { STYLE_IDS } from "../../shared/constants.js";
 import { findDialog, parseDiff, parseMeta } from "./edit-history-parser.js";
@@ -7,12 +6,11 @@ import { createOverlay, destroyOverlay } from "./edit-history-ui.js";
 const STYLE_ID = STYLE_IDS.EDIT_HISTORY;
 const MAX_DIFF_SIZE = 100_000;
 const BUTTON_ID = "ghflex-eh-enhance-btn";
-const DIALOG_SELECTOR =
-  '[class*="EditHistoryDialog-module__EditHistoryDialogContainer"]';
 
 export const editHistory = {
   enabled: false,
   observer: null,
+  pollTimer: null,
 
   enable() {
     if (this.enabled) return;
@@ -25,6 +23,8 @@ export const editHistory = {
     if (!this.enabled) return;
     this.observer?.disconnect();
     this.observer = null;
+    clearTimeout(this.pollTimer);
+    this.pollTimer = null;
     destroyOverlay();
     this.removeStyles();
     this.enabled = false;
@@ -35,10 +35,7 @@ export const editHistory = {
       for (const mutation of mutations) {
         for (const node of mutation.addedNodes) {
           if (node.nodeType !== Node.ELEMENT_NODE) continue;
-          const dialog =
-            node.matches?.(DIALOG_SELECTOR) ||
-            node.querySelector?.(DIALOG_SELECTOR);
-          if (dialog) {
+          if (node.matches?.("[data-portal-root]") || findDialog()) {
             this.waitForDialogContent();
             return;
           }
@@ -49,20 +46,19 @@ export const editHistory = {
   },
 
   waitForDialogContent(attempt = 0) {
-    if (attempt > 15) return;
+    if (!this.enabled || attempt > 15) return;
     const dialog = findDialog();
-    const header = dialog?.querySelector(
-      '[class*="EditHistoryDialogHeader-module"]',
-    );
-    if (header) {
-      this.injectButton();
+    if (dialog?.querySelector('[class*="EditHistoryDialogHeader-module"]')) {
+      this.injectButton(dialog);
     } else {
-      setTimeout(() => this.waitForDialogContent(attempt + 1), 200);
+      this.pollTimer = setTimeout(
+        () => this.waitForDialogContent(attempt + 1),
+        200,
+      );
     }
   },
 
-  injectButton() {
-    const dialog = findDialog();
+  injectButton(dialog) {
     if (!dialog || dialog.querySelector(`#${BUTTON_ID}`)) return;
 
     const header = dialog.querySelector(
