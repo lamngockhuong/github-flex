@@ -212,6 +212,12 @@ export const imageLightbox = {
       this.lightboxImg.style.height = "";
     }
 
+    const parentDialog = img.closest("dialog[open]");
+    const target = parentDialog || document.body;
+    if (this.lightbox.parentNode !== target) {
+      target.appendChild(this.lightbox);
+    }
+
     this.resetZoom();
     this.lightbox.classList.add("active");
     document.body.style.overflow = "hidden";
@@ -221,6 +227,9 @@ export const imageLightbox = {
     if (!this.lightbox) return;
     this.lightbox.classList.remove("active");
     document.body.style.overflow = "";
+    if (this.lightbox.parentNode !== document.body) {
+      document.body.appendChild(this.lightbox);
+    }
   },
 
   handleAction(action) {
