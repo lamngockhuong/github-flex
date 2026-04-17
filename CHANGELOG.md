@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.9](https://github.com/lamngockhuong/github-flex/compare/v0.0.8...v0.0.9) (2026-04-17)
+
+
+### Features
+
+* add edit history enhanced diff viewer ([#45](https://github.com/lamngockhuong/github-flex/issues/45)) ([3ae1938](https://github.com/lamngockhuong/github-flex/commit/3ae1938ed3641b12c5317c47f41f991552942133))
+* edit history enhanced diff viewer with wider modals ([#47](https://github.com/lamngockhuong/github-flex/issues/47)) ([5d377bb](https://github.com/lamngockhuong/github-flex/commit/5d377bb48adde9ddc1028e6ac83700d82eac31c6))
+
 ## [0.0.8](https://github.com/lamngockhuong/github-flex/compare/v0.0.7...v0.0.8) (2026-04-14)
 
 
