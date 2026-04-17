@@ -1,5 +1,23 @@
 /* Edit History - enhanced diff viewer overlay */
 
+/* === WIDEN GITHUB'S NATIVE EDIT HISTORY MODAL === */
+.ghflex-eh-wide-modal,
+.hx_rsm-dialog.hx_rsm-modal {
+  width: 90vw !important;
+  max-width: 1400px !important;
+}
+
+dialog[id^="edit-history-dialog"].Overlay--size-large {
+  width: 90vw !important;
+  max-width: 1400px !important;
+  height: 95vh !important;
+  max-height: 95vh !important;
+}
+
+dialog[id^="edit-history-dialog"] .overflow-y-scroll {
+  max-height: none !important;
+}
+
 /* === INJECTED BUTTON (inside GitHub's dialog) === */
 .ghflex-eh-enhance-btn {
   margin-left: auto;

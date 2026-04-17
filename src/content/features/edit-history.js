@@ -6,6 +6,7 @@ import { createOverlay, destroyOverlay } from "./edit-history-ui.js";
 const STYLE_ID = STYLE_IDS.EDIT_HISTORY;
 const MAX_DIFF_SIZE = 100_000;
 const BUTTON_ID = "ghflex-eh-enhance-btn";
+const WIDE_CLASS = "ghflex-eh-wide-modal";
 
 export const editHistory = {
   enabled: false,
@@ -49,6 +50,7 @@ export const editHistory = {
     if (!this.enabled || attempt > 15) return;
     const dialog = findDialog();
     if (dialog?.querySelector('[class*="EditHistoryDialogHeader-module"]')) {
+      this.widenNativeModal(dialog);
       this.injectButton(dialog);
     } else {
       this.pollTimer = setTimeout(
@@ -56,6 +58,11 @@ export const editHistory = {
         200,
       );
     }
+  },
+
+  widenNativeModal(dialog) {
+    const overlay = dialog.closest(".Box--overlay, .Box-overlay--wide");
+    if (overlay) overlay.classList.add(WIDE_CLASS);
   },
 
   injectButton(dialog) {

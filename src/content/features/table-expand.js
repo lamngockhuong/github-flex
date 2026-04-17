@@ -149,7 +149,9 @@ export const tableExpand = {
     content.appendChild(closeBtn);
     content.appendChild(tableClone);
     overlay.appendChild(content);
-    document.body.appendChild(overlay);
+
+    const parentDialog = table.closest("dialog[open]");
+    (parentDialog || document.body).appendChild(overlay);
     document.body.style.overflow = "hidden";
 
     if (imageLightbox.enabled) {
