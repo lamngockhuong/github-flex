@@ -16,5 +16,7 @@
   "gifPicker": { "message": "GIF Picker" },
   "gifPickerDesc": { "message": "Add GIF button to comments" },
   "sidebarToggle": { "message": "Sidebar Toggle" },
-  "sidebarToggleDesc": { "message": "Hide/show sidebar (Alt+M)" }
+  "sidebarToggleDesc": { "message": "Hide/show sidebar (Alt+M)" },
+  "editHistory": { "message": "Edit History" },
+  "editHistoryDesc": { "message": "Enhanced diff viewer for edits" }
 }

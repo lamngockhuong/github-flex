@@ -7,6 +7,7 @@ const SETTING_KEYS = [
   "imageLightbox",
   "gifPicker",
   "sidebarToggle",
+  "editHistory",
 ];
 
 /** Apply i18n translations to elements with data-i18n attribute */

@@ -16,5 +16,7 @@
   "gifPicker": { "message": "GIFピッカー" },
   "gifPickerDesc": { "message": "コメントにGIFボタンを追加" },
   "sidebarToggle": { "message": "サイドバー切替" },
-  "sidebarToggleDesc": { "message": "サイドバーの表示/非表示 (Alt+M)" }
+  "sidebarToggleDesc": { "message": "サイドバーの表示/非表示 (Alt+M)" },
+  "editHistory": { "message": "編集履歴" },
+  "editHistoryDesc": { "message": "編集の差分ビューアーを強化" }
 }
