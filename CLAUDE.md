@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) that enhances GitHub's interface with features like wide layout, table expansion, image lightbox, GIF picker, and sidebar toggle. Uses webextension-polyfill for cross-browser API compatibility.
+GitHub Flex is a cross-browser Manifest V3 extension (Chrome & Firefox) that enhances GitHub's interface with features like wide layout, table expansion, image lightbox, GIF picker, sidebar toggle, and edit history diff viewer. Uses webextension-polyfill for cross-browser API compatibility.
 
 ## Commands
 
@@ -70,6 +70,8 @@ export const featureName = {
 ```
 
 Features are registered in `main.js` and toggled based on user settings stored in `browser.storage.sync` (webextension-polyfill abstracts chrome._to browser._).
+
+Note: The Edit History feature is split across multiple files (`edit-history.js`, `edit-history-ui.js`, `edit-history-diff.js`, `edit-history-parser.js`, `edit-history-markdown.js`) for modularity.
 
 ### Build System
 

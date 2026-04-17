@@ -13,12 +13,13 @@ GitHub Flex is a cross-browser Manifest V3 extension (Chrome 88+, Firefox 112+) 
 │  │  ┌──────────────────────────────────────────────────┐  │  │
 │  │  │         Content Script (main.js)                 │  │  │
 │  │  │  ┌────────────────────────────────────────────┐  │  │  │
-│  │  │  │ Feature Modules (5 independent units)      │  │  │  │
+│  │  │  │ Feature Modules (6 independent units)      │  │  │  │
 │  │  │  │  • Wide Layout                             │  │  │  │
 │  │  │  │  • Table Expand                            │  │  │  │
 │  │  │  │  • Image Lightbox                          │  │  │  │
 │  │  │  │  • GIF Picker                              │  │  │  │
 │  │  │  │  • Sidebar Toggle                          │  │  │  │
+│  │  │  │  • Edit History                            │  │  │  │
 │  │  │  └────────────────────────────────────────────┘  │  │  │
 │  │  └──────────────────────────────────────────────────┘  │  │
 │  └────────────────────────────────────────────────────────┘  │
@@ -88,7 +89,7 @@ src/content/main.js (70 LOC)
 ```
 src/popup/popup.{html,css,js} (43 LOC JS)
 ├── Trigger: User clicks extension icon
-├── UI: 5 checkboxes (one per feature)
+├── UI: 6 checkboxes (one per feature)
 ├── Flow:
 │   ├── Load current settings on open
 │   ├── Bind checkbox change handlers
@@ -129,8 +130,15 @@ main.js
   ├─► tableExpand     ─┤
   ├─► imageLightbox   ─┼─► shared/storage.js
   ├─► gifPicker       ─┤    shared/constants.js
-  └─► sidebarToggle   ─┘    shared/icons.js
-                            shared/dom.js
+  ├─► sidebarToggle   ─┤    shared/icons.js
+  └─► editHistory     ─┘    shared/dom.js
+
+editHistory (internal dependency graph):
+  edit-history.js (controller)
+    ├─► edit-history-parser.js (DOM parsing)
+    └─► edit-history-ui.js (overlay rendering)
+          ├─► edit-history-diff.js (word-level diff)
+          └─► edit-history-markdown.js (markdown renderer)
 
 (No horizontal dependencies between features)
 ```
@@ -146,7 +154,8 @@ browser.storage.sync (webextension-polyfill)
     ├── tableExpand: true
     ├── imageLightbox: true
     ├── gifPicker: true
-    └── sidebarToggle: true
+    ├── sidebarToggle: true
+    └── editHistory: false
 ```
 
 **Characteristics:**
@@ -493,6 +502,90 @@ const isHidden = stored === "true";
 ```
 
 **Why String Conversion?** localStorage only stores strings. Boolean `true` must be explicitly compared as string `"true"`.
+
+### Edit History
+
+**Architecture:** MutationObserver + dialog parsing + enhanced overlay with 3 view modes
+
+```
+Feature enabled
+        ↓
+MutationObserver watches document.body
+        ↓
+GitHub user clicks "edited" on a comment
+        ↓
+GitHub opens native edit history dialog
+        ↓
+Observer detects [data-portal-root] or EditHistoryDialog
+        ↓
+waitForDialogContent() polls for dialog header (max 15 attempts, 200ms each)
+        ↓
+widenNativeModal(dialog)
+        ├─► Adds .ghflex-eh-wide-modal class
+        └─► Native modal expands to 90vw / max 1400px
+        ↓
+injectButton(dialog)
+        ├─► Creates "Split View" button
+        └─► Appends to EditHistoryDialogHeader
+        ↓
+User clicks "Split View" button
+        ↓
+openEnhancedView(dialog)
+        ├─► parseDiff(dialog)
+        │       ├─► Reads diff container from GitHub DOM
+        │       ├─► Iterates rows: added/removed/changed/unchanged
+        │       ├─► For changed lines: separates old/new word spans
+        │       └─► Returns { oldText, newText }
+        ├─► parseMeta(dialog)
+        │       └─► Extracts: avatarUrl, author, displayTime
+        ├─► Size check: oldText + newText ≤ 100KB
+        └─► createOverlay(oldText, newText, meta)
+                ├─► computeWordDiff(oldText, newText) via `diff` library
+                ├─► Builds panel: header + body + footer
+                ├─► Header: title, author meta, view toggles, close button
+                ├─► Footer: word stats (+N −N words), Esc hint
+                └─► Default view: "Split" (side-by-side)
+        ↓
+View Mode: Split (side-by-side)
+        ├─► buildSideBySide(parts) → oldSegments + newSegments
+        ├─► Left pane: "Old" with removed/unchanged text
+        ├─► Right pane: "New" with added/unchanged text
+        └─► Synced scrolling between panes
+        ↓
+View Mode: Unified
+        ├─► buildUnified(parts) → single segment list
+        └─► Inline added/removed/unchanged spans
+        ↓
+View Mode: Preview (rendered markdown)
+        ├─► buildAnnotatedTexts(parts) → markdown with marker chars
+        ├─► renderMarkdown(container, text) → safe DOM rendering
+        ├─► highlightMarkers() → wraps diff markers in styled spans
+        └─► Side-by-side rendered markdown with diff highlights
+        ↓
+User presses Esc or clicks backdrop
+        ↓
+destroyOverlay()
+        ├─► Removes keydown listener
+        ├─► Removes overlay from DOM
+        └─► Restores body overflow
+```
+
+**Markdown Renderer (`edit-history-markdown.js`):**
+
+XSS-safe renderer that creates DOM elements directly (no innerHTML with user data):
+- Block elements: headers (h1-h6), paragraphs, blockquotes, code blocks, lists (ul/ol), tables, horizontal rules
+- Inline elements: bold, italic, strikethrough, code, links, images
+- Safe HTML tags: whitelisted set (h1-h6, p, span, div, em, strong, etc.)
+- Safe attributes: whitelisted set (id, class, title, name, open)
+
+**Why Not GitHub's Native Viewer?** GitHub's edit history dialog shows a basic line-by-line diff. The enhanced viewer adds:
+1. Wider modal for better readability
+2. Word-level diff highlighting (not just line-level)
+3. Side-by-side comparison
+4. Rendered markdown preview with diff highlighting
+5. Word count statistics
+
+**Why Default Off?** Feature relies on GitHub's internal CSS class names (e.g., `EditHistoryDialog-module`, `GroupedTextDiffViewer-module`) which may change. Opt-in reduces impact of GitHub DOM updates on users who don't need this feature.
 
 ## Communication Patterns
 

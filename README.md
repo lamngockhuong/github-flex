@@ -20,6 +20,7 @@ A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface wi
 - **Image Lightbox** - Click images to view in fullscreen overlay
 - **GIF Picker** - Insert GIFs in comments and issues
 - **Sidebar Toggle** - Hide/show sidebar with button or `Alt+M` shortcut
+- **Edit History** - Enhanced diff viewer with split/unified/preview modes for comment edits
 
 <p align="center">
   <img src="assets/promo-02-wide-layout-1280x800.svg" alt="Wide Layout" width="400" />
