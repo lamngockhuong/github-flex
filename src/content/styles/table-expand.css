@@ -69,7 +69,7 @@
 .ghflex-table-fullscreen-overlay {
   position: fixed;
   inset: 0;
-  z-index: 99999;
+  z-index: 100002;
   background: var(--bgColor-default, #ffffff);
   overflow: auto;
 }

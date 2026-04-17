@@ -1,5 +1,6 @@
 import browser from "webextension-polyfill";
 import { getSettings } from "../shared/storage.js";
+import { editHistory } from "./features/edit-history.js";
 import { gifPicker } from "./features/gif-picker.js";
 import { imageLightbox } from "./features/image-lightbox.js";
 import { sidebarToggle } from "./features/sidebar-toggle.js";
@@ -12,6 +13,7 @@ const features = {
   imageLightbox,
   gifPicker,
   sidebarToggle,
+  editHistory,
 };
 
 // URL patterns where certain features should be excluded

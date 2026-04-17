@@ -16,5 +16,7 @@
   "gifPicker": { "message": "Chọn GIF" },
   "gifPickerDesc": { "message": "Thêm nút GIF vào bình luận" },
   "sidebarToggle": { "message": "Ẩn/hiện thanh bên" },
-  "sidebarToggleDesc": { "message": "Ẩn/hiện thanh bên (Alt+M)" }
+  "sidebarToggleDesc": { "message": "Ẩn/hiện thanh bên (Alt+M)" },
+  "editHistory": { "message": "Lịch sử chỉnh sửa" },
+  "editHistoryDesc": { "message": "Trình xem so sánh nâng cao cho bản chỉnh sửa" }
 }

@@ -5,6 +5,7 @@ export const SETTINGS_DEFAULTS = {
   imageLightbox: true,
   gifPicker: true,
   sidebarToggle: true,
+  editHistory: false,
 };
 
 // Chrome storage keys
@@ -18,6 +19,7 @@ export const STYLE_IDS = {
   TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
   SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
+  EDIT_HISTORY: "ghflex-edit-history-styles",
 };
 
 // Sidebar toggle storage key (localStorage for per-page state)
