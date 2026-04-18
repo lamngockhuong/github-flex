@@ -1,6 +1,7 @@
 // Service worker for GitHub Flex
 import browser from "webextension-polyfill";
 import {
+  BRAND_COLOR,
   CONTEXT_MENU_ITEMS,
   EXT_LINKS,
   MESSAGE_ACTIONS,
@@ -63,10 +64,10 @@ browser.runtime.onInstalled.addListener((details) => {
   if (details.reason === "install") {
     console.log("[GitHub Flex] Installed");
   } else if (details.reason === "update") {
-    console.log(
-      "[GitHub Flex] Updated to",
-      browser.runtime.getManifest().version,
-    );
+    const version = browser.runtime.getManifest().version;
+    console.log("[GitHub Flex] Updated to", version);
+    browser.action.setBadgeText({ text: "Up!" });
+    browser.action.setBadgeBackgroundColor({ color: BRAND_COLOR });
   }
 });
 
@@ -82,6 +83,9 @@ browser.contextMenus.onClicked.addListener((info) => {
 // Firefox content scripts are subject to the page's CSP, unlike Chrome.
 // Returns a Promise (required by webextension-polyfill, works on both browsers).
 browser.runtime.onMessage.addListener((message, _sender) => {
+  if (message.action === MESSAGE_ACTIONS.CLEAR_BADGE) {
+    return browser.action.setBadgeText({ text: "" });
+  }
   if (message.action === MESSAGE_ACTIONS.FETCH_GIFS) {
     return fetchGifApi(message.url);
   }
