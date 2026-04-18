@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.0.10](https://github.com/lamngockhuong/github-flex/compare/v0.0.9...v0.0.10) (2026-04-18)
+
+
+### Features
+
+* update badge notification and Edit History feature card ([#51](https://github.com/lamngockhuong/github-flex/issues/51)) ([b8ecdf3](https://github.com/lamngockhuong/github-flex/commit/b8ecdf33475d828b2072e66925ba5217ffa92399))
+
+
+### Bug Fixes
+
+* **deps:** update dependency astro to v6.1.7 ([#39](https://github.com/lamngockhuong/github-flex/issues/39)) ([b88a6b9](https://github.com/lamngockhuong/github-flex/commit/b88a6b999377f024ada92d3ebea68e0444a3c9f4))
+
 ## [0.0.9](https://github.com/lamngockhuong/github-flex/compare/v0.0.8...v0.0.9) (2026-04-17)
 
 
