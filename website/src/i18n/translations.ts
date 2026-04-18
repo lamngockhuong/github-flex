@@ -12,7 +12,7 @@ export const translations = {
   en: {
     meta: {
       title: 'GitHub Flex - Enhance Your GitHub Experience',
-      description: 'Browser extension with wide layout, expandable tables/images, GIF picker, and sidebar toggle for GitHub.',
+      description: 'Browser extension with wide layout, expandable tables/images, GIF picker, sidebar toggle, and edit history for GitHub.',
     },
     header: {
       features: 'Features',
@@ -23,7 +23,7 @@ export const translations = {
     },
     hero: {
       tagline: 'Enhance Your GitHub Experience',
-      description: 'Wide layout, expandable tables, image lightbox, GIF picker, and sidebar toggle - all in one extension.',
+      description: 'Wide layout, expandable tables, image lightbox, GIF picker, sidebar toggle, and edit history - all in one extension.',
       ctaChrome: 'Add to Chrome',
       ctaFirefox: 'Add to Firefox',
       subtext: 'Chrome • Edge • Brave • Opera • Vivaldi • Arc • Firefox',
@@ -37,6 +37,7 @@ export const translations = {
         { icon: '🖼️', title: 'Image Lightbox', description: 'Click images to view in fullscreen overlay with zoom' },
         { icon: '🎬', title: 'GIF Picker', description: 'Insert GIFs in comments and issues with GIPHY integration' },
         { icon: '📑', title: 'Sidebar Toggle', description: 'Hide/show sidebar with button or Alt+M shortcut' },
+        { icon: '📝', title: 'Edit History', description: 'View comment edit history with side-by-side diff comparison' },
       ],
     },
     screenshots: {
@@ -115,6 +116,7 @@ export const translations = {
         { icon: '🖼️', title: 'Phóng to hình ảnh', description: 'Nhấp vào hình ảnh để xem toàn màn hình với zoom' },
         { icon: '🎬', title: 'Chọn GIF', description: 'Chèn GIF vào bình luận và issues với tích hợp GIPHY' },
         { icon: '📑', title: 'Ẩn/hiện thanh bên', description: 'Ẩn/hiện thanh bên bằng nút hoặc phím tắt Alt+M' },
+        { icon: '📝', title: 'Lịch sử chỉnh sửa', description: 'Xem lịch sử chỉnh sửa bình luận với so sánh diff song song' },
       ],
     },
     screenshots: {
@@ -193,6 +195,7 @@ export const translations = {
         { icon: '🖼️', title: '画像ライトボックス', description: '画像をクリックしてズーム付きの全画面表示' },
         { icon: '🎬', title: 'GIFピッカー', description: 'GIPHY統合でコメントやissueにGIFを挿入' },
         { icon: '📑', title: 'サイドバー切替', description: 'ボタンまたはAlt+Mショートカットでサイドバーを表示/非表示' },
+        { icon: '📝', title: '編集履歴', description: 'コメントの編集履歴をサイドバイサイドの差分比較で表示' },
       ],
     },
     screenshots: {
