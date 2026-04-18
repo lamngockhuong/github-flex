@@ -32,10 +32,14 @@ export const TABLE_EXPAND_STORAGE_PREFIX = "ghflex-table-expand";
 export const GIF_API_URL = "https://github-gifs.aldilaff6545.workers.dev";
 export const GIF_DEBOUNCE_DELAY = 300;
 
+// Brand color (matches --gf-primary in colors.css and --primary in popup.css)
+export const BRAND_COLOR = "#8957e5";
+
 // Service worker message actions
 export const MESSAGE_ACTIONS = {
   FETCH_IMAGE: "fetchImage",
   FETCH_GIFS: "fetchGifs",
+  CLEAR_BADGE: "clearBadge",
 };
 
 // GitHub toolbar selector (shared between toolbar detection strategies)

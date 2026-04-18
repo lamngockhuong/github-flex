@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { MESSAGE_ACTIONS } from "../shared/constants.js";
 import { getSettings, saveSetting } from "../shared/storage.js";
 
 const SETTING_KEYS = [
@@ -21,6 +22,9 @@ function applyI18n() {
 
 async function init() {
   applyI18n();
+  browser.runtime
+    .sendMessage({ action: MESSAGE_ACTIONS.CLEAR_BADGE })
+    .catch(() => {});
   const settings = await getSettings();
 
   for (const key of SETTING_KEYS) {
