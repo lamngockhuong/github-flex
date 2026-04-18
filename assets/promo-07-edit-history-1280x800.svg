@@ -1,0 +1,210 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 800" width="1280" height="800">
+  <defs>
+    <linearGradient id="bgGradient" x1="100%" y1="100%" x2="0%" y2="0%">
+      <stop offset="0%" style="stop-color:#0d1117"/>
+      <stop offset="50%" style="stop-color:#161b22"/>
+      <stop offset="100%" style="stop-color:#3d1f6d"/>
+    </linearGradient>
+    <radialGradient id="purpleGlow" cx="50%" cy="40%" r="55%">
+      <stop offset="0%" style="stop-color:#8957e5;stop-opacity:0.18"/>
+      <stop offset="100%" style="stop-color:#8957e5;stop-opacity:0"/>
+    </radialGradient>
+    <clipPath id="leftPanelClip">
+      <rect x="0" y="0" width="200" height="288" rx="6"/>
+    </clipPath>
+    <clipPath id="rightPanelClip">
+      <rect x="0" y="0" width="680" height="288" rx="6"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="800" fill="url(#bgGradient)"/>
+  <rect width="1280" height="800" fill="url(#purpleGlow)"/>
+
+  <!-- Visual: Edit History diff viewer -->
+  <g transform="translate(640, 230)" text-anchor="middle">
+    <!-- Modal window -->
+    <g transform="translate(-470, -170)">
+      <rect x="0" y="0" width="940" height="360" rx="12" fill="#161b22" stroke="#8957e5" stroke-width="2"/>
+
+      <!-- Modal header -->
+      <rect x="0" y="0" width="940" height="44" rx="12" fill="#21262d"/>
+      <rect x="0" y="24" width="940" height="20" fill="#21262d"/>
+      <text x="20" y="29" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#e6edf3" text-anchor="start">Edit History</text>
+      <!-- Close button -->
+      <g transform="translate(908, 22)">
+        <circle cx="0" cy="0" r="12" fill="rgba(137,87,229,0.3)"/>
+        <path d="M-4 -4 L4 4 M4 -4 L-4 4" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round"/>
+      </g>
+
+      <!-- Left panel: Edit timeline -->
+      <g transform="translate(15, 56)">
+        <rect x="0" y="0" width="200" height="288" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+        <g clip-path="url(#leftPanelClip)">
+          <text x="12" y="24" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#e6edf3" text-anchor="start">Revisions</text>
+
+          <!-- Edit entry 1 (selected) -->
+          <rect x="8" y="36" width="184" height="52" rx="4" fill="rgba(137,87,229,0.15)" stroke="#8957e5" stroke-width="1"/>
+          <circle cx="22" cy="54" r="6" fill="#8957e5"/>
+          <text x="34" y="53" font-family="system-ui, sans-serif" font-size="11" font-weight="600" fill="#a371f7" text-anchor="start">Current version</text>
+          <text x="34" y="68" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="start">@octocat · 2 min ago</text>
+          <text x="34" y="81" font-family="system-ui, sans-serif" font-size="10" fill="#3fb950" text-anchor="start">+12 -3 lines</text>
+
+          <!-- Timeline connector -->
+          <rect x="21" y="88" width="2" height="8" fill="#30363d"/>
+
+          <!-- Edit entry 2 -->
+          <rect x="8" y="96" width="184" height="52" rx="4" fill="#21262d"/>
+          <circle cx="22" cy="114" r="6" fill="#30363d"/>
+          <text x="34" y="113" font-family="system-ui, sans-serif" font-size="11" fill="#e6edf3" text-anchor="start">Previous edit</text>
+          <text x="34" y="128" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="start">@octocat · 15 min ago</text>
+          <text x="34" y="141" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="start">+5 -1 lines</text>
+
+          <!-- Timeline connector -->
+          <rect x="21" y="148" width="2" height="8" fill="#30363d"/>
+
+          <!-- Edit entry 3 (original) -->
+          <rect x="8" y="156" width="184" height="52" rx="4" fill="#21262d"/>
+          <circle cx="22" cy="174" r="6" fill="#30363d"/>
+          <text x="34" y="173" font-family="system-ui, sans-serif" font-size="11" fill="#e6edf3" text-anchor="start">Original</text>
+          <text x="34" y="188" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="start">@octocat · 1 hour ago</text>
+          <text x="34" y="201" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="start">Initial comment</text>
+        </g>
+      </g>
+
+      <!-- Right panel: Diff viewer -->
+      <g transform="translate(230, 56)">
+        <rect x="0" y="0" width="695" height="288" rx="6" fill="#0d1117" stroke="#30363d" stroke-width="1"/>
+        <g clip-path="url(#rightPanelClip)">
+          <!-- Diff header -->
+          <rect x="0" y="0" width="695" height="32" rx="6" fill="#21262d"/>
+          <rect x="0" y="20" width="695" height="12" fill="#21262d"/>
+          <text x="15" y="22" font-family="system-ui, sans-serif" font-size="12" font-weight="600" fill="#e6edf3" text-anchor="start">Changes</text>
+          <!-- View toggle -->
+          <rect x="555" y="6" width="60" height="20" rx="4" fill="#8957e5"/>
+          <text x="585" y="20" font-family="system-ui, sans-serif" font-size="10" font-weight="600" fill="#ffffff" text-anchor="middle">Unified</text>
+          <rect x="620" y="6" width="55" height="20" rx="4" fill="#30363d"/>
+          <text x="647" y="20" font-family="system-ui, sans-serif" font-size="10" fill="#8b949e" text-anchor="middle">Split</text>
+
+          <!-- Diff lines -->
+          <!-- Context line 1 -->
+          <g transform="translate(0, 40)">
+            <text x="15" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">1</text>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">1</text>
+            <text x="50" y="14" font-family="monospace" font-size="11" fill="#e6edf3" text-anchor="start">## Description</text>
+          </g>
+          <!-- Context line 2 -->
+          <g transform="translate(0, 58)">
+            <text x="15" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">2</text>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">2</text>
+          </g>
+
+          <!-- Removed line -->
+          <g transform="translate(0, 76)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(248,81,73,0.1)"/>
+            <text x="15" y="14" font-family="monospace" font-size="11" fill="#f85149" text-anchor="end">3</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#f85149" text-anchor="start">-</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#ffa198" text-anchor="start">This PR fixes the login bug</text>
+          </g>
+
+          <!-- Added lines -->
+          <g transform="translate(0, 96)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">3</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">This PR fixes the auth bug in login flow</text>
+          </g>
+          <g transform="translate(0, 116)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">4</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">that caused session timeouts.</text>
+          </g>
+          <g transform="translate(0, 136)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">5</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+          </g>
+          <g transform="translate(0, 156)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">6</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">### Changes</text>
+          </g>
+
+          <!-- Context line -->
+          <g transform="translate(0, 176)">
+            <text x="15" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">4</text>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#8b949e" text-anchor="end">7</text>
+          </g>
+
+          <!-- More removed/added -->
+          <g transform="translate(0, 196)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(248,81,73,0.1)"/>
+            <text x="15" y="14" font-family="monospace" font-size="11" fill="#f85149" text-anchor="end">5</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#f85149" text-anchor="start">-</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#ffa198" text-anchor="start">- Fixed bug</text>
+          </g>
+          <g transform="translate(0, 216)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">8</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">- Fixed session timeout in OAuth callback</text>
+          </g>
+          <g transform="translate(0, 236)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">9</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">- Added retry logic for token refresh</text>
+          </g>
+          <g transform="translate(0, 256)">
+            <rect x="0" y="0" width="695" height="18" fill="rgba(63,185,80,0.1)"/>
+            <text x="35" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="end">10</text>
+            <text x="42" y="14" font-family="monospace" font-size="11" fill="#3fb950" text-anchor="start">+</text>
+            <text x="55" y="14" font-family="monospace" font-size="11" fill="#7ee787" text-anchor="start">- Updated error messages for clarity</text>
+          </g>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <!-- Bottom section: Text content -->
+  <g transform="translate(0, 480)">
+    <!-- Main headline -->
+    <text x="640" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="56" font-weight="700" fill="#ffffff" text-anchor="middle">
+      Edit History
+    </text>
+
+    <!-- Subheadline -->
+    <text x="640" y="140" font-family="system-ui, -apple-system, sans-serif" font-size="22" fill="#8b949e" text-anchor="middle">
+      Track comment edits with a full diff viewer - see what changed
+    </text>
+
+    <!-- Feature badges -->
+    <g transform="translate(455, 180)">
+      <rect x="0" y="0" width="120" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="60" y="18" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle" dominant-baseline="central">Diff Viewer</text>
+
+      <rect x="135" y="0" width="100" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="185" y="18" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle" dominant-baseline="central">Timeline</text>
+
+      <rect x="250" y="0" width="120" height="36" rx="18" fill="rgba(137,87,229,0.2)"/>
+      <text x="310" y="18" font-family="system-ui, sans-serif" font-size="14" fill="#a371f7" text-anchor="middle" dominant-baseline="central">Unified/Split</text>
+    </g>
+
+    <!-- Logo bottom right -->
+    <g transform="translate(1100, 240)">
+      <rect width="36" height="36" rx="5" fill="#8957e5"/>
+      <g transform="translate(8, 8) scale(0.75)" fill="#ffffff">
+        <path d="m12.301 0h.093c2.242 0 4.34.613 6.137 1.68l-.055-.031c1.871 1.094 3.386 2.609 4.449 4.422l.031.058c1.04 1.769 1.654 3.896 1.654 6.166 0 5.406-3.483 10-8.327 11.658l-.087.026c-.063.02-.135.031-.209.031-.162 0-.312-.054-.433-.144l.002.001c-.128-.115-.208-.281-.208-.466v-.014q0-.048.008-1.226t.008-2.154c.007-.075.011-.161.011-.249 0-.792-.323-1.508-.844-2.025.618-.061 1.176-.163 1.718-.305l-.076.017c.573-.16 1.073-.373 1.537-.642l-.031.017c.508-.28.938-.636 1.292-1.058l.006-.007c.372-.476.663-1.036.84-1.645l.009-.035c.209-.683.329-1.468.329-2.281 0-.045 0-.091-.001-.136v.007c0-.022.001-.047.001-.072 0-1.248-.482-2.383-1.269-3.23l.003.003c.168-.44.265-.948.265-1.479 0-.649-.145-1.263-.404-1.814l.011.026c-.115-.022-.246-.035-.381-.035-.334 0-.649.078-.929.216l.012-.005c-.568.21-1.054.448-1.512.726l.038-.022-.609.384c-.922-.264-1.981-.416-3.075-.416s-2.153.152-3.157.436l.081-.02q-.256-.176-.681-.433c-.373-.214-.814-.421-1.272-.595l-.066-.022c-.293-.154-.64-.244-1.009-.244-.124 0-.246.01-.364.03l.013-.002c-.248.524-.393 1.139-.393 1.788 0 .531.097 1.04.275 1.509l-.01-.029c-.785.844-1.266 1.979-1.266 3.227v.076c-.001.039-.001.084-.001.13 0 .809.12 1.591.344 2.327l-.015-.057c.189.643.476 1.202.85 1.693l-.009-.013c.354.435.782.793 1.267 1.062l.022.011c.432.252.933.465 1.46.614l.046.011c.466.125 1.024.227 1.595.284l.046.004c-.431.428-.718 1-.784 1.638l-.001.012c-.207.101-.448.183-.699.236l-.021.004c-.256.051-.549.08-.85.08h-.066c-.394-.008-.756-.136-1.055-.348l.006.004c-.371-.259-.671-.595-.881-.986l-.007-.015c-.198-.336-.459-.614-.768-.827l-.009-.006c-.225-.169-.49-.301-.776-.38l-.016-.004-.32-.048c-.023-.002-.05-.003-.077-.003-.14 0-.273.028-.394.077l.007-.003q-.128.072-.08.184c.039.086.087.16.145.225l-.001-.001c.061.072.13.135.205.19l.003.002.112.08c.283.148.516.354.693.603l.004.006c.191.237.359.505.494.792l.01.024.16.368c.135.402.38.738.7.981l.005.004c.3.234.662.402 1.057.478l.016.002c.33.064.714.104 1.106.112h.007c.045.002.097.002.15.002.261 0 .517-.021.767-.062l-.027.004.368-.064q0 .609.008 1.418t.008.873v.014c0 .185-.08.351-.208.466-.119.089-.268.143-.431.143-.075 0-.147-.011-.214-.032l.005.001c-4.929-1.689-8.409-6.283-8.409-11.69 0-2.268.612-4.393 1.681-6.219l-.032.058c1.094-1.871 2.609-3.386 4.422-4.449l.058-.031c1.739-1.034 3.835-1.645 6.073-1.645h.098z"/>
+      </g>
+      <g stroke="#ffffff" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" fill="none">
+        <path d="M4 10 L4 4 L10 4"/>
+        <path d="M26 4 L32 4 L32 10"/>
+        <path d="M4 26 L4 32 L10 32"/>
+        <path d="M32 26 L32 32 L26 32"/>
+      </g>
+      <text x="46" y="26" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#a371f7">GitHub Flex</text>
+    </g>
+  </g>
+</svg>

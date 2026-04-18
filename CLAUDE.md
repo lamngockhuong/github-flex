@@ -20,6 +20,9 @@ pnpm lint:fix         # Auto-fix linting issues
 pnpm test             # Run tests
 pnpm test:watch       # Run tests in watch mode
 
+# Assets (convert SVG promo images to PNG)
+cd assets && for f in *.svg; do rsvg-convert "$f" -o "${f%.svg}.png"; done
+
 # Website (landing page)
 cd website
 pnpm install          # Install website dependencies
