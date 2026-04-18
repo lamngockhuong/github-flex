@@ -7,6 +7,9 @@
 [![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
 [![Website](https://img.shields.io/badge/Website-github--flex.khuong.dev-8957e5?logo=astro&logoColor=white)](https://github-flex.khuong.dev)
 
+<a href="https://unikorn.vn/p/github-flex?ref=embed-github-flex" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/github-flex?theme=light" alt="GitHub Flex trên Unikorn.vn" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+<a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank"><img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/light" alt="GitHub Flex - Launched on J2TEAM Launch" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+
 A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface with productivity features.
 
 <p align="center">
