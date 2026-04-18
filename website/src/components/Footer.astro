@@ -1,6 +1,6 @@
 ---
 import { useTranslations, type Locale } from '../i18n';
-import { CHROME_STORE_URL, FIREFOX_ADDONS_URL, GITHUB_URL } from '../constants';
+import { CHROME_STORE_URL, FIREFOX_ADDONS_URL, GITHUB_URL, OTHER_PROJECTS } from '../constants';
 
 interface Props {
   locale: Locale;
@@ -46,7 +46,7 @@ const t = useTranslations(locale);
   <!-- Links Section -->
   <div class="py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-7xl mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-8">
+      <div class="grid grid-cols-2 md:grid-cols-5 gap-8">
         <!-- Product -->
         <div>
           <h3 class="font-semibold text-primary dark:text-primary-light mb-4">{t.footer.sections.product}</h3>
@@ -72,6 +72,23 @@ const t = useTranslations(locale);
           <ul class="space-y-2">
             <li><a href={CHROME_STORE_URL} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.chromeStore}</a></li>
             <li><a href={FIREFOX_ADDONS_URL} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors">{t.footer.links.firefoxAddons}</a></li>
+          </ul>
+        </div>
+
+        <!-- Other Projects -->
+        <div>
+          <h3 class="font-semibold text-primary dark:text-primary-light mb-4">{t.footer.sections.otherProjects}</h3>
+          <ul class="space-y-3">
+            {OTHER_PROJECTS.map(project => (
+              <li>
+                <a href={project.url} target="_blank" rel="noopener noreferrer" class="text-text-muted dark:text-text-muted-dark hover:text-primary dark:hover:text-primary-light transition-colors font-medium">
+                  {project.name}
+                </a>
+                <p class="text-xs text-text-muted dark:text-text-muted-dark opacity-75 mt-0.5">
+                  {t.footer.otherProjects[project.descriptionKey]}
+                </p>
+              </li>
+            ))}
           </ul>
         </div>
 
