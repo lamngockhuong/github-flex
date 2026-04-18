@@ -1,6 +1,6 @@
 ---
-import { useTranslations, type Locale } from '../i18n';
-import { CHROME_STORE_URL, FIREFOX_ADDONS_URL } from '../constants';
+import { CHROME_STORE_URL, FIREFOX_ADDONS_URL } from "../constants";
+import { type Locale, useTranslations } from "../i18n";
 
 interface Props {
   locale: Locale;
@@ -10,12 +10,12 @@ const { locale } = Astro.props;
 const t = useTranslations(locale);
 
 const screenshots = [
-  { src: '/screenshots/wide-layout.svg', alt: 'Wide Layout' },
-  { src: '/screenshots/table-expand.svg', alt: 'Table Expand' },
-  { src: '/screenshots/lightbox.svg', alt: 'Image Lightbox' },
-  { src: '/screenshots/gif-picker.svg', alt: 'GIF Picker' },
-  { src: '/screenshots/sidebar-toggle.svg', alt: 'Sidebar Toggle' },
-  { src: '/screenshots/edit-history.svg', alt: 'Edit History' },
+  { src: "/screenshots/wide-layout.svg", alt: "Wide Layout" },
+  { src: "/screenshots/table-expand.svg", alt: "Table Expand" },
+  { src: "/screenshots/lightbox.svg", alt: "Image Lightbox" },
+  { src: "/screenshots/gif-picker.svg", alt: "GIF Picker" },
+  { src: "/screenshots/sidebar-toggle.svg", alt: "Sidebar Toggle" },
+  { src: "/screenshots/edit-history.svg", alt: "Edit History" },
 ];
 ---
 
@@ -106,6 +106,14 @@ const screenshots = [
     <p class="mt-3 text-xs text-text-muted dark:text-text-muted-dark opacity-75">
       {t.hero.subtext}
     </p>
+    <div class="mt-6 flex flex-wrap items-center justify-center gap-3">
+      <a href="https://unikorn.vn/p/github-flex?ref=embed-github-flex" target="_blank" rel="noopener noreferrer">
+        <img src="https://unikorn.vn/api/widgets/badge/github-flex?theme=dark" alt="GitHub Flex trên Unikorn.vn" width="180" height="45" />
+      </a>
+      <a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank" rel="noopener noreferrer">
+        <img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/dark" alt="GitHub Flex - Launched on J2TEAM Launch" width="180" height="45" />
+      </a>
+    </div>
   </div>
 </section>
 
