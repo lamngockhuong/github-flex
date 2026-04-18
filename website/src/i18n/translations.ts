@@ -75,6 +75,7 @@ export const translations = {
       sections: {
         product: 'Product',
         resources: 'Resources',
+        otherProjects: 'Other Projects',
       },
       links: {
         features: 'Features',
@@ -84,6 +85,9 @@ export const translations = {
         reportIssue: 'Report Issue',
         chromeStore: 'Chrome Web Store',
         firefoxAddons: 'Firefox Add-ons',
+      },
+      otherProjects: {
+        termote: 'Remote control CLI tools from mobile/desktop via PWA',
       },
       copyright: '© 2026 GitHub Flex. Open source under MIT License.',
     },
@@ -154,6 +158,7 @@ export const translations = {
       sections: {
         product: 'Sản phẩm',
         resources: 'Tài nguyên',
+        otherProjects: 'Dự án khác',
       },
       links: {
         features: 'Tính năng',
@@ -163,6 +168,9 @@ export const translations = {
         reportIssue: 'Báo lỗi',
         chromeStore: 'Chrome Web Store',
         firefoxAddons: 'Firefox Add-ons',
+      },
+      otherProjects: {
+        termote: 'Điều khiển CLI từ xa từ di động/máy tính qua PWA',
       },
       copyright: '© 2026 GitHub Flex. Mã nguồn mở theo giấy phép MIT.',
     },
@@ -233,6 +241,7 @@ export const translations = {
       sections: {
         product: '製品',
         resources: 'リソース',
+        otherProjects: '他のプロジェクト',
       },
       links: {
         features: '機能',
@@ -242,6 +251,9 @@ export const translations = {
         reportIssue: '問題を報告',
         chromeStore: 'Chrome Web Store',
         firefoxAddons: 'Firefox Add-ons',
+      },
+      otherProjects: {
+        termote: 'モバイル/デスクトップからPWAでCLIツールをリモート操作',
       },
       copyright: '© 2026 GitHub Flex. MITライセンスのオープンソース。',
     },
