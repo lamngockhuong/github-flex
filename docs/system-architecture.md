@@ -1183,9 +1183,9 @@ No cleanup needed (pure client-side, no server state)
 
 ### Landing Page (Astro)
 
-**URL:** https://github-flex.khuong.dev
+**URL:** https://github-flex.ohnice.app
 **Framework:** Astro 5.x + Tailwind CSS 4.x
-**Hosting:** Cloudflare Pages
+**Hosting:** GitHub Pages
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -1251,10 +1251,10 @@ pnpm build       # SSG build → dist/
 pnpm preview     # Preview production build
 ```
 
-**CI/CD:** GitHub Actions → Cloudflare Pages
+**CI/CD:** GitHub Actions → GitHub Pages
 - Trigger: Push to `main` branch
 - Build: `pnpm build` in `website/` directory
-- Output: Static HTML to Cloudflare edge network
+- Output: Static HTML to GitHub Pages
 
 ## Monitoring & Observability
 

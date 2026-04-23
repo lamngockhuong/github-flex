@@ -47,7 +47,7 @@ export const TOOLBAR_SELECTOR = '.toolbar, [role="toolbar"], markdown-toolbar';
 
 // External links for context menu and popup
 export const EXT_LINKS = {
-  website: "https://github-flex.khuong.dev",
+  website: "https://github-flex.ohnice.app",
   github: "https://github.com/lamngockhuong/github-flex",
   issues: "https://github.com/lamngockhuong/github-flex/issues",
   changelog:

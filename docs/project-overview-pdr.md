@@ -7,7 +7,7 @@
 **Version:** 0.0.9
 **License:** MIT
 **Repository:** <https://github.com/lamngockhuong/github-flex>
-**Website:** <https://github-flex.khuong.dev>
+**Website:** <https://github-flex.ohnice.app>
 
 ## Product Vision
 
@@ -263,7 +263,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 - Astro 5.x (SSG framework)
 - Tailwind CSS 4.x (styling)
-- Cloudflare Pages (hosting)
+- GitHub Pages (hosting)
 
 ### System
 
