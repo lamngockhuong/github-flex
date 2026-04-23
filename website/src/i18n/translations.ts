@@ -33,7 +33,7 @@ export const translations = {
       subtitle: 'Everything you need for a better GitHub experience',
       items: [
         { icon: '📐', title: 'Wide Layout', description: 'Expand GitHub to full viewport width for better code reading' },
-        { icon: '📊', title: 'Table Expand', description: 'Expandable tables with fullscreen mode and persistent state' },
+        { icon: '📊', title: 'Table Expand', description: 'Expandable tables with fullscreen, column resize, column hide/show, and persistent state' },
         { icon: '🖼️', title: 'Image Lightbox', description: 'Click images to view in fullscreen overlay with zoom' },
         { icon: '🎬', title: 'GIF Picker', description: 'Insert GIFs in comments and issues with GIPHY integration' },
         { icon: '📑', title: 'Sidebar Toggle', description: 'Hide/show sidebar with button or Alt+M shortcut' },
@@ -116,7 +116,7 @@ export const translations = {
       subtitle: 'Mọi thứ bạn cần để có trải nghiệm GitHub tốt hơn',
       items: [
         { icon: '📐', title: 'Bố cục rộng', description: 'Mở rộng GitHub ra toàn bộ chiều rộng để đọc code tốt hơn' },
-        { icon: '📊', title: 'Phóng to bảng', description: 'Bảng có thể mở rộng với chế độ toàn màn hình và lưu trạng thái' },
+        { icon: '📊', title: 'Phóng to bảng', description: 'Bảng mở rộng với toàn màn hình, kéo thay đổi cột, ẩn/hiện cột và lưu trạng thái' },
         { icon: '🖼️', title: 'Phóng to hình ảnh', description: 'Nhấp vào hình ảnh để xem toàn màn hình với zoom' },
         { icon: '🎬', title: 'Chọn GIF', description: 'Chèn GIF vào bình luận và issues với tích hợp GIPHY' },
         { icon: '📑', title: 'Ẩn/hiện thanh bên', description: 'Ẩn/hiện thanh bên bằng nút hoặc phím tắt Alt+M' },
@@ -199,7 +199,7 @@ export const translations = {
       subtitle: 'より良いGitHub体験に必要なすべて',
       items: [
         { icon: '📐', title: 'ワイドレイアウト', description: 'GitHubを全幅に拡大してコードを読みやすく' },
-        { icon: '📊', title: 'テーブル拡大', description: '全画面モードと状態保持機能付きの拡大可能なテーブル' },
+        { icon: '📊', title: 'テーブル拡大', description: '全画面、列リサイズ、列の表示/非表示、状態保持機能付きの拡大可能なテーブル' },
         { icon: '🖼️', title: '画像ライトボックス', description: '画像をクリックしてズーム付きの全画面表示' },
         { icon: '🎬', title: 'GIFピッカー', description: 'GIPHY統合でコメントやissueにGIFを挿入' },
         { icon: '📑', title: 'サイドバー切替', description: 'ボタンまたはAlt+Mショートカットでサイドバーを表示/非表示' },

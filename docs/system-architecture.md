@@ -133,6 +133,10 @@ main.js
   ├─► sidebarToggle   ─┤    shared/icons.js
   └─► editHistory     ─┘    shared/dom.js
 
+tableExpand (internal dependency graph):
+  table-expand.js (controller)
+    └─► table-column-resize.js (drag-to-resize columns, width persistence)
+
 editHistory (internal dependency graph):
   edit-history.js (controller)
     ├─► edit-history-parser.js (DOM parsing)
@@ -183,7 +187,8 @@ Popup writes → browser.storage.sync.set() [polyfilled]
 ```
 localStorage (per-origin, github.com)
 ├── "ghflex-zen-hidden": "true"
-└── "ghflex-table-expand-state": '{"pathname:table-0": true, ...}'
+├── "ghflex-table-expand-state": '{"pathname:table-0": true, ...}'
+└── "ghflex-table-col-widths": '{"Header1|Header2": [w1, w2], ...}'
 ```
 
 **Characteristics:**
@@ -221,7 +226,7 @@ Content renders wide immediately (no flash)
 
 ### Table Expand
 
-**Architecture:** DOM wrapper + state persistence
+**Architecture:** DOM wrapper + state persistence + draggable column resize
 
 ```
 Feature enabled
@@ -230,7 +235,11 @@ processTables() runs
         ├─► Queries: .markdown-body table
         ├─► Wraps each in: .ghflex-table-wrapper
         ├─► Injects buttons: expand + fullscreen
-        └─► Restores state from localStorage
+        ├─► Restores expand state from localStorage
+        └─► addResizeHandles(table)
+                ├─► Adds drag handles on <th> right borders
+                ├─► Restores saved column widths (keyed by header text)
+                └─► Sets table-layout: fixed with explicit column widths
                 ↓
 User clicks expand button
         ↓
@@ -239,11 +248,20 @@ toggleExpand(table, index)
         ├─► Saves state: localStorage[pathname:table-{index}] = true
         └─► Button icon updates
                 ↓
+User drags column border
+        ↓
+startResize(event, table, headerCells, colIndex, tableKey)
+        ├─► Tracks mousedown X position
+        ├─► Updates column width on mousemove (min 50px)
+        ├─► On mouseup: saves widths to localStorage
+        └─► Key: header texts joined by "|" (shared across pages)
+                ↓
 User clicks fullscreen
         ↓
 enterFullscreen(table)
         ├─► Creates overlay: position: fixed, z-index: 9999
         ├─► Clones table into overlay
+        ├─► Adds fresh resize handles to clone
         ├─► Adds Esc key listener
         └─► Stores reference: this.fullscreenTable
                 ↓
@@ -253,14 +271,19 @@ MutationObserver fires
         ↓
 Debounced processTables() runs (100ms delay)
         ├─► Detects new tables
-        ├─► Wraps and injects buttons
+        ├─► Wraps and injects buttons + resize handles
         └─► Restores state for new URL
 ```
 
-**State Key Pattern:** `pathname:table-index`
+**Expand State Key Pattern:** `pathname:table-index`
 
 - Example: `/user/repo/blob/main/README.md:table-0`
 - Ensures state isolation per-page
+
+**Column Width Key Pattern:** Header text joined by `|`
+
+- Example: `"File|Change"` → `[250, 500]`
+- Shared across pages — identical table structures get the same saved widths
 
 **Why Debounce?** GitHub's SPA triggers hundreds of mutations during navigation. Debouncing prevents excessive processing.
 

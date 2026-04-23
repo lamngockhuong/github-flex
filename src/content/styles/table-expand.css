@@ -65,6 +65,59 @@
   opacity: 1;
 }
 
+/* === COLUMN RESIZE === */
+.ghflex-col-resize-handle {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  user-select: none;
+  z-index: 1;
+}
+
+.ghflex-col-resize-handle:hover,
+.ghflex-table-resizing .ghflex-col-resize-handle {
+  background-color: var(--borderColor-accent, #0969da);
+}
+
+.ghflex-table-resizing {
+  user-select: none;
+}
+
+/* === COLUMN HIDE === */
+.ghflex-col-hide-btn {
+  position: absolute;
+  top: 4px;
+  left: 4px;
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+  border: none;
+  background: transparent;
+  color: var(--fgColor-muted, #656d76);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 14px;
+  line-height: 1;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+thead th:hover .ghflex-col-hide-btn {
+  opacity: 0.5;
+}
+
+.ghflex-col-hide-btn:hover {
+  opacity: 1 !important;
+  background-color: var(--bgColor-danger-muted, #ffebe9);
+  color: var(--fgColor-danger, #d1242f);
+}
+
 /* === FULLSCREEN OVERLAY === */
 .ghflex-table-fullscreen-overlay {
   position: fixed;
@@ -80,6 +133,19 @@
   min-height: 100%;
   width: fit-content;
   min-width: 100%;
+}
+
+.ghflex-table-fullscreen-btn-group {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  display: flex;
+  gap: 4px;
+  z-index: 10;
+}
+
+.ghflex-table-fullscreen-btn-group .ghflex-table-toggle {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .ghflex-table-fullscreen-close {
