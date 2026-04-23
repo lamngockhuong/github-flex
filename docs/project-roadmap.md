@@ -94,7 +94,7 @@
 - [x] Submit for review (both stores)
 - [x] Chrome Web Store published: <https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc>
 - [x] Firefox Add-ons published: <https://addons.mozilla.org/en-US/firefox/addon/github-flex/>
-- [x] Landing page launched: <https://github-flex.khuong.dev>
+- [x] Landing page launched: <https://github-flex.ohnice.app>
 
 #### Launch Activities
 

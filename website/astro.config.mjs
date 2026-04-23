@@ -3,7 +3,7 @@ import tailwindcss from '@tailwindcss/vite';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://github-flex.khuong.dev',
+  site: 'https://github-flex.ohnice.app',
   i18n: {
     defaultLocale: 'en',
     locales: ['en', 'vi', 'ja'],

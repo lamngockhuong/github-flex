@@ -4,10 +4,10 @@
 
 **Name:** GitHub Flex
 **Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox) + Landing Page
-**Version:** 0.0.9
+**Version:** 0.0.11
 **License:** MIT
 **Repository:** <https://github.com/lamngockhuong/github-flex>
-**Website:** <https://github-flex.khuong.dev>
+**Website:** <https://github-flex.ohnice.app>
 
 ## Product Vision
 
@@ -263,7 +263,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 - Astro 5.x (SSG framework)
 - Tailwind CSS 4.x (styling)
-- Cloudflare Pages (hosting)
+- GitHub Pages (hosting)
 
 ### System
 

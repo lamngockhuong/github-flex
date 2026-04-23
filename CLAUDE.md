@@ -91,7 +91,7 @@ Custom esbuild script (`scripts/build.js`) bundles content script and popup JS t
 - **Framework:** Astro 5.x + Tailwind CSS 4.x
 - **i18n:** Static routes (`/`, `/ja/`, `/vi/`) with `useTranslations()` helper
 - **Components:** `website/src/components/` (Header, Footer, LandingPage, etc.)
-- **Hosting:** Cloudflare Pages at https://github-flex.khuong.dev
+- **Hosting:** GitHub Pages at https://github-flex.ohnice.app
 - **Constants:** `website/src/constants.ts` (store URLs, GitHub URL)
 
 ## Adding a New Feature
