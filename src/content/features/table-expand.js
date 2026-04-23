@@ -1,8 +1,16 @@
-// Table Expand feature - expandable tables with fullscreen option
 import browser from "webextension-polyfill";
 import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 import { imageLightbox } from "./image-lightbox.js";
+import {
+  addResizeHandles,
+  removeAllResizeHandles,
+  removeResizeHandles,
+} from "./table-column-resize.js";
+import {
+  addColumnToggles,
+  removeAllColumnToggles,
+} from "./table-column-toggle.js";
 
 const STYLE_ID = "ghflex-table-expand-styles";
 const STORAGE_KEY = "ghflex-table-expand-state";
@@ -29,6 +37,8 @@ export const tableExpand = {
     this.observer?.disconnect();
     this.exitFullscreen();
     this.removeEscapeHandler();
+    removeAllColumnToggles();
+    removeAllResizeHandles();
     this.removeAllToggles();
     this.removeStyles();
     this.enabled = false;
@@ -75,11 +85,9 @@ export const tableExpand = {
         container.classList.add("ghflex-table-expanded");
       }
 
-      // Button group
       const btnGroup = document.createElement("div");
       btnGroup.className = "ghflex-table-btn-group";
 
-      // Expand button
       const expandBtn = this.createButton(
         isExpanded ? ICONS.unlock : ICONS.lock,
         isExpanded ? "Collapse" : "Expand",
@@ -95,7 +103,6 @@ export const tableExpand = {
         },
       );
 
-      // Fullscreen button
       const fullscreenBtn = this.createButton(
         ICONS.fullscreen,
         "Fullscreen",
@@ -109,6 +116,8 @@ export const tableExpand = {
       wrapper.appendChild(btnGroup);
       wrapper.appendChild(container);
       container.appendChild(table);
+      addResizeHandles(table);
+      addColumnToggles(table, btnGroup);
     });
   },
 
@@ -121,7 +130,6 @@ export const tableExpand = {
     return button;
   },
 
-  // Fullscreen mode
   openFullscreen(table) {
     if (this.fullscreenTable) return;
 
@@ -137,7 +145,6 @@ export const tableExpand = {
     closeBtn.title = "Exit Fullscreen (Esc)";
     closeBtn.addEventListener("click", () => this.exitFullscreen());
 
-    // Clone table for fullscreen
     const tableClone = table.cloneNode(true);
     tableClone.className = "ghflex-table-fullscreen-table";
 
@@ -146,13 +153,25 @@ export const tableExpand = {
       img.classList.remove("ghflex-lightbox-trigger");
     });
 
+    const fsBtnGroup = document.createElement("div");
+    fsBtnGroup.className = "ghflex-table-fullscreen-btn-group";
+
     content.appendChild(closeBtn);
+    content.appendChild(fsBtnGroup);
     content.appendChild(tableClone);
     overlay.appendChild(content);
 
     const parentDialog = table.closest("dialog[open]");
     (parentDialog || document.body).appendChild(overlay);
     document.body.style.overflow = "hidden";
+
+    removeResizeHandles(tableClone);
+    addResizeHandles(tableClone);
+    for (const btn of tableClone.querySelectorAll(".ghflex-col-hide-btn")) {
+      btn.remove();
+    }
+    delete tableClone.dataset.ghflexColToggle;
+    addColumnToggles(tableClone, fsBtnGroup);
 
     if (imageLightbox.enabled) {
       imageLightbox.processImages(content);

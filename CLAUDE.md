@@ -74,7 +74,7 @@ export const featureName = {
 
 Features are registered in `main.js` and toggled based on user settings stored in `browser.storage.sync` (webextension-polyfill abstracts chrome._to browser._).
 
-Note: The Edit History feature is split across multiple files (`edit-history.js`, `edit-history-ui.js`, `edit-history-diff.js`, `edit-history-parser.js`, `edit-history-markdown.js`) for modularity.
+Note: The Edit History feature is split across multiple files (`edit-history.js`, `edit-history-ui.js`, `edit-history-diff.js`, `edit-history-parser.js`, `edit-history-markdown.js`) for modularity. The Table Expand feature uses `table-column-resize.js` as a submodule for drag-to-resize column widths with persistence keyed by header structure.
 
 ### Build System
 

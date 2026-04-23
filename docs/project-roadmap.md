@@ -16,7 +16,7 @@
 #### Delivered Features
 
 - [x] Wide Layout - Full viewport expansion (20 LOC)
-- [x] Table Expand - Expandable tables with fullscreen (227 LOC)
+- [x] Table Expand - Expandable tables with fullscreen + drag-to-resize columns (371 LOC across 2 files)
 - [x] Image Lightbox - Click-to-zoom with pan (318 LOC)
 - [x] GIF Picker - Search and insert GIFs (656 LOC)
 - [x] Sidebar Toggle - Hide/show sidebar with Alt+M (335 LOC)

@@ -41,13 +41,15 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 #### FR2: Table Expand
 
-- **Description:** Add expand/collapse controls to markdown tables
+- **Description:** Add expand/collapse controls and column resize to markdown tables
 - **Features:**
   - Inline expand (removes horizontal scroll)
   - Fullscreen mode with Esc key exit
-  - Persistent state per-page (localStorage)
+  - Persistent expand state per-page (localStorage)
+  - Drag-to-resize column widths via header border handles
+  - Column widths persisted by header structure (shared across pages with identical columns)
 - **Scope:** All `.markdown-body table` elements
-- **Success Metric:** Tables >1200px wide become readable without horizontal scroll
+- **Success Metric:** Tables >1200px wide become readable without horizontal scroll; column widths customizable and persistent
 
 #### FR3: Image Lightbox
 
