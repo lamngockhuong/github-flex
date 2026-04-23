@@ -90,6 +90,7 @@ export const translations = {
         termote: 'Remote control CLI tools from mobile/desktop via PWA',
       },
       copyright: '© 2026 GitHub Flex. Open source under MIT License.',
+      builtBy: 'Built by',
     },
   },
   vi: {
@@ -173,6 +174,7 @@ export const translations = {
         termote: 'Điều khiển CLI từ xa từ di động/máy tính qua PWA',
       },
       copyright: '© 2026 GitHub Flex. Mã nguồn mở theo giấy phép MIT.',
+      builtBy: 'Xây dựng bởi',
     },
   },
   ja: {
@@ -256,6 +258,7 @@ export const translations = {
         termote: 'モバイル/デスクトップからPWAでCLIツールをリモート操作',
       },
       copyright: '© 2026 GitHub Flex. MITライセンスのオープンソース。',
+      builtBy: '開発：',
     },
   },
 } as const;

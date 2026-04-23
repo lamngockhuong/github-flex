@@ -1,6 +1,6 @@
 ---
 import { useTranslations, type Locale } from '../i18n';
-import { CHROME_STORE_URL, FIREFOX_ADDONS_URL, GITHUB_URL, OTHER_PROJECTS } from '../constants';
+import { CHROME_STORE_URL, FIREFOX_ADDONS_URL, GITHUB_URL, OHLAB_URL, OTHER_PROJECTS } from '../constants';
 
 interface Props {
   locale: Locale;
@@ -100,6 +100,9 @@ const t = useTranslations(locale);
           </a>
           <p class="text-sm text-text-muted dark:text-text-muted-dark">
             {t.footer.copyright}
+          </p>
+          <p class="text-sm text-text-muted dark:text-text-muted-dark mt-1">
+            {t.footer.builtBy} <a href={OHLAB_URL} target="_blank" rel="noopener noreferrer" class="hover:text-primary dark:hover:text-primary-light transition-colors font-medium">ohlab.dev</a>
           </p>
         </div>
       </div>
