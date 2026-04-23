@@ -4,7 +4,7 @@
 
 **Name:** GitHub Flex
 **Type:** Cross-browser Extension (Manifest V3 - Chrome & Firefox) + Landing Page
-**Version:** 0.0.9
+**Version:** 0.0.11
 **License:** MIT
 **Repository:** <https://github.com/lamngockhuong/github-flex>
 **Website:** <https://github-flex.ohnice.app>
