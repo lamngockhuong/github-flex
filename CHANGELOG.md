@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.0.11](https://github.com/lamngockhuong/github-flex/compare/v0.0.10...v0.0.11) (2026-04-23)
+
+
+### Features
+
+* add column resize and column hide/show to Table Expand ([#60](https://github.com/lamngockhuong/github-flex/issues/60)) ([6f2945f](https://github.com/lamngockhuong/github-flex/commit/6f2945f364aac0cdf7a30093236676e802d43d12))
+* add Other Projects section and i18n README ([#54](https://github.com/lamngockhuong/github-flex/issues/54)) ([356b120](https://github.com/lamngockhuong/github-flex/commit/356b120ba10e04f07f61d18d47d5d15cf0dab53e))
+* add Other Projects section and i18n README translations ([356b120](https://github.com/lamngockhuong/github-flex/commit/356b120ba10e04f07f61d18d47d5d15cf0dab53e))
+* add Unikorn and J2TEAM Launch badges ([#52](https://github.com/lamngockhuong/github-flex/issues/52)) ([32c13d0](https://github.com/lamngockhuong/github-flex/commit/32c13d035ed76b8b229c2b32e99904848bb3194b))
+* add Unikorn and J2TEAM Launch badges to README and landing page ([32c13d0](https://github.com/lamngockhuong/github-flex/commit/32c13d035ed76b8b229c2b32e99904848bb3194b))
+
+
+### Bug Fixes
+
+* **deps:** update dependency astro to v6.1.9 ([#55](https://github.com/lamngockhuong/github-flex/issues/55)) ([a15cb8c](https://github.com/lamngockhuong/github-flex/commit/a15cb8c479a8f366d5174e2c4f939a1c1119265f))
+
 ## [0.0.10](https://github.com/lamngockhuong/github-flex/compare/v0.0.9...v0.0.10) (2026-04-18)
 
 
