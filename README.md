@@ -119,6 +119,7 @@ If you find this extension useful, consider supporting its development:
 ## Other Projects
 
 - [Termote](https://github.com/lamngockhuong/termote) - Remote control CLI tools (Claude Code, GitHub Copilot, any terminal) from mobile/desktop via PWA
+- [TabRest](https://github.com/lamngockhuong/tabrest) - Chrome extension that automatically unloads inactive tabs to free memory
 
 ## License
 
