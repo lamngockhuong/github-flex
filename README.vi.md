@@ -119,6 +119,7 @@ Nếu bạn thấy tiện ích này hữu ích, hãy cân nhắc hỗ trợ phá
 ## Dự án khác
 
 - [Termote](https://github.com/lamngockhuong/termote) - Điều khiển CLI từ xa (Claude Code, GitHub Copilot, bất kỳ terminal nào) từ di động/máy tính qua PWA
+- [TabRest](https://github.com/lamngockhuong/tabrest) - Tiện ích Chrome tự động unload các tab không hoạt động để giải phóng bộ nhớ
 
 ## Giấy phép
 
