@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.12](https://github.com/lamngockhuong/github-flex/compare/v0.0.11...v0.0.12) (2026-04-28)
+
+
+### Features
+
+* **website:** add ohlab.dev credit to footer ([#62](https://github.com/lamngockhuong/github-flex/issues/62)) ([5a20000](https://github.com/lamngockhuong/github-flex/commit/5a20000b858b208f09deedb228bda0da958f65f3))
+
 ## [0.0.11](https://github.com/lamngockhuong/github-flex/compare/v0.0.10...v0.0.11) (2026-04-23)
 
 
