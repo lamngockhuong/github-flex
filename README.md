@@ -2,15 +2,52 @@
 
 # GitHub Flex
 
-[![Version](https://img.shields.io/github/v/release/lamngockhuong/github-flex)](https://github.com/lamngockhuong/github-flex/releases)
-[![CI](https://github.com/lamngockhuong/github-flex/actions/workflows/ci.yml/badge.svg)](https://github.com/lamngockhuong/github-flex/actions/workflows/ci.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Chrome Web Store](https://img.shields.io/badge/Chrome_Web_Store-Install-4285F4?logo=googlechrome&logoColor=white)](https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc)
-[![Firefox Add-ons](https://img.shields.io/badge/Firefox_Add--ons-Install-FF7139?logo=firefox&logoColor=white)](https://addons.mozilla.org/en-US/firefox/addon/github-flex/)
-[![Website](https://img.shields.io/badge/Website-github--flex.ohnice.app-8957e5?logo=astro&logoColor=white)](https://github-flex.ohnice.app)
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc">
+    <img src="https://img.shields.io/chrome-web-store/v/iechckkdnjmdnpbdohhnmojofcbfnemc?label=chrome&style=flat-square&logo=googlechrome&logoColor=white&color=4285F4" alt="Chrome Web Store Version">
+  </a>
+  <a href="https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc">
+    <img src="https://img.shields.io/chrome-web-store/users/iechckkdnjmdnpbdohhnmojofcbfnemc?style=flat-square&color=6ee7b7" alt="Chrome Web Store Users">
+  </a>
+  <a href="https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc">
+    <img src="https://img.shields.io/chrome-web-store/rating/iechckkdnjmdnpbdohhnmojofcbfnemc?style=flat-square&color=facc15" alt="Chrome Web Store Rating">
+  </a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/github-flex/">
+    <img src="https://img.shields.io/amo/v/github-flex?label=firefox&style=flat-square&logo=firefox&logoColor=white&color=FF7139" alt="Firefox Add-on Version">
+  </a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/github-flex/">
+    <img src="https://img.shields.io/amo/users/github-flex?style=flat-square&color=6ee7b7" alt="Firefox Add-on Users">
+  </a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/github-flex/">
+    <img src="https://img.shields.io/amo/rating/github-flex?style=flat-square&color=facc15" alt="Firefox Add-on Rating">
+  </a>
+  <a href="https://github.com/lamngockhuong/github-flex/actions/workflows/ci.yml">
+    <img src="https://img.shields.io/github/actions/workflow/status/lamngockhuong/github-flex/ci.yml?style=flat-square&label=CI&color=22c55e" alt="CI">
+  </a>
+  <a href="LICENSE">
+    <img src="https://img.shields.io/github/license/lamngockhuong/github-flex?style=flat-square&color=60a5fa" alt="MIT License">
+  </a>
+  <a href="https://github.com/lamngockhuong/github-flex/stargazers">
+    <img src="https://img.shields.io/github/stars/lamngockhuong/github-flex?style=flat-square&color=f59e0b" alt="GitHub Stars">
+  </a>
+</p>
 
-<a href="https://unikorn.vn/p/github-flex?ref=embed-github-flex" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/github-flex?theme=light" alt="GitHub Flex trên Unikorn.vn" style="width: 180px; height: 45px;" width="180" height="45" /></a>
-<a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank"><img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/light" alt="GitHub Flex - Launched on J2TEAM Launch" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+<p align="center">
+  <a href="https://chromewebstore.google.com/detail/github-flex/iechckkdnjmdnpbdohhnmojofcbfnemc">
+    <img src="https://img.shields.io/badge/Install_from-Chrome_Web_Store-4285F4?style=for-the-badge&logo=googlechrome&logoColor=white" alt="Install from Chrome Web Store">
+  </a>
+  <a href="https://addons.mozilla.org/en-US/firefox/addon/github-flex/">
+    <img src="https://img.shields.io/badge/Install_from-Firefox_Add--ons-FF7139?style=for-the-badge&logo=firefox&logoColor=white" alt="Install from Firefox Add-ons">
+  </a>
+  <a href="https://github-flex.ohnice.app">
+    <img src="https://img.shields.io/badge/Visit-Website-8957e5?style=for-the-badge&logo=astro&logoColor=white" alt="Website">
+  </a>
+</p>
+
+<p align="center">
+  <a href="https://unikorn.vn/p/github-flex?ref=embed-github-flex" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/github-flex?theme=light" alt="GitHub Flex on Unikorn.vn" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+  <a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank"><img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/light" alt="GitHub Flex - Launched on J2TEAM Launch" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+</p>
 
 A cross-browser extension (Chrome & Firefox) that enhances GitHub's interface with productivity features.
 
