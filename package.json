@@ -22,9 +22,9 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.4.12",
-    "@vitest/coverage-v8": "4.1.5",
+    "@vitest/coverage-v8": "4.1.10",
     "esbuild": "0.28.0",
-    "vitest": "4.1.5",
+    "vitest": "4.1.10",
     "web-ext": "10.4.0"
   },
   "engines": {
