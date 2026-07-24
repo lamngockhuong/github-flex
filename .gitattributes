@@ -1,0 +1,18 @@
+# Normalize all text files to LF in the repository.
+# Working trees check out LF on every platform (repo is LF-native).
+* text=auto eol=lf
+
+# Explicitly treat common binary assets as binary (never touch line endings).
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.pdf binary
+*.zip binary
+*.gz binary
