@@ -80,7 +80,7 @@ module.exports = featureName;
 **Quotes:** Double quotes preferred
 ```javascript
 // ✓ Good
-const styleId = "ghflex-table-expand-styles";
+const styleId = "ghflex-gif-picker-styles";
 
 // ✓ Also acceptable (for avoiding escapes)
 const html = '<button class="btn">Click</button>';
@@ -318,7 +318,21 @@ document.querySelectorAll("textarea");
 
 ### CSS Injection
 
-**Pattern:**
+**Choose the right timing first.** CSS that restyles content already present in
+GitHub's initial HTML must be declared in `manifest.json` under the
+`document_start` content script's `css` array (and mirrored in `scripts/build.js`,
+which rewrites those paths for `dist/`). Injecting it later means the page paints
+once with GitHub's layout and again with ours — a visible jump on every reload.
+`wide-layout.css` and `table-expand.css` load this way.
+
+Rules there stay inert until their feature runs, because every selector is scoped
+to a class the feature's JS creates. That is what makes it safe to load the sheet
+unconditionally, and it is a constraint to preserve when adding rules.
+
+Use the JS pattern below only for CSS that styles UI the extension itself creates
+on demand — a modal, a picker, an overlay — where nothing exists to flash.
+
+**Pattern (on-demand UI only):**
 ```javascript
 injectStyles() {
   if (document.getElementById(STYLE_ID)) return;

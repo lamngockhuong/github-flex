@@ -32,7 +32,8 @@
         "https://gist.github.com/*"
       ],
       "css": [
-        "src/content/styles/wide-layout.css"
+        "src/content/styles/wide-layout.css",
+        "src/content/styles/table-expand.css"
       ],
       "js": [
         "src/content/early-inject.js"

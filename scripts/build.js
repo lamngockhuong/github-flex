@@ -106,7 +106,10 @@ function copyAssets(browser, minify = true) {
 
   // Common path rewrites
   manifest.action.default_popup = "popup/popup.html";
-  manifest.content_scripts[0].css = ["content/styles/wide-layout.css"];
+  manifest.content_scripts[0].css = [
+    "content/styles/wide-layout.css",
+    "content/styles/table-expand.css",
+  ];
   manifest.content_scripts[0].js = ["content/early-inject.js"];
   manifest.content_scripts[1].js = ["content/main.js"];
   manifest.web_accessible_resources[0].resources = ["content/styles/*.css"];

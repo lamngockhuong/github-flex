@@ -14,9 +14,9 @@ export const STORAGE_KEYS = {
 };
 
 // Feature style IDs (for dynamically injected CSS)
-// Note: wide-layout CSS is injected via manifest, not here
+// Note: wide-layout and table-expand CSS load via manifest at document_start,
+// so they have no entry here - injecting them later causes a visible reflow.
 export const STYLE_IDS = {
-  TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
   SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
   EDIT_HISTORY: "ghflex-edit-history-styles",

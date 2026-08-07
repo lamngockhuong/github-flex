@@ -269,7 +269,6 @@ SETTINGS_DEFAULTS = {
 STORAGE_KEYS = { SETTINGS: "settings" };
 
 STYLE_IDS = {
-  TABLE_EXPAND: "ghflex-table-expand-styles",
   GIF_PICKER: "ghflex-gif-picker-styles",
   SIDEBAR_TOGGLE: "ghflex-sidebar-toggle-styles",
   EDIT_HISTORY: "ghflex-edit-history-styles",

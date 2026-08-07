@@ -143,15 +143,6 @@ export function addCellClamps(table, btnGroup) {
   btnGroup.appendChild(createToggleButton(table, tableKey));
 }
 
-// The feature stylesheet is injected as a <link> and loads asynchronously, so
-// the first detection pass can run before max-height exists - measuring every
-// cell as fitting. table-expand re-runs detection once the sheet lands.
-export function refreshAllCellClamps() {
-  document
-    .querySelectorAll("table[data-ghflex-cell-clamp]")
-    .forEach(detectOverflow);
-}
-
 export function removeCellClamps(table) {
   if (!table?.dataset.ghflexCellClamp) return;
   delete table.dataset.ghflexCellClamp;

@@ -1,10 +1,8 @@
-import browser from "webextension-polyfill";
 import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 import { imageLightbox } from "./image-lightbox.js";
 import {
   addCellClamps,
-  refreshAllCellClamps,
   removeAllCellClamps,
   removeCellClamps,
 } from "./table-cell-clamp.js";
@@ -20,7 +18,6 @@ import {
 } from "./table-column-toggle.js";
 import { createToolbarButton } from "./table-utils.js";
 
-const STYLE_ID = "ghflex-table-expand-styles";
 const STORAGE_KEY = "ghflex-table-expand-state";
 
 export const tableExpand = {
@@ -32,7 +29,6 @@ export const tableExpand = {
   enable() {
     if (this.enabled) return;
     this.loadState();
-    this.injectStyles();
     this.processTables();
     this.setupObserver();
     this.setupEscapeHandler();
@@ -49,7 +45,6 @@ export const tableExpand = {
     removeAllResizeHandles();
     removeAllCellClamps();
     this.removeAllToggles();
-    this.removeStyles();
     this.enabled = false;
   },
 
@@ -241,21 +236,5 @@ export const tableExpand = {
       }
       wrapper.remove();
     });
-  },
-
-  injectStyles() {
-    if (document.getElementById(STYLE_ID)) return;
-    const link = document.createElement("link");
-    link.id = STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = browser.runtime.getURL("content/styles/table-expand.css");
-    // Cell clamp measures against max-height from this sheet; until it loads
-    // every cell measures as fitting, so re-detect once it lands.
-    link.addEventListener("load", refreshAllCellClamps);
-    document.head.appendChild(link);
-  },
-
-  removeStyles() {
-    document.getElementById(STYLE_ID)?.remove();
   },
 };
