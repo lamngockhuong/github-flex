@@ -15,7 +15,7 @@ Features:
 
 - Wide Layout: Expands GitHub pages to use the full width of your browser. No more wasted screen space - see more code, diffs, and content at a glance.
 
-- Table Expand: Expand, resize columns, and hide/show columns on large tables. View tables in fullscreen mode. All customizations (column widths, hidden columns, expand state) persist across page loads.
+- Table Expand: Expand, resize columns, and hide/show columns on large tables. Tall cells are capped so rows stay readable - click a capped cell to see it in full, or unclamp the whole table. View tables in fullscreen mode. All customizations (column widths, hidden columns, expand state) persist across page loads.
 
 - Image Lightbox: Click any image on GitHub to view it in a fullscreen overlay. Easily inspect screenshots, diagrams, and visual content without opening a new tab.
 
@@ -49,7 +49,7 @@ Tính năng:
 
 - Bố cục rộng (Wide Layout): Mở rộng trang GitHub ra toàn bộ chiều rộng trình duyệt. Không còn lãng phí không gian màn hình - xem nhiều code, diff và nội dung hơn trong một cái nhìn.
 
-- Mở rộng bảng (Table Expand): Mở rộng, kéo thay đổi kích thước cột, ẩn/hiện cột trên các bảng lớn. Xem bảng ở chế độ toàn màn hình. Tất cả tùy chỉnh (độ rộng cột, cột ẩn, trạng thái mở rộng) được lưu lại qua các lần tải trang.
+- Mở rộng bảng (Table Expand): Mở rộng, kéo thay đổi kích thước cột, ẩn/hiện cột trên các bảng lớn. Ô quá cao được thu gọn để hàng dễ đọc - nhấp vào ô để xem đầy đủ, hoặc bỏ thu gọn cho cả bảng. Xem bảng ở chế độ toàn màn hình. Tất cả tùy chỉnh (độ rộng cột, cột ẩn, trạng thái mở rộng) được lưu lại qua các lần tải trang.
 
 - Xem ảnh toàn màn hình (Image Lightbox): Nhấp vào bất kỳ ảnh nào trên GitHub để xem trong chế độ toàn màn hình. Dễ dàng xem ảnh chụp màn hình, sơ đồ và nội dung hình ảnh mà không cần mở tab mới.
 
@@ -83,7 +83,7 @@ GitHub Flexは、日々のワークフローをよりスムーズで効率的に
 
 - ワイドレイアウト: GitHubページをブラウザの全幅に拡張します。画面スペースの無駄をなくし、コード、差分、コンテンツを一目で確認できます。
 
-- テーブル拡大: 大きなテーブルの拡大、列のリサイズ、列の表示/非表示が可能。全画面モードでテーブルを表示。すべてのカスタマイズ（列幅、非表示列、展開状態）はページ読み込み間で保持されます。
+- テーブル拡大: 大きなテーブルの拡大、列のリサイズ、列の表示/非表示が可能。高いセルは折りたたまれて行が読みやすくなり、クリックすると全体を表示できます（テーブル単位で折りたたみ解除も可能）。全画面モードでテーブルを表示。すべてのカスタマイズ（列幅、非表示列、展開状態）はページ読み込み間で保持されます。
 
 - 画像ライトボックス: GitHub上の任意の画像をクリックしてフルスクリーンオーバーレイで表示。新しいタブを開くことなく、スクリーンショット、図表、ビジュアルコンテンツを簡単に確認できます。
 
