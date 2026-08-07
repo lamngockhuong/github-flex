@@ -157,6 +157,7 @@ Nếu bạn thấy tiện ích này hữu ích, hãy cân nhắc hỗ trợ phá
 
 - [Termote](https://github.com/lamngockhuong/termote) - Điều khiển CLI từ xa (Claude Code, GitHub Copilot, bất kỳ terminal nào) từ di động/máy tính qua PWA
 - [TabRest](https://github.com/lamngockhuong/tabrest) - Tiện ích Chrome tự động unload các tab không hoạt động để giải phóng bộ nhớ
+- [Specpin](https://github.com/lamngockhuong/specpin) - Ghim đặc tả nghiệp vụ sống động lên các phần tử của giao diện web đang chạy. Git-native, local-first, không phụ thuộc framework
 
 ## Giấy phép
 

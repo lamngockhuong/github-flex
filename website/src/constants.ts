@@ -9,6 +9,16 @@ export const OTHER_PROJECTS = [
   {
     name: 'Termote',
     descriptionKey: 'termote' as const,
-    url: 'https://termote.khuong.dev',
+    url: 'https://termote.ohnice.app',
+  },
+  {
+    name: 'TabRest',
+    descriptionKey: 'tabrest' as const,
+    url: 'https://tabrest.ohnice.app',
+  },
+  {
+    name: 'Specpin',
+    descriptionKey: 'specpin' as const,
+    url: 'https://specpin.ohnice.app',
   },
 ] as const;
