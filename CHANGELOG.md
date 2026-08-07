@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.12](https://github.com/lamngockhuong/github-flex/compare/v0.0.11...v0.0.12) (2026-08-07)
+
+
+### Features
+
+* **table-expand:** clamp oversized table cells ([#83](https://github.com/lamngockhuong/github-flex/issues/83)) ([bce4287](https://github.com/lamngockhuong/github-flex/commit/bce4287c6142467c1c6bf32764d5991b6d2bf013))
+* **website:** add ohlab.dev credit to footer ([#62](https://github.com/lamngockhuong/github-flex/issues/62)) ([5a20000](https://github.com/lamngockhuong/github-flex/commit/5a20000b858b208f09deedb228bda0da958f65f3))
+
+
+### Bug Fixes
+
+* **deps:** update astro monorepo ([#67](https://github.com/lamngockhuong/github-flex/issues/67)) ([9612c60](https://github.com/lamngockhuong/github-flex/commit/9612c6043f0ee2fdc90d9569acca4d8f1c518734))
+
 ## [0.0.11](https://github.com/lamngockhuong/github-flex/compare/v0.0.10...v0.0.11) (2026-04-23)
 
 
