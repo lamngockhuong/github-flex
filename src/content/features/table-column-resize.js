@@ -7,6 +7,11 @@ let activeDragCleanup = null;
 
 function applyWidths(table, headerCells, widths) {
   table.style.tableLayout = "fixed";
+  // GitHub caps .markdown-body table at max-width:100%, which would swallow any
+  // drag that widens the table past its container - resizing would only appear
+  // to work in expanded mode, where a CSS rule already lifts the cap. The
+  // container scrolls horizontally, so releasing the cap is safe here.
+  table.style.setProperty("max-width", "none", "important");
   table.style.width = `${widths.reduce((sum, w) => sum + w, 0)}px`;
   headerCells.forEach((th, i) => {
     th.style.width = `${widths[i]}px`;
@@ -98,6 +103,7 @@ export function removeResizeHandles(table) {
   delete table.dataset.ghflexResizable;
   table.style.tableLayout = "";
   table.style.width = "";
+  table.style.removeProperty("max-width");
   table.classList.remove("ghflex-table-resizing");
   for (const h of table.querySelectorAll(".ghflex-col-resize-handle")) {
     h.remove();
