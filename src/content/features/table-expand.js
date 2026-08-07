@@ -16,7 +16,11 @@ import {
   removeAllColumnToggles,
   removeColumnToggles,
 } from "./table-column-toggle.js";
-import { createToolbarButton } from "./table-utils.js";
+import {
+  createToolbarButton,
+  loadJsonStore,
+  saveJsonStore,
+} from "./table-utils.js";
 
 const STORAGE_KEY = "ghflex-table-expand-state";
 
@@ -49,21 +53,11 @@ export const tableExpand = {
   },
 
   loadState() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      this.expandedState = stored ? JSON.parse(stored) : {};
-    } catch (error) {
-      console.error("[GitHub Flex] Failed to load table expand state:", error);
-      this.expandedState = {};
-    }
+    this.expandedState = loadJsonStore(STORAGE_KEY);
   },
 
   saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.expandedState));
-    } catch (error) {
-      console.error("[GitHub Flex] Failed to save table expand state:", error);
-    }
+    saveJsonStore(STORAGE_KEY, this.expandedState);
   },
 
   getStateKey(index) {
@@ -143,9 +137,6 @@ export const tableExpand = {
 
     const tableClone = table.cloneNode(true);
     tableClone.className = "ghflex-table-fullscreen-table";
-    // The clone carries the clamp wrappers but none of their listeners, so drop
-    // the guard flag and let addCellClamps below wire it up from scratch.
-    delete tableClone.dataset.ghflexCellClamp;
 
     tableClone.querySelectorAll("img[data-ghflex-lightbox]").forEach((img) => {
       delete img.dataset.ghflexLightbox;
@@ -171,6 +162,13 @@ export const tableExpand = {
     // Fullscreen is where a wide table needs clamping most - a spec table with
     // long cells is unreadable at full row height. Same mechanism, same
     // persisted per-table choice, own toggle button.
+    //
+    // Unlike its two siblings above this clears the guard flag by hand instead
+    // of calling removeCellClamps: that would unwrap the cells and discard the
+    // ghflex-cell-open classes the clone inherited, so a cell you had expanded
+    // on the page would collapse on entering fullscreen. Reading continues
+    // where it left off.
+    delete tableClone.dataset.ghflexCellClamp;
     addCellClamps(tableClone, fsBtnGroup);
 
     if (imageLightbox.enabled) {
@@ -185,12 +183,15 @@ export const tableExpand = {
     if (imageLightbox.enabled) {
       imageLightbox.removeImageTriggers(this.fullscreenTable);
     }
-    // Unbind the clone's listeners, observer and pending timer before it is
-    // discarded, so nothing fires against a detached table.
-    removeCellClamps(
-      this.fullscreenTable.querySelector(".ghflex-table-fullscreen-table"),
+    const clone = this.fullscreenTable.querySelector(
+      ".ghflex-table-fullscreen-table",
     );
+    // Detach first: teardown unwraps every cell, and doing that to a live tree
+    // costs a style and layout pass on a table that is about to disappear.
     this.fullscreenTable.remove();
+    // The shared ResizeObserver holds its targets strongly, so the clone would
+    // be pinned for the page's lifetime without this.
+    removeCellClamps(clone);
     this.fullscreenTable = null;
     document.body.style.overflow = "";
   },

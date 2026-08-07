@@ -320,9 +320,10 @@ document.querySelectorAll("textarea");
 
 **Choose the right timing first.** CSS that restyles content already present in
 GitHub's initial HTML must be declared in `manifest.json` under the
-`document_start` content script's `css` array (and mirrored in `scripts/build.js`,
-which rewrites those paths for `dist/`). Injecting it later means the page paints
-once with GitHub's layout and again with ours — a visible jump on every reload.
+`document_start` content script's `css` array. `scripts/build.js` derives the
+`dist/` paths from the manifest, so that is the only place to add it. Injecting
+it later means the page paints once with GitHub's layout and again with ours — a
+visible jump on every reload.
 `wide-layout.css` and `table-expand.css` load this way.
 
 Rules there stay inert until their feature runs, because every selector is scoped

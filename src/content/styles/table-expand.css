@@ -128,7 +128,11 @@ thead th:hover .ghflex-col-hide-btn {
   position: relative;
 }
 
-.ghflex-table-container tr:nth-child(even) .ghflex-cell-clamp {
+/* Unscoped on purpose: .ghflex-cell-clamp only exists in tables this feature
+   processed, and both the in-page container and the fullscreen overlay stripe
+   even rows the same way. Scoping this by ancestor is what made the overlay
+   need a second copy of the rule. */
+tr:nth-child(even) .ghflex-cell-clamp {
   --ghflex-cell-fade: var(--bgColor-muted, #f6f8fa);
 }
 
@@ -171,16 +175,22 @@ thead th:hover .ghflex-col-hide-btn {
    break-word, NOT anywhere: anywhere also drops the cell's min-content to a
    single character, so a many-column table collapses every column to one
    character wide and the text reads vertically. break-word keeps min-content
-   at the longest word, so normal prose still wraps at spaces. */
-.ghflex-table-container td,
-.ghflex-table-container th {
+   at the longest word, so normal prose still wraps at spaces.
+
+   Both scopes are named: the fullscreen clone clamps too, and without these a
+   bare URL there cannot wrap, so the cell stays one line tall and clamping
+   never fires. Cell content rides the wrapper class, which covers both. */
+.ghflex-cell-clamp,
+.ghflex-table-container th,
+.ghflex-table-fullscreen-table th {
   overflow-wrap: break-word;
 }
 
 /* Cap runaway column width. td only - under table-layout:fixed (set by
    table-column-resize) column widths come from thead th, so capping td stays
    inert there instead of fighting it. */
-.ghflex-table-container td {
+.ghflex-table-container td,
+.ghflex-table-fullscreen-table td {
   max-width: 40em;
 }
 
@@ -272,12 +282,6 @@ thead th:hover .ghflex-col-hide-btn {
   background-color: var(--bgColor-muted, #f6f8fa);
 }
 
-/* Fullscreen does its own row striping, so the clamp fade needs matching here
-   too - the container-scoped assignment does not reach the overlay. */
-.ghflex-table-fullscreen-table tr:nth-child(even) .ghflex-cell-clamp {
-  --ghflex-cell-fade: var(--bgColor-muted, #f6f8fa);
-}
-
 /* === DARK MODE === */
 @media (prefers-color-scheme: dark) {
   .ghflex-table-fullscreen-overlay {
@@ -302,8 +306,7 @@ thead th:hover .ghflex-col-hide-btn {
     --ghflex-cell-fade: var(--bgColor-default, #0d1117);
   }
 
-  .ghflex-table-container tr:nth-child(even) .ghflex-cell-clamp,
-  .ghflex-table-fullscreen-table tr:nth-child(even) .ghflex-cell-clamp {
+  tr:nth-child(even) .ghflex-cell-clamp {
     --ghflex-cell-fade: var(--bgColor-muted, #161b22);
   }
 }

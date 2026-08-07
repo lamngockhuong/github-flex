@@ -32,11 +32,16 @@ const widthObserver = new ResizeObserver((entries) => {
   }
 });
 
+// Clamping is suspended for the whole table by the toggle button. While it is,
+// measuring is meaningless and clicks must not toggle state nothing can show.
+const isClamping = (table) => !table.classList.contains(UNCLAMPED_CLASS);
+
 // Move (never clone) the cell's children into the wrapper, so listeners bound
 // by other features - image-lightbox in particular - survive the wrap.
 function wrapCells(table) {
   for (const td of table.querySelectorAll("tbody td")) {
-    if (td.querySelector(":scope > .ghflex-cell-clamp")) continue;
+    // once wrapped, the wrapper is the cell's only child
+    if (td.firstElementChild?.classList.contains("ghflex-cell-clamp")) continue;
     const wrapper = document.createElement("div");
     wrapper.className = "ghflex-cell-clamp";
     wrapper.append(...td.childNodes);
@@ -48,9 +53,8 @@ function wrapCells(table) {
 // that outlived teardown - a late image load, a pending timer - stays inert.
 function detectOverflow(table) {
   if (!table?.dataset.ghflexCellClamp) return;
-  // measuring while unclamped is meaningless (max-height is none); the toggle
-  // re-runs detection the moment clamping comes back on
-  if (table.classList.contains(UNCLAMPED_CLASS)) return;
+  // the toggle re-runs detection the moment clamping comes back on
+  if (!isClamping(table)) return;
 
   // Batch the passes: interleaving class writes with geometry reads forces a
   // synchronous reflow per cell. Strip open state, read every height, then
@@ -77,6 +81,10 @@ function scheduleDetect(table) {
 
 // One delegated listener per table, not one per cell.
 function onTableClick(e) {
+  // detectOverflow leaves the clamped markers stale while unclamped, so without
+  // this the click would toggle open state that nothing renders - and that
+  // phantom state comes back the moment clamping is switched on again.
+  if (!isClamping(e.currentTarget)) return;
   if (e.target.closest("a, button, img, input, select, textarea, summary")) {
     return;
   }
@@ -100,23 +108,24 @@ function onCellContentSettled(e) {
 }
 
 function createToggleButton(table, tableKey) {
+  const syncUI = () => {
+    const clamping = isClamping(table);
+    setTrustedHTML(button, clamping ? ICONS.unfoldRows : ICONS.foldRows);
+    button.title = clamping ? "Show full cells" : "Clamp tall cells";
+  };
+
   const button = createToolbarButton(
     ICONS.unfoldRows,
     "Show full cells",
     () => {
       const unclamped = table.classList.toggle(UNCLAMPED_CLASS);
-      writeTableEntry(STORAGE_KEY, tableKey, unclamped || undefined);
+      // undefined removes the entry - only the non-default state is stored
+      writeTableEntry(STORAGE_KEY, tableKey, unclamped ? true : undefined);
       syncUI();
       detectOverflow(table);
     },
   );
   button.classList.add("ghflex-cells-toggle");
-
-  const syncUI = () => {
-    const unclamped = table.classList.contains(UNCLAMPED_CLASS);
-    setTrustedHTML(button, unclamped ? ICONS.foldRows : ICONS.unfoldRows);
-    button.title = unclamped ? "Clamp tall cells" : "Show full cells";
-  };
 
   syncUI();
   return button;
@@ -139,6 +148,10 @@ export function addCellClamps(table, btnGroup) {
   for (const type of CONTENT_EVENTS) {
     table.addEventListener(type, onCellContentSettled, true);
   }
+  // Seed the baseline before observing: a fresh observation always fires one
+  // callback, which would otherwise clear the deadband and queue a second,
+  // identical detection pass 100ms later.
+  lastWidths.set(table, table.clientWidth);
   widthObserver.observe(table);
   btnGroup.appendChild(createToggleButton(table, tableKey));
 }

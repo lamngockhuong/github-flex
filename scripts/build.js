@@ -104,15 +104,19 @@ function copyAssets(browser, minify = true) {
 
   const manifest = JSON.parse(readFileSync(join(ROOT, "manifest.json"), "utf8"));
 
-  // Common path rewrites
-  manifest.action.default_popup = "popup/popup.html";
-  manifest.content_scripts[0].css = [
-    "content/styles/wide-layout.css",
-    "content/styles/table-expand.css",
-  ];
-  manifest.content_scripts[0].js = ["content/early-inject.js"];
-  manifest.content_scripts[1].js = ["content/main.js"];
-  manifest.web_accessible_resources[0].resources = ["content/styles/*.css"];
+  // Common path rewrites: dist drops the src/ prefix, so derive every path from
+  // the manifest rather than restating it. Listing files here again means one
+  // added stylesheet needs two edits, and forgetting the second ships a dist
+  // that silently never loads it - no build error, just a visual regression.
+  const stripSrc = (p) => p.replace(/^src\//, "");
+  manifest.action.default_popup = stripSrc(manifest.action.default_popup);
+  for (const script of manifest.content_scripts) {
+    if (script.css) script.css = script.css.map(stripSrc);
+    if (script.js) script.js = script.js.map(stripSrc);
+  }
+  for (const entry of manifest.web_accessible_resources) {
+    entry.resources = entry.resources.map(stripSrc);
+  }
 
   if (browser === "chrome") {
     manifest.background = {
