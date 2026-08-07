@@ -157,6 +157,7 @@ If you find this extension useful, consider supporting its development:
 
 - [Termote](https://github.com/lamngockhuong/termote) - Remote control CLI tools (Claude Code, GitHub Copilot, any terminal) from mobile/desktop via PWA
 - [TabRest](https://github.com/lamngockhuong/tabrest) - Chrome extension that automatically unloads inactive tabs to free memory
+- [Specpin](https://github.com/lamngockhuong/specpin) - Pin living business specs onto the elements of your running web UI. Git-native, local-first, framework-agnostic
 
 ## License
 

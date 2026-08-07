@@ -88,6 +88,8 @@ export const translations = {
       },
       otherProjects: {
         termote: 'Remote control CLI tools from mobile/desktop via PWA',
+        tabrest: 'Automatically unloads inactive tabs to free memory',
+        specpin: 'Pin living business specs onto your running web UI',
       },
       copyright: '© 2026 GitHub Flex. Open source under MIT License.',
       builtBy: 'Built by',
@@ -172,6 +174,8 @@ export const translations = {
       },
       otherProjects: {
         termote: 'Điều khiển CLI từ xa từ di động/máy tính qua PWA',
+        tabrest: 'Tự động unload các tab không hoạt động để giải phóng bộ nhớ',
+        specpin: 'Ghim đặc tả nghiệp vụ sống động lên giao diện web đang chạy',
       },
       copyright: '© 2026 GitHub Flex. Mã nguồn mở theo giấy phép MIT.',
       builtBy: 'Xây dựng bởi',
@@ -256,6 +260,8 @@ export const translations = {
       },
       otherProjects: {
         termote: 'モバイル/デスクトップからPWAでCLIツールをリモート操作',
+        tabrest: '非アクティブなタブを自動でアンロードしてメモリを解放',
+        specpin: '稼働中のWeb UIに生きたビジネス仕様をピン留め',
       },
       copyright: '© 2026 GitHub Flex. MITライセンスのオープンソース。',
       builtBy: '開発：',

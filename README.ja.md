@@ -157,6 +157,7 @@ zip -r github-flex-source.zip src/ scripts/ package.json pnpm-lock.yaml biome.js
 
 - [Termote](https://github.com/lamngockhuong/termote) - モバイル/デスクトップからPWAでCLIツール（Claude Code、GitHub Copilot、任意のターミナル）をリモート操作
 - [TabRest](https://github.com/lamngockhuong/tabrest) - 非アクティブなタブを自動でアンロードしてメモリを解放するChrome拡張機能
+- [Specpin](https://github.com/lamngockhuong/specpin) - 稼働中のWeb UIの要素に生きたビジネス仕様をピン留め。Gitネイティブ、ローカルファースト、フレームワーク非依存
 
 ## ライセンス
 
