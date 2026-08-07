@@ -8,6 +8,7 @@ import {
 } from "./table-cell-clamp.js";
 import {
   addResizeHandles,
+  refreshColumnWidths,
   removeAllResizeHandles,
   removeResizeHandles,
 } from "./table-column-resize.js";
@@ -96,6 +97,8 @@ export const tableExpand = {
           );
           this.expandedState[stateKey] = nowExpanded;
           this.saveState();
+          // each state keeps its own column widths - swap to the new set
+          refreshColumnWidths(table);
           setTrustedHTML(expandBtn, nowExpanded ? ICONS.unlock : ICONS.lock);
           expandBtn.title = nowExpanded ? "Collapse" : "Expand";
         },
