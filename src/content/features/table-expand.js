@@ -3,6 +3,12 @@ import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 import { imageLightbox } from "./image-lightbox.js";
 import {
+  addCellClamps,
+  refreshAllCellClamps,
+  removeAllCellClamps,
+  removeCellClamps,
+} from "./table-cell-clamp.js";
+import {
   addResizeHandles,
   removeAllResizeHandles,
   removeResizeHandles,
@@ -10,7 +16,9 @@ import {
 import {
   addColumnToggles,
   removeAllColumnToggles,
+  removeColumnToggles,
 } from "./table-column-toggle.js";
+import { createToolbarButton } from "./table-utils.js";
 
 const STYLE_ID = "ghflex-table-expand-styles";
 const STORAGE_KEY = "ghflex-table-expand-state";
@@ -39,6 +47,7 @@ export const tableExpand = {
     this.removeEscapeHandler();
     removeAllColumnToggles();
     removeAllResizeHandles();
+    removeAllCellClamps();
     this.removeAllToggles();
     this.removeStyles();
     this.enabled = false;
@@ -88,7 +97,7 @@ export const tableExpand = {
       const btnGroup = document.createElement("div");
       btnGroup.className = "ghflex-table-btn-group";
 
-      const expandBtn = this.createButton(
+      const expandBtn = createToolbarButton(
         isExpanded ? ICONS.unlock : ICONS.lock,
         isExpanded ? "Collapse" : "Expand",
         () => {
@@ -103,7 +112,7 @@ export const tableExpand = {
         },
       );
 
-      const fullscreenBtn = this.createButton(
+      const fullscreenBtn = createToolbarButton(
         ICONS.fullscreen,
         "Fullscreen",
         () => this.openFullscreen(table),
@@ -118,16 +127,8 @@ export const tableExpand = {
       container.appendChild(table);
       addResizeHandles(table);
       addColumnToggles(table, btnGroup);
+      addCellClamps(table, btnGroup);
     });
-  },
-
-  createButton(icon, title, onClick) {
-    const button = document.createElement("button");
-    button.className = "ghflex-table-toggle";
-    setTrustedHTML(button, icon);
-    button.title = title;
-    button.addEventListener("click", onClick);
-    return button;
   },
 
   openFullscreen(table) {
@@ -147,6 +148,9 @@ export const tableExpand = {
 
     const tableClone = table.cloneNode(true);
     tableClone.className = "ghflex-table-fullscreen-table";
+    // The clone carries the clamp wrappers but none of their listeners, so drop
+    // the guard flag and let addCellClamps below wire it up from scratch.
+    delete tableClone.dataset.ghflexCellClamp;
 
     tableClone.querySelectorAll("img[data-ghflex-lightbox]").forEach((img) => {
       delete img.dataset.ghflexLightbox;
@@ -167,11 +171,12 @@ export const tableExpand = {
 
     removeResizeHandles(tableClone);
     addResizeHandles(tableClone);
-    for (const btn of tableClone.querySelectorAll(".ghflex-col-hide-btn")) {
-      btn.remove();
-    }
-    delete tableClone.dataset.ghflexColToggle;
+    removeColumnToggles(tableClone);
     addColumnToggles(tableClone, fsBtnGroup);
+    // Fullscreen is where a wide table needs clamping most - a spec table with
+    // long cells is unreadable at full row height. Same mechanism, same
+    // persisted per-table choice, own toggle button.
+    addCellClamps(tableClone, fsBtnGroup);
 
     if (imageLightbox.enabled) {
       imageLightbox.processImages(content);
@@ -185,6 +190,11 @@ export const tableExpand = {
     if (imageLightbox.enabled) {
       imageLightbox.removeImageTriggers(this.fullscreenTable);
     }
+    // Unbind the clone's listeners, observer and pending timer before it is
+    // discarded, so nothing fires against a detached table.
+    removeCellClamps(
+      this.fullscreenTable.querySelector(".ghflex-table-fullscreen-table"),
+    );
     this.fullscreenTable.remove();
     this.fullscreenTable = null;
     document.body.style.overflow = "";
@@ -239,6 +249,9 @@ export const tableExpand = {
     link.id = STYLE_ID;
     link.rel = "stylesheet";
     link.href = browser.runtime.getURL("content/styles/table-expand.css");
+    // Cell clamp measures against max-height from this sheet; until it loads
+    // every cell measures as fitting, so re-detect once it lands.
+    link.addEventListener("load", refreshAllCellClamps);
     document.head.appendChild(link);
   },
 

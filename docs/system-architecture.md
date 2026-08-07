@@ -135,7 +135,11 @@ main.js
 
 tableExpand (internal dependency graph):
   table-expand.js (controller)
-    └─► table-column-resize.js (drag-to-resize columns, width persistence)
+    ├─► table-column-resize.js (drag-to-resize columns, width persistence)
+    ├─► table-column-toggle.js (per-column hide/show)
+    ├─► table-cell-clamp.js (cap oversized cell height / column width)
+    ├─► table-utils.js (shared getTableKey/JSON store helpers, used by the three above)
+    └─► image-lightbox.js (re-processes images inside the fullscreen table clone)
 
 editHistory (internal dependency graph):
   edit-history.js (controller)
@@ -144,7 +148,7 @@ editHistory (internal dependency graph):
           ├─► edit-history-diff.js (word-level diff)
           └─► edit-history-markdown.js (markdown renderer)
 
-(No horizontal dependencies between features)
+(No horizontal dependencies between top-level features, except where an orchestrator explicitly composes a sibling — see table-expand → image-lightbox above)
 ```
 
 ### 3. Data Storage Architecture
@@ -226,7 +230,7 @@ Content renders wide immediately (no flash)
 
 ### Table Expand
 
-**Architecture:** DOM wrapper + state persistence + draggable column resize
+**Architecture:** DOM wrapper + state persistence + draggable column resize + cell/column clamping
 
 ```
 Feature enabled
@@ -236,10 +240,17 @@ processTables() runs
         ├─► Wraps each in: .ghflex-table-wrapper
         ├─► Injects buttons: expand + fullscreen
         ├─► Restores expand state from localStorage
-        └─► addResizeHandles(table)
-                ├─► Adds drag handles on <th> right borders
-                ├─► Restores saved column widths (keyed by header text)
-                └─► Sets table-layout: fixed with explicit column widths
+        ├─► addResizeHandles(table)
+        │       ├─► Adds drag handles on <th> right borders
+        │       ├─► Restores saved column widths (keyed by header text)
+        │       └─► Sets table-layout: fixed with explicit column widths
+        ├─► addColumnToggles(table, btnGroup)
+        │       └─► Adds per-column hide/show buttons + "restore all" control
+        └─► addCellClamps(table, btnGroup)
+                ├─► Wraps each tbody td's children in div.ghflex-cell-clamp
+                ├─► CSS caps wrapper max-height: 7.5em and td width: 40em
+                ├─► ResizeObserver + scrollHeight check flags genuine overflow only
+                └─► Adds table-level unclamp button to btnGroup
                 ↓
 User clicks expand button
         ↓
@@ -255,6 +266,18 @@ startResize(event, table, headerCells, colIndex, tableKey)
         ├─► Updates column width on mousemove (min 50px)
         ├─► On mouseup: saves widths to localStorage
         └─► Key: header texts joined by "|" (shared across pages)
+                ↓
+User clicks an overflowing cell
+        ↓
+onTableClick(event)
+        ├─► Ignored if click hit a link/button/image/input, or if it ended a text selection
+        └─► Toggles .ghflex-cell-open on that cell's .ghflex-cell-clamp wrapper
+                ↓
+User clicks the table's unclamp button
+        ↓
+        ├─► Toggles .ghflex-cells-unclamped on the table (disables the height cap)
+        ├─► Saves choice: localStorage[ghflex-table-cells-unclamped][tableKey] = true
+        └─► Re-runs overflow detection (skipped entirely while unclamped)
                 ↓
 User clicks fullscreen
         ↓
@@ -286,6 +309,10 @@ Debounced processTables() runs (100ms delay)
 - Shared across pages — identical table structures get the same saved widths
 
 **Why Debounce?** GitHub's SPA triggers hundreds of mutations during navigation. Debouncing prevents excessive processing.
+
+**Why wrap cell children in a `div`, not `max-height` on the `<td>` directly?** Browsers treat `max-height` on a table cell as a minimum, not a cap, so the constraint has to live on a block-level child instead. The wrap moves (never clones) the cell's existing children, so listeners bound by other features — image-lightbox in particular — keep working.
+
+**Why is the feature purely visual?** The DOM keeps every node; clamping only changes CSS (`max-height`/`overflow`) and toggles classes. Copy/paste, Ctrl+F, and image-lightbox wiring on clamped cells all continue to work unchanged.
 
 ### Image Lightbox
 

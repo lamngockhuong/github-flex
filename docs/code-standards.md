@@ -50,7 +50,8 @@ src/
 ```
 
 **Rules:**
-- Features never import from other features (no cross-dependencies)
+- An orchestrator feature may compose its own sibling submodules (e.g. `table-expand.js` → `table-column-resize.js`, `table-column-toggle.js`, `table-cell-clamp.js`, `table-utils.js`; `edit-history.js` → its four `edit-history-*.js` submodules) — those submodules exist to be imported by their orchestrator, not by unrelated features
+- An orchestrator may also reach into a sibling top-level feature when integration requires it (e.g. `table-expand.js` imports `image-lightbox.js` to re-process images inside a cloned fullscreen table) — keep this the exception, not the norm
 - All features import from `shared/` for utilities
 - `shared/` never imports from features (unidirectional)
 
