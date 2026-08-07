@@ -1,4 +1,4 @@
-import { getTableKey, loadJsonStore, saveJsonStore } from "./table-utils.js";
+import { getTableKey, readTableEntry, writeTableEntry } from "./table-utils.js";
 
 const STORAGE_KEY = "ghflex-table-col-widths";
 const MIN_COL_WIDTH = 50;
@@ -54,14 +54,10 @@ function startResize(e, table, headerCells, colIndex, tableKey) {
     document.body.style.userSelect = "";
     activeDragCleanup = null;
 
-    if (tableKey) {
-      const widths = [...headerCells].map((th) =>
-        Math.round(parseFloat(th.style.width)),
-      );
-      const all = loadJsonStore(STORAGE_KEY);
-      all[tableKey] = widths;
-      saveJsonStore(STORAGE_KEY, all);
-    }
+    const widths = [...headerCells].map((th) =>
+      Math.round(parseFloat(th.style.width)),
+    );
+    writeTableEntry(STORAGE_KEY, tableKey, widths);
   };
 
   activeDragCleanup = cleanup;
@@ -78,7 +74,7 @@ export function addResizeHandles(table) {
   table.dataset.ghflexResizable = "true";
 
   const tableKey = getTableKey(table);
-  const saved = tableKey ? loadJsonStore(STORAGE_KEY)[tableKey] : null;
+  const saved = readTableEntry(STORAGE_KEY, tableKey);
 
   if (saved && saved.length === headerCells.length) {
     applyWidths(table, headerCells, saved);

@@ -1,6 +1,10 @@
-import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
-import { getTableKey, loadJsonStore, saveJsonStore } from "./table-utils.js";
+import {
+  createToolbarButton,
+  getTableKey,
+  readTableEntry,
+  writeTableEntry,
+} from "./table-utils.js";
 
 const STORAGE_KEY = "ghflex-table-hidden-cols";
 
@@ -42,26 +46,18 @@ export function addColumnToggles(table, btnGroup) {
   table.dataset.ghflexColToggle = "true";
 
   const tableKey = getTableKey(table);
-  const hiddenSet = new Set(
-    tableKey ? loadJsonStore(STORAGE_KEY)[tableKey] || [] : [],
-  );
+  const hiddenSet = new Set(readTableEntry(STORAGE_KEY, tableKey) || []);
 
-  const restoreBtn = document.createElement("button");
-  restoreBtn.className = "ghflex-table-toggle ghflex-table-restore-btn";
-  restoreBtn.style.display = "none";
-  setTrustedHTML(restoreBtn, ICONS.eye);
-  restoreBtn.addEventListener("click", () => {
+  const restoreBtn = createToolbarButton(ICONS.eye, "", () => {
     for (const idx of hiddenSet) {
       setColumnVisibility(table, idx, true);
     }
     hiddenSet.clear();
-    if (tableKey) {
-      const all = loadJsonStore(STORAGE_KEY);
-      delete all[tableKey];
-      saveJsonStore(STORAGE_KEY, all);
-    }
+    writeTableEntry(STORAGE_KEY, tableKey, undefined);
     updateUI(table, hiddenSet, restoreBtn);
   });
+  restoreBtn.classList.add("ghflex-table-restore-btn");
+  restoreBtn.style.display = "none";
   btnGroup.appendChild(restoreBtn);
 
   headerCells.forEach((th, i) => {
@@ -73,11 +69,7 @@ export function addColumnToggles(table, btnGroup) {
       e.stopPropagation();
       setColumnVisibility(table, i, false);
       hiddenSet.add(i);
-      if (tableKey) {
-        const all = loadJsonStore(STORAGE_KEY);
-        all[tableKey] = [...hiddenSet];
-        saveJsonStore(STORAGE_KEY, all);
-      }
+      writeTableEntry(STORAGE_KEY, tableKey, [...hiddenSet]);
       updateUI(table, hiddenSet, restoreBtn);
     });
     th.appendChild(hideBtn);
