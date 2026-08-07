@@ -25,11 +25,11 @@ github-flex/
 │   │   ├── early-inject.js            # FOUC prevention (document_start) (17 LOC)
 │   │   ├── features/
 │   │   │   ├── wide-layout.js         # Full viewport width (20 LOC)
-│   │   │   ├── table-expand.js        # Expandable tables controller (252 LOC)
-│   │   │   ├── table-column-resize.js # Drag-to-resize table columns (115 LOC)
+│   │   │   ├── table-expand.js        # Expandable tables controller (244 LOC)
+│   │   │   ├── table-column-resize.js # Drag-to-resize table columns (176 LOC)
 │   │   │   ├── table-column-toggle.js # Hide/show table columns (104 LOC)
-│   │   │   ├── table-cell-clamp.js    # Clamp oversized cell height/column width (183 LOC)
-│   │   │   ├── table-utils.js         # Shared table key, storage and toolbar-button helpers (46 LOC)
+│   │   │   ├── table-cell-clamp.js    # Clamp oversized cell height/column width (187 LOC)
+│   │   │   ├── table-utils.js         # Shared table key, storage and toolbar-button helpers (65 LOC)
 │   │   │   ├── image-lightbox.js      # Image zoom overlay (318 LOC)
 │   │   │   ├── gif-picker.js          # GIF search modal (656 LOC)
 │   │   │   ├── sidebar-toggle.js      # Sidebar toggle with Alt+M (335 LOC)
@@ -185,10 +185,10 @@ export const featureName = {
   6. Column widths persisted by header structure (same columns across different pages share widths)
   7. Wraps each `tbody td`'s children in `div.ghflex-cell-clamp` (`max-height: 7.5em`) and caps column width at `40em`; only cells that genuinely overflow (`scrollHeight > clientHeight + 1`) get a gradient fade and click-to-expand
 - **Submodules:**
-  - `table-column-resize.js` (115 LOC): resize handles, drag events, width persistence keyed by header text
+  - `table-column-resize.js` (176 LOC): resize handles, drag events, width persistence keyed by header text and expand state (collapsed/expanded kept separately)
   - `table-column-toggle.js` (104 LOC): per-column hide/show buttons, "restore all" control
-  - `table-cell-clamp.js` (183 LOC): oversized-cell clamping, overflow detection, per-table unclamp toggle persisted in localStorage (`ghflex-table-cells-unclamped`, keyed by `getTableKey()`)
-  - `table-utils.js` (46 LOC): shared `getTableKey()`, storage-entry and toolbar-button helpers used by the three submodules above and by the controller
+  - `table-cell-clamp.js` (187 LOC): oversized-cell clamping, overflow detection, per-table unclamp toggle persisted in localStorage (`ghflex-table-cells-unclamped`, keyed by `getTableKey()`); also applied to the fullscreen clone via its own toolbar button
+  - `table-utils.js` (65 LOC): shared `getTableKey()`, storage-entry and toolbar-button helpers used by the three submodules above and by the controller
 - **State:** `{ expandedState: {}, fullscreenTable: null }`
 - **Events:** Click (toggle, cell expand), Esc (exit fullscreen), mousedown/move/up (column resize)
 
@@ -416,7 +416,7 @@ User clicks checkbox in popup
 **localStorage (per-page state):**
 
 - Table Expand: `ghflex-table-expand-state` → `{ "pathname:table-0": true, ... }`
-- Table Column Widths: `ghflex-table-col-widths` → `{ "Header1|Header2": [w1, w2], ... }` (keyed by header text, shared across pages)
+- Table Column Widths: `ghflex-table-col-widths` → `{ "Header1|Header2": { collapsed: [w1, w2], expanded: [w1, w2] }, ... }` (keyed by header text, shared across pages; collapsed/expanded tracked separately since fullscreen counts as expanded; a legacy bare-array entry is still honoured for either state and migrated to both on the next drag)
 - Sidebar Toggle: `ghflex-sidebar-hidden` → `true` | `false`
 
 ### GitHub SPA Navigation
@@ -775,7 +775,7 @@ pnpm dev         # Watch mode (auto-rebuild)
 | GIF Picker     | gif-picker.js         | 656 | High (API, state, sanitization)        |
 | Sidebar Toggle | sidebar-toggle.js     | 335 | Medium (keyboard, persistence)         |
 | Image Lightbox | image-lightbox.js     | 318 | Medium (transforms, events)            |
-| Table Expand   | table-expand.js + table-column-resize.js + table-column-toggle.js + table-cell-clamp.js + table-utils.js | 700 | Medium (state, observer, column resize/toggle, cell clamp) |
+| Table Expand   | table-expand.js + table-column-resize.js + table-column-toggle.js + table-cell-clamp.js + table-utils.js | 776 | Medium (state, observer, column resize/toggle, cell clamp) |
 | Build System   | build.js              | 178 | Medium (esbuild, multi-browser)        |
 | Service Worker | service-worker.js     | 110 | Medium (context menu, image proxy)     |
 | Main Entry     | main.js               | 70  | Low (initialization logic)             |

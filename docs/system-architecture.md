@@ -138,7 +138,7 @@ tableExpand (internal dependency graph):
     ├─► table-column-resize.js (drag-to-resize columns, width persistence)
     ├─► table-column-toggle.js (per-column hide/show)
     ├─► table-cell-clamp.js (cap oversized cell height / column width)
-    ├─► table-utils.js (shared getTableKey/JSON store helpers, used by the three above)
+    ├─► table-utils.js (shared getTableKey/JSON store/toolbar-button/storage-entry helpers, used by the three above and by the controller itself)
     └─► image-lightbox.js (re-processes images inside the fullscreen table clone)
 
 editHistory (internal dependency graph):
@@ -192,7 +192,7 @@ Popup writes → browser.storage.sync.set() [polyfilled]
 localStorage (per-origin, github.com)
 ├── "ghflex-zen-hidden": "true"
 ├── "ghflex-table-expand-state": '{"pathname:table-0": true, ...}'
-└── "ghflex-table-col-widths": '{"Header1|Header2": [w1, w2], ...}'
+└── "ghflex-table-col-widths": '{"Header1|Header2": {"collapsed": [w1, w2], "expanded": [w1, w2]}, ...}'
 ```
 
 **Characteristics:**
@@ -257,6 +257,8 @@ User clicks expand button
 toggleExpand(table, index)
         ├─► Toggles class: .ghflex-table-expanded
         ├─► Saves state: localStorage[pathname:table-{index}] = true
+        ├─► refreshColumnWidths(table) — swaps to the new state's saved widths,
+        │       or reverts to the browser's own sizing if none were saved for it
         └─► Button icon updates
                 ↓
 User drags column border
@@ -264,8 +266,11 @@ User drags column border
 startResize(event, table, headerCells, colIndex, tableKey)
         ├─► Tracks mousedown X position
         ├─► Updates column width on mousemove (min 50px)
-        ├─► On mouseup: saves widths to localStorage
-        └─► Key: header texts joined by "|" (shared across pages)
+        ├─► On mouseup: saves widths to localStorage, under whichever of
+        │       collapsed/expanded the table is currently in
+        └─► Key: getTableKey(table) — header texts joined by "|" (shared across
+                pages; ignores extension-injected elements so the key doesn't
+                drift once controls like the column-hide button exist)
                 ↓
 User clicks an overflowing cell
         ↓
@@ -281,11 +286,15 @@ User clicks the table's unclamp button
                 ↓
 User clicks fullscreen
         ↓
-enterFullscreen(table)
-        ├─► Creates overlay: position: fixed, z-index: 9999
-        ├─► Clones table into overlay
-        ├─► Adds fresh resize handles to clone
-        ├─► Adds Esc key listener
+openFullscreen(table)
+        ├─► Creates overlay: position: fixed, z-index: 100002
+        ├─► Deep-clones the table into the overlay
+        ├─► Adds fresh resize handles to the clone
+        ├─► Adds fresh column-hide toggles to the clone
+        ├─► Adds cell clamps to the clone too — same persisted per-table choice,
+        │       own toolbar toggle button; the clone keeps its inherited
+        │       .ghflex-cell-open classes, so a cell expanded on the page stays
+        │       expanded in fullscreen
         └─► Stores reference: this.fullscreenTable
                 ↓
 GitHub SPA navigation (e.g., file → another file)
@@ -303,10 +312,11 @@ Debounced processTables() runs (100ms delay)
 - Example: `/user/repo/blob/main/README.md:table-0`
 - Ensures state isolation per-page
 
-**Column Width Key Pattern:** Header text joined by `|`
+**Column Width Key Pattern:** Header text joined by `|`, skipping any element carrying a `ghflex-` class (the extension's own injected controls, e.g. the column-hide button) so the key doesn't drift once those exist
 
-- Example: `"File|Change"` → `[250, 500]`
+- Example: `"File|Change"` → `{ collapsed: [250, 500], expanded: [300, 600] }`
 - Shared across pages — identical table structures get the same saved widths
+- Collapsed and expanded widths are tracked separately; fullscreen counts as expanded. A legacy bare-array entry (from before per-state widths) is honoured for either state and migrated to both on the next drag
 
 **Why Debounce?** GitHub's SPA triggers hundreds of mutations during navigation. Debouncing prevents excessive processing.
 

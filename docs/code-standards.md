@@ -671,9 +671,9 @@ z-index: 9999;  /* Top-most (if needed) */
 ```
 
 **Current Usage:**
-- Table fullscreen: `z-index: 9999`
-- GIF picker modal: `z-index: 10000`
-- Image lightbox: `z-index: 10000`
+- Table fullscreen: `z-index: 100002`
+- GIF picker modal: `z-index: 9999`
+- Image lightbox: `z-index: 100002`
 
 ### Transitions
 
