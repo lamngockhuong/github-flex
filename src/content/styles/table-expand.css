@@ -118,6 +118,87 @@ thead th:hover .ghflex-col-hide-btn {
   color: var(--fgColor-danger, #d1242f);
 }
 
+/* === CELL CLAMP === */
+.ghflex-cell-clamp {
+  /* The fade must blend into the row it sits on, so the colour is a variable
+     and the gradient itself is written once. GitHub stripes even rows. */
+  --ghflex-cell-fade: var(--bgColor-default, #ffffff);
+  max-height: 7.5em;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Unscoped on purpose: .ghflex-cell-clamp only exists in tables this feature
+   processed, and both the in-page container and the fullscreen overlay stripe
+   even rows the same way. Scoping this by ancestor is what made the overlay
+   need a second copy of the rule. */
+tr:nth-child(even) .ghflex-cell-clamp {
+  --ghflex-cell-fade: var(--bgColor-muted, #f6f8fa);
+}
+
+/* The wrapper inherits the cell's "last child has no bottom margin" rule,
+   so hand it down to the content that was moved inside. */
+.ghflex-cell-clamp > *:last-child {
+  margin-bottom: 0;
+}
+
+/* Clamping is suspended per-cell (open) and per-table (the toggle button).
+   Fullscreen rides the same per-table class rather than a parallel rule set. */
+.ghflex-cell-clamp.ghflex-cell-open,
+.ghflex-cells-unclamped .ghflex-cell-clamp {
+  max-height: none;
+}
+
+/* Fade and pointer only on cells that overflow and are currently closed */
+.ghflex-cell-clamped:not(.ghflex-cell-open) {
+  cursor: pointer;
+}
+
+.ghflex-cell-clamped:not(.ghflex-cell-open)::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 2em;
+  background: linear-gradient(to bottom, transparent, var(--ghflex-cell-fade));
+  pointer-events: none;
+}
+
+.ghflex-cells-unclamped .ghflex-cell-clamped {
+  cursor: auto;
+}
+
+.ghflex-cells-unclamped .ghflex-cell-clamped::after {
+  content: none;
+}
+
+/* Break tokens that have no break opportunity - a bare URL, a long identifier.
+   break-word, NOT anywhere: anywhere also drops the cell's min-content to a
+   single character, so a many-column table collapses every column to one
+   character wide and the text reads vertically. break-word keeps min-content
+   at the longest word, so normal prose still wraps at spaces.
+
+   Both scopes are named: the fullscreen clone clamps too, and without these a
+   bare URL there cannot wrap, so the cell stays one line tall and clamping
+   never fires. Cell content rides the wrapper class, which covers both. */
+.ghflex-cell-clamp,
+.ghflex-table-container th,
+.ghflex-table-fullscreen-table th {
+  overflow-wrap: break-word;
+}
+
+/* Cap runaway column width. td only - under table-layout:fixed (set by
+   table-column-resize) column widths come from thead th, so capping td stays
+   inert there instead of fighting it. */
+.ghflex-table-container td,
+.ghflex-table-fullscreen-table td {
+  max-width: 40em;
+}
+
+/* Expanded mode deliberately drops width constraints - honour that */
+.ghflex-table-container.ghflex-table-expanded td {
+  max-width: none;
+}
+
 /* === FULLSCREEN OVERLAY === */
 .ghflex-table-fullscreen-overlay {
   position: fixed;
@@ -218,5 +299,26 @@ thead th:hover .ghflex-col-hide-btn {
 
   .ghflex-table-fullscreen-table tr:nth-child(even) {
     background-color: var(--bgColor-muted, #161b22);
+  }
+
+  /* GitHub's own variables flip on their own - only the fallbacks need this */
+  .ghflex-cell-clamp {
+    --ghflex-cell-fade: var(--bgColor-default, #0d1117);
+  }
+
+  tr:nth-child(even) .ghflex-cell-clamp {
+    --ghflex-cell-fade: var(--bgColor-muted, #161b22);
+  }
+}
+
+/* Clamping a printed table would hide content permanently. These selectors
+   mirror the rules they override - @media adds no specificity of its own. */
+@media print {
+  .ghflex-cell-clamp {
+    max-height: none;
+  }
+
+  .ghflex-cell-clamped:not(.ghflex-cell-open)::after {
+    content: none;
   }
 }

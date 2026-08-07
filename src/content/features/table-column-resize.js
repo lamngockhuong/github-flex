@@ -1,12 +1,58 @@
-import { getTableKey, loadJsonStore, saveJsonStore } from "./table-utils.js";
+import { getTableKey, readTableEntry, writeTableEntry } from "./table-utils.js";
 
 const STORAGE_KEY = "ghflex-table-col-widths";
 const MIN_COL_WIDTH = 50;
 
 let activeDragCleanup = null;
 
+// Collapsed and expanded are two reading modes with very different available
+// width, so each keeps its own column widths. Sharing one set meant widths
+// dragged while expanded were restored onto the collapsed table, which then
+// opened as wide as the expanded one. Fullscreen counts as expanded.
+function stateOf(table) {
+  if (table.classList.contains("ghflex-table-fullscreen-table")) {
+    return "expanded";
+  }
+  const container = table.closest(".ghflex-table-container");
+  return container?.classList.contains("ghflex-table-expanded")
+    ? "expanded"
+    : "collapsed";
+}
+
+function readWidths(table, tableKey) {
+  const stored = readTableEntry(STORAGE_KEY, tableKey);
+  if (!stored) return null;
+  // a bare array predates per-state widths - honour it for either state
+  if (Array.isArray(stored)) return stored;
+  return stored[stateOf(table)] ?? null;
+}
+
+function saveWidths(table, tableKey, widths) {
+  const stored = readTableEntry(STORAGE_KEY, tableKey);
+  // migrate a legacy array by seeding both states before overwriting one
+  const entry = Array.isArray(stored)
+    ? { collapsed: stored, expanded: stored }
+    : { ...stored };
+  entry[stateOf(table)] = widths;
+  writeTableEntry(STORAGE_KEY, tableKey, entry);
+}
+
+function clearWidths(table, headerCells) {
+  table.style.tableLayout = "";
+  table.style.width = "";
+  table.style.removeProperty("max-width");
+  headerCells.forEach((th) => {
+    th.style.width = "";
+  });
+}
+
 function applyWidths(table, headerCells, widths) {
   table.style.tableLayout = "fixed";
+  // GitHub caps .markdown-body table at max-width:100%, which would swallow any
+  // drag that widens the table past its container - resizing would only appear
+  // to work in expanded mode, where a CSS rule already lifts the cap. The
+  // container scrolls horizontally, so releasing the cap is safe here.
+  table.style.setProperty("max-width", "none", "important");
   table.style.width = `${widths.reduce((sum, w) => sum + w, 0)}px`;
   headerCells.forEach((th, i) => {
     th.style.width = `${widths[i]}px`;
@@ -58,9 +104,7 @@ function startResize(e, table, headerCells, colIndex, tableKey) {
       const widths = [...headerCells].map((th) =>
         Math.round(parseFloat(th.style.width)),
       );
-      const all = loadJsonStore(STORAGE_KEY);
-      all[tableKey] = widths;
-      saveJsonStore(STORAGE_KEY, all);
+      saveWidths(table, tableKey, widths);
     }
   };
 
@@ -78,7 +122,7 @@ export function addResizeHandles(table) {
   table.dataset.ghflexResizable = "true";
 
   const tableKey = getTableKey(table);
-  const saved = tableKey ? loadJsonStore(STORAGE_KEY)[tableKey] : null;
+  const saved = readWidths(table, tableKey);
 
   if (saved && saved.length === headerCells.length) {
     applyWidths(table, headerCells, saved);
@@ -100,16 +144,29 @@ export function removeResizeHandles(table) {
   if (!table?.dataset.ghflexResizable) return;
   if (activeDragCleanup) activeDragCleanup();
   delete table.dataset.ghflexResizable;
-  table.style.tableLayout = "";
-  table.style.width = "";
+  const headerCells = table.querySelectorAll("thead th");
+  clearWidths(table, headerCells);
   table.classList.remove("ghflex-table-resizing");
   for (const h of table.querySelectorAll(".ghflex-col-resize-handle")) {
     h.remove();
   }
-  table.querySelectorAll("thead th").forEach((th) => {
-    th.style.width = "";
+  headerCells.forEach((th) => {
     th.style.position = "";
   });
+}
+
+// Expand/collapse swaps which stored width set applies, so the caller must
+// re-apply after toggling. No widths saved for the new state means reverting to
+// the browser's own column sizing rather than carrying the other state's over.
+export function refreshColumnWidths(table) {
+  if (!table?.dataset.ghflexResizable) return;
+  const headerCells = table.querySelectorAll("thead th");
+  const widths = readWidths(table, getTableKey(table));
+  if (widths && widths.length === headerCells.length) {
+    applyWidths(table, headerCells, widths);
+  } else {
+    clearWidths(table, headerCells);
+  }
 }
 
 export function removeAllResizeHandles() {

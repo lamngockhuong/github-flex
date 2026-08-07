@@ -135,7 +135,11 @@ main.js
 
 tableExpand (internal dependency graph):
   table-expand.js (controller)
-    └─► table-column-resize.js (drag-to-resize columns, width persistence)
+    ├─► table-column-resize.js (drag-to-resize columns, width persistence)
+    ├─► table-column-toggle.js (per-column hide/show)
+    ├─► table-cell-clamp.js (cap oversized cell height / column width)
+    ├─► table-utils.js (shared getTableKey/JSON store/toolbar-button/storage-entry helpers, used by the three above and by the controller itself)
+    └─► image-lightbox.js (re-processes images inside the fullscreen table clone)
 
 editHistory (internal dependency graph):
   edit-history.js (controller)
@@ -144,7 +148,7 @@ editHistory (internal dependency graph):
           ├─► edit-history-diff.js (word-level diff)
           └─► edit-history-markdown.js (markdown renderer)
 
-(No horizontal dependencies between features)
+(No horizontal dependencies between top-level features, except where an orchestrator explicitly composes a sibling — see table-expand → image-lightbox above)
 ```
 
 ### 3. Data Storage Architecture
@@ -188,7 +192,7 @@ Popup writes → browser.storage.sync.set() [polyfilled]
 localStorage (per-origin, github.com)
 ├── "ghflex-zen-hidden": "true"
 ├── "ghflex-table-expand-state": '{"pathname:table-0": true, ...}'
-└── "ghflex-table-col-widths": '{"Header1|Header2": [w1, w2], ...}'
+└── "ghflex-table-col-widths": '{"Header1|Header2": {"collapsed": [w1, w2], "expanded": [w1, w2]}, ...}'
 ```
 
 **Characteristics:**
@@ -226,7 +230,7 @@ Content renders wide immediately (no flash)
 
 ### Table Expand
 
-**Architecture:** DOM wrapper + state persistence + draggable column resize
+**Architecture:** DOM wrapper + state persistence + draggable column resize + cell/column clamping
 
 ```
 Feature enabled
@@ -236,16 +240,25 @@ processTables() runs
         ├─► Wraps each in: .ghflex-table-wrapper
         ├─► Injects buttons: expand + fullscreen
         ├─► Restores expand state from localStorage
-        └─► addResizeHandles(table)
-                ├─► Adds drag handles on <th> right borders
-                ├─► Restores saved column widths (keyed by header text)
-                └─► Sets table-layout: fixed with explicit column widths
+        ├─► addResizeHandles(table)
+        │       ├─► Adds drag handles on <th> right borders
+        │       ├─► Restores saved column widths (keyed by header text)
+        │       └─► Sets table-layout: fixed with explicit column widths
+        ├─► addColumnToggles(table, btnGroup)
+        │       └─► Adds per-column hide/show buttons + "restore all" control
+        └─► addCellClamps(table, btnGroup)
+                ├─► Wraps each tbody td's children in div.ghflex-cell-clamp
+                ├─► CSS caps wrapper max-height: 7.5em and td width: 40em
+                ├─► ResizeObserver + scrollHeight check flags genuine overflow only
+                └─► Adds table-level unclamp button to btnGroup
                 ↓
 User clicks expand button
         ↓
 toggleExpand(table, index)
         ├─► Toggles class: .ghflex-table-expanded
         ├─► Saves state: localStorage[pathname:table-{index}] = true
+        ├─► refreshColumnWidths(table) — swaps to the new state's saved widths,
+        │       or reverts to the browser's own sizing if none were saved for it
         └─► Button icon updates
                 ↓
 User drags column border
@@ -253,16 +266,35 @@ User drags column border
 startResize(event, table, headerCells, colIndex, tableKey)
         ├─► Tracks mousedown X position
         ├─► Updates column width on mousemove (min 50px)
-        ├─► On mouseup: saves widths to localStorage
-        └─► Key: header texts joined by "|" (shared across pages)
+        ├─► On mouseup: saves widths to localStorage, under whichever of
+        │       collapsed/expanded the table is currently in
+        └─► Key: getTableKey(table) — header texts joined by "|" (shared across
+                pages; ignores extension-injected elements so the key doesn't
+                drift once controls like the column-hide button exist)
+                ↓
+User clicks an overflowing cell
+        ↓
+onTableClick(event)
+        ├─► Ignored if click hit a link/button/image/input, or if it ended a text selection
+        └─► Toggles .ghflex-cell-open on that cell's .ghflex-cell-clamp wrapper
+                ↓
+User clicks the table's unclamp button
+        ↓
+        ├─► Toggles .ghflex-cells-unclamped on the table (disables the height cap)
+        ├─► Saves choice: localStorage[ghflex-table-cells-unclamped][tableKey] = true
+        └─► Re-runs overflow detection (skipped entirely while unclamped)
                 ↓
 User clicks fullscreen
         ↓
-enterFullscreen(table)
-        ├─► Creates overlay: position: fixed, z-index: 9999
-        ├─► Clones table into overlay
-        ├─► Adds fresh resize handles to clone
-        ├─► Adds Esc key listener
+openFullscreen(table)
+        ├─► Creates overlay: position: fixed, z-index: 100002
+        ├─► Deep-clones the table into the overlay
+        ├─► Adds fresh resize handles to the clone
+        ├─► Adds fresh column-hide toggles to the clone
+        ├─► Adds cell clamps to the clone too — same persisted per-table choice,
+        │       own toolbar toggle button; the clone keeps its inherited
+        │       .ghflex-cell-open classes, so a cell expanded on the page stays
+        │       expanded in fullscreen
         └─► Stores reference: this.fullscreenTable
                 ↓
 GitHub SPA navigation (e.g., file → another file)
@@ -280,12 +312,17 @@ Debounced processTables() runs (100ms delay)
 - Example: `/user/repo/blob/main/README.md:table-0`
 - Ensures state isolation per-page
 
-**Column Width Key Pattern:** Header text joined by `|`
+**Column Width Key Pattern:** Header text joined by `|`, skipping any element carrying a `ghflex-` class (the extension's own injected controls, e.g. the column-hide button) so the key doesn't drift once those exist
 
-- Example: `"File|Change"` → `[250, 500]`
+- Example: `"File|Change"` → `{ collapsed: [250, 500], expanded: [300, 600] }`
 - Shared across pages — identical table structures get the same saved widths
+- Collapsed and expanded widths are tracked separately; fullscreen counts as expanded. A legacy bare-array entry (from before per-state widths) is honoured for either state and migrated to both on the next drag
 
 **Why Debounce?** GitHub's SPA triggers hundreds of mutations during navigation. Debouncing prevents excessive processing.
+
+**Why wrap cell children in a `div`, not `max-height` on the `<td>` directly?** Browsers treat `max-height` on a table cell as a minimum, not a cap, so the constraint has to live on a block-level child instead. The wrap moves (never clones) the cell's existing children, so listeners bound by other features — image-lightbox in particular — keep working.
+
+**Why is the feature purely visual?** The DOM keeps every node; clamping only changes CSS (`max-height`/`overflow`) and toggles classes. Copy/paste, Ctrl+F, and image-lightbox wiring on clamped cells all continue to work unchanged.
 
 ### Image Lightbox
 

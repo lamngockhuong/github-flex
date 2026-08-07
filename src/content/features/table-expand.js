@@ -1,18 +1,28 @@
-import browser from "webextension-polyfill";
 import { setTrustedHTML } from "../../shared/dom.js";
 import { ICONS } from "../../shared/icons.js";
 import { imageLightbox } from "./image-lightbox.js";
 import {
+  addCellClamps,
+  removeAllCellClamps,
+  removeCellClamps,
+} from "./table-cell-clamp.js";
+import {
   addResizeHandles,
+  refreshColumnWidths,
   removeAllResizeHandles,
   removeResizeHandles,
 } from "./table-column-resize.js";
 import {
   addColumnToggles,
   removeAllColumnToggles,
+  removeColumnToggles,
 } from "./table-column-toggle.js";
+import {
+  createToolbarButton,
+  loadJsonStore,
+  saveJsonStore,
+} from "./table-utils.js";
 
-const STYLE_ID = "ghflex-table-expand-styles";
 const STORAGE_KEY = "ghflex-table-expand-state";
 
 export const tableExpand = {
@@ -24,7 +34,6 @@ export const tableExpand = {
   enable() {
     if (this.enabled) return;
     this.loadState();
-    this.injectStyles();
     this.processTables();
     this.setupObserver();
     this.setupEscapeHandler();
@@ -39,27 +48,17 @@ export const tableExpand = {
     this.removeEscapeHandler();
     removeAllColumnToggles();
     removeAllResizeHandles();
+    removeAllCellClamps();
     this.removeAllToggles();
-    this.removeStyles();
     this.enabled = false;
   },
 
   loadState() {
-    try {
-      const stored = localStorage.getItem(STORAGE_KEY);
-      this.expandedState = stored ? JSON.parse(stored) : {};
-    } catch (error) {
-      console.error("[GitHub Flex] Failed to load table expand state:", error);
-      this.expandedState = {};
-    }
+    this.expandedState = loadJsonStore(STORAGE_KEY);
   },
 
   saveState() {
-    try {
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.expandedState));
-    } catch (error) {
-      console.error("[GitHub Flex] Failed to save table expand state:", error);
-    }
+    saveJsonStore(STORAGE_KEY, this.expandedState);
   },
 
   getStateKey(index) {
@@ -88,7 +87,7 @@ export const tableExpand = {
       const btnGroup = document.createElement("div");
       btnGroup.className = "ghflex-table-btn-group";
 
-      const expandBtn = this.createButton(
+      const expandBtn = createToolbarButton(
         isExpanded ? ICONS.unlock : ICONS.lock,
         isExpanded ? "Collapse" : "Expand",
         () => {
@@ -98,12 +97,14 @@ export const tableExpand = {
           );
           this.expandedState[stateKey] = nowExpanded;
           this.saveState();
+          // each state keeps its own column widths - swap to the new set
+          refreshColumnWidths(table);
           setTrustedHTML(expandBtn, nowExpanded ? ICONS.unlock : ICONS.lock);
           expandBtn.title = nowExpanded ? "Collapse" : "Expand";
         },
       );
 
-      const fullscreenBtn = this.createButton(
+      const fullscreenBtn = createToolbarButton(
         ICONS.fullscreen,
         "Fullscreen",
         () => this.openFullscreen(table),
@@ -118,16 +119,8 @@ export const tableExpand = {
       container.appendChild(table);
       addResizeHandles(table);
       addColumnToggles(table, btnGroup);
+      addCellClamps(table, btnGroup);
     });
-  },
-
-  createButton(icon, title, onClick) {
-    const button = document.createElement("button");
-    button.className = "ghflex-table-toggle";
-    setTrustedHTML(button, icon);
-    button.title = title;
-    button.addEventListener("click", onClick);
-    return button;
   },
 
   openFullscreen(table) {
@@ -167,11 +160,19 @@ export const tableExpand = {
 
     removeResizeHandles(tableClone);
     addResizeHandles(tableClone);
-    for (const btn of tableClone.querySelectorAll(".ghflex-col-hide-btn")) {
-      btn.remove();
-    }
-    delete tableClone.dataset.ghflexColToggle;
+    removeColumnToggles(tableClone);
     addColumnToggles(tableClone, fsBtnGroup);
+    // Fullscreen is where a wide table needs clamping most - a spec table with
+    // long cells is unreadable at full row height. Same mechanism, same
+    // persisted per-table choice, own toggle button.
+    //
+    // Unlike its two siblings above this clears the guard flag by hand instead
+    // of calling removeCellClamps: that would unwrap the cells and discard the
+    // ghflex-cell-open classes the clone inherited, so a cell you had expanded
+    // on the page would collapse on entering fullscreen. Reading continues
+    // where it left off.
+    delete tableClone.dataset.ghflexCellClamp;
+    addCellClamps(tableClone, fsBtnGroup);
 
     if (imageLightbox.enabled) {
       imageLightbox.processImages(content);
@@ -185,7 +186,15 @@ export const tableExpand = {
     if (imageLightbox.enabled) {
       imageLightbox.removeImageTriggers(this.fullscreenTable);
     }
+    const clone = this.fullscreenTable.querySelector(
+      ".ghflex-table-fullscreen-table",
+    );
+    // Detach first: teardown unwraps every cell, and doing that to a live tree
+    // costs a style and layout pass on a table that is about to disappear.
     this.fullscreenTable.remove();
+    // The shared ResizeObserver holds its targets strongly, so the clone would
+    // be pinned for the page's lifetime without this.
+    removeCellClamps(clone);
     this.fullscreenTable = null;
     document.body.style.overflow = "";
   },
@@ -231,18 +240,5 @@ export const tableExpand = {
       }
       wrapper.remove();
     });
-  },
-
-  injectStyles() {
-    if (document.getElementById(STYLE_ID)) return;
-    const link = document.createElement("link");
-    link.id = STYLE_ID;
-    link.rel = "stylesheet";
-    link.href = browser.runtime.getURL("content/styles/table-expand.css");
-    document.head.appendChild(link);
-  },
-
-  removeStyles() {
-    document.getElementById(STYLE_ID)?.remove();
   },
 };
