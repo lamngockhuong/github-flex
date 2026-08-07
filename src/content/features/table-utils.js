@@ -2,10 +2,29 @@
 
 import { setTrustedHTML } from "../../shared/dom.js";
 
+// Our own controls live inside the header cells - the column-hide button puts a
+// "x" in every th. Counting those makes the key depend on WHEN it was taken:
+// before the buttons exist it reads "No|Item", after them "Nox|Itemx". A key
+// that drifts mid-session silently loses whatever was stored under the old one.
+function isInjected(node) {
+  return (
+    node.nodeType === Node.ELEMENT_NODE &&
+    [...node.classList].some((name) => name.startsWith("ghflex-"))
+  );
+}
+
 export function getTableKey(table) {
   const headers = table.querySelectorAll("thead th");
   if (headers.length === 0) return null;
-  return [...headers].map((th) => th.textContent.trim()).join("|");
+  return [...headers]
+    .map((th) =>
+      [...th.childNodes]
+        .filter((node) => !isInjected(node))
+        .map((node) => node.textContent)
+        .join("")
+        .trim(),
+    )
+    .join("|");
 }
 
 export function loadJsonStore(key) {
