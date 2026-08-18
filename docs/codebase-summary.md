@@ -183,11 +183,11 @@ export const featureName = {
   4. MutationObserver detects new tables on SPA navigation
   5. Adds drag-to-resize handles on column header borders
   6. Column widths persisted by header structure (same columns across different pages share widths)
-  7. Wraps each `tbody td`'s children in `div.ghflex-cell-clamp` (`max-height: 7.5em`) and caps column width at `40em`; only cells that genuinely overflow (`scrollHeight > clientHeight + 1`) get a gradient fade and click-to-expand
+  7. Wraps each `tbody td`'s children in `div.ghflex-cell-clamp` (`max-height: 7.5em`) and caps column width at `40em`; only cells that genuinely overflow (`scrollHeight > clientHeight + 1`) get a gradient fade, and clicking one opens its whole row
 - **Submodules:**
   - `table-column-resize.js` (176 LOC): resize handles, drag events, width persistence keyed by header text and expand state (collapsed/expanded kept separately)
   - `table-column-toggle.js` (104 LOC): per-column hide/show buttons, "restore all" control
-  - `table-cell-clamp.js` (187 LOC): oversized-cell clamping, overflow detection, per-table unclamp toggle persisted in localStorage (`ghflex-table-cells-unclamped`, keyed by `getTableKey()`); also applied to the fullscreen clone via its own toolbar button
+  - `table-cell-clamp.js` (211 LOC): oversized-cell clamping, overflow detection, click-to-open-row, per-table unclamp toggle persisted in localStorage (`ghflex-table-cells-unclamped`, keyed by `getTableKey()`); also applied to the fullscreen clone via its own toolbar button
   - `table-utils.js` (65 LOC): shared `getTableKey()`, storage-entry and toolbar-button helpers used by the three submodules above and by the controller
 - **State:** `{ expandedState: {}, fullscreenTable: null }`
 - **Events:** Click (toggle, cell expand), Esc (exit fullscreen), mousedown/move/up (column resize)

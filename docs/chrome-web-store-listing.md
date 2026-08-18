@@ -15,7 +15,7 @@ Features:
 
 - Wide Layout: Expands GitHub pages to use the full width of your browser. No more wasted screen space - see more code, diffs, and content at a glance.
 
-- Table Expand: Expand, resize columns, and hide/show columns on large tables. Tall cells are capped so rows stay readable - click a capped cell to see it in full, or unclamp the whole table. View tables in fullscreen mode. All customizations (column widths, hidden columns, expand state) persist across page loads.
+- Table Expand: Expand, resize columns, and hide/show columns on large tables. Tall cells are capped so rows stay readable - click a capped cell to open that whole row at once, or unclamp the whole table. View tables in fullscreen mode. All customizations (column widths, hidden columns, expand state) persist across page loads.
 
 - Image Lightbox: Click any image on GitHub to view it in a fullscreen overlay. Easily inspect screenshots, diagrams, and visual content without opening a new tab.
 
