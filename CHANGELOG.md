@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.0.13](https://github.com/lamngockhuong/github-flex/compare/v0.0.12...v0.0.13) (2026-08-18)
+
+
+### Features
+
+* **table-expand:** expand a whole table row on click ([#87](https://github.com/lamngockhuong/github-flex/issues/87)) ([821aa5c](https://github.com/lamngockhuong/github-flex/commit/821aa5cc43e1f40df06f027b4edb56bfb0aad55a))
+
+
+### Bug Fixes
+
+* **deps:** update dependency astro to v7 ([#75](https://github.com/lamngockhuong/github-flex/issues/75)) ([1496d3e](https://github.com/lamngockhuong/github-flex/commit/1496d3e7fea9e042196f7066f883c8d63a9c760d))
+* **i18n:** refine Vietnamese copy and localize badge alt text ([#89](https://github.com/lamngockhuong/github-flex/issues/89)) ([b512070](https://github.com/lamngockhuong/github-flex/commit/b5120701f9ac0e7311a26df4867f53465e87e15a))
+
 ## [0.0.12](https://github.com/lamngockhuong/github-flex/compare/v0.0.11...v0.0.12) (2026-08-07)
 
 
