@@ -166,7 +166,9 @@ tr:nth-child(even) .ghflex-cell-clamp {
   pointer-events: none;
 }
 
-.ghflex-cells-unclamped .ghflex-cell-clamp {
+/* Narrow on purpose: an unclamped table has no open rows - the toggle closes
+   them - so this never has to out-rank the row-open pointer above. */
+.ghflex-cells-unclamped .ghflex-cell-clamped {
   cursor: auto;
 }
 

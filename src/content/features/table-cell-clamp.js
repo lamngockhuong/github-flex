@@ -8,8 +8,6 @@ import {
 } from "./table-utils.js";
 
 const STORAGE_KEY = "ghflex-table-cells-unclamped";
-// Container-level state carries a name; cell-level markers stay literal, as
-// the rest of the file has them.
 const UNCLAMPED_CLASS = "ghflex-cells-unclamped";
 const ROW_OPEN_CLASS = "ghflex-row-open";
 const DETECT_DEBOUNCE = 100;
@@ -39,6 +37,15 @@ const widthObserver = new ResizeObserver((entries) => {
 // measuring is meaningless and clicks must not toggle state nothing can show.
 const isClamping = (table) => !table.classList.contains(UNCLAMPED_CLASS);
 
+// Returns the rows it closed, so a caller that only wants them out of the way
+// for a moment can put them back. The NodeList is static - removing the class
+// does not disturb it.
+function closeOpenRows(table) {
+  const rows = table.querySelectorAll(`tr.${ROW_OPEN_CLASS}`);
+  for (const row of rows) row.classList.remove(ROW_OPEN_CLASS);
+  return rows;
+}
+
 // Move (never clone) the cell's children into the wrapper, so listeners bound
 // by other features - image-lightbox in particular - survive the wrap.
 function wrapCells(table) {
@@ -61,10 +68,8 @@ function detectOverflow(table) {
 
   // Cells of an open row are uncapped, so clientHeight equals scrollHeight and
   // every one of them would measure as fitting. Close the rows for the
-  // measurement and put them straight back - there is no height to recompute,
-  // only a class, so nothing here can go stale.
-  const openRows = [...table.querySelectorAll(`tr.${ROW_OPEN_CLASS}`)];
-  for (const row of openRows) row.classList.remove(ROW_OPEN_CLASS);
+  // measurement and put them straight back.
+  const openRows = closeOpenRows(table);
 
   // Batch the passes: interleaving class writes with geometry reads forces a
   // synchronous reflow per cell. Read every height, then write the results
@@ -100,17 +105,11 @@ function onTableClick(e) {
   if (!wrapper) return;
 
   // Expanding is a row operation, not a cell one: one click releases every cell
-  // of the row, so the lines of a single record can be read side by side instead
-  // of being uncovered one cell at a time. Only a cell with something hidden can
-  // open a row; once open, a click on any of its cells closes it again.
+  // of the row, so the lines of a single record can be read side by side.
   const row = wrapper.closest("tr");
-  if (!row) return;
-  if (
-    !row.classList.contains(ROW_OPEN_CLASS) &&
-    !wrapper.classList.contains("ghflex-cell-clamped")
-  ) {
-    return;
-  }
+  const isOpen = row.classList.contains(ROW_OPEN_CLASS);
+  const canOpen = wrapper.classList.contains("ghflex-cell-clamped");
+  if (!isOpen && !canOpen) return;
 
   // a click that ends a text selection in this cell must not collapse it
   const selection = window.getSelection();
@@ -141,6 +140,10 @@ function createToggleButton(table, tableKey) {
     "Show full cells",
     () => {
       const unclamped = table.classList.toggle(UNCLAMPED_CLASS);
+      // Suspending the whole table subsumes every row opened inside it. Closing
+      // them keeps the two scopes from ever being set at once, so neither the
+      // stylesheet nor a reader has to work out which one takes precedence.
+      closeOpenRows(table);
       // undefined removes the entry - only the non-default state is stored
       writeTableEntry(STORAGE_KEY, tableKey, unclamped ? true : undefined);
       syncUI();
@@ -191,18 +194,17 @@ export function removeCellClamps(table) {
   clearTimeout(detectTimers.get(table));
   detectTimers.delete(table);
 
-  // Rows outlive the unwrap below, so their state is cleared by hand; the cell
-  // markers go with the wrappers that are about to be destroyed.
-  for (const row of table.querySelectorAll(`tr.${ROW_OPEN_CLASS}`)) {
-    row.classList.remove(ROW_OPEN_CLASS);
-  }
+  // Rows and the table itself outlive the unwrap below, so the view state they
+  // carry is cleared by hand; the cell markers go with the wrappers that are
+  // about to be destroyed.
+  closeOpenRows(table);
+  table.classList.remove(UNCLAMPED_CLASS);
 
   // Restore the original DOM exactly: move children back, drop the wrapper.
   for (const wrapper of table.querySelectorAll(".ghflex-cell-clamp")) {
     wrapper.parentNode?.append(...wrapper.childNodes);
     wrapper.remove();
   }
-  table.classList.remove(UNCLAMPED_CLASS);
 }
 
 export function removeAllCellClamps() {
