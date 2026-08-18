@@ -167,10 +167,10 @@ export const tableExpand = {
     // persisted per-table choice, own toggle button.
     //
     // Unlike its two siblings above this clears the guard flag by hand instead
-    // of calling removeCellClamps: that would unwrap the cells and discard the
-    // ghflex-cell-open classes the clone inherited, so a cell you had expanded
-    // on the page would collapse on entering fullscreen. Reading continues
-    // where it left off.
+    // of calling removeCellClamps: that would unwrap the cells and clear the
+    // open-row classes the clone inherited, so a row you had expanded on the
+    // page would collapse on entering fullscreen. Reading continues where it
+    // left off.
     delete tableClone.dataset.ghflexCellClamp;
     addCellClamps(tableClone, fsBtnGroup);
 

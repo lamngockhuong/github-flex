@@ -276,11 +276,15 @@ User clicks an overflowing cell
         ↓
 onTableClick(event)
         ├─► Ignored if click hit a link/button/image/input, or if it ended a text selection
-        └─► Toggles .ghflex-cell-open on that cell's .ghflex-cell-clamp wrapper
+        ├─► Only a cell that hides something can open a row; any cell of an open
+        │       row closes it again
+        └─► Toggles .ghflex-row-open on that cell's <tr>, lifting the cap off
+                every cell in the row at once
                 ↓
 User clicks the table's unclamp button
         ↓
         ├─► Toggles .ghflex-cells-unclamped on the table (disables the height cap)
+        ├─► Closes any open row: a table-wide suspend subsumes the row-level one
         ├─► Saves choice: localStorage[ghflex-table-cells-unclamped][tableKey] = true
         └─► Re-runs overflow detection (skipped entirely while unclamped)
                 ↓
@@ -293,7 +297,7 @@ openFullscreen(table)
         ├─► Adds fresh column-hide toggles to the clone
         ├─► Adds cell clamps to the clone too — same persisted per-table choice,
         │       own toolbar toggle button; the clone keeps its inherited
-        │       .ghflex-cell-open classes, so a cell expanded on the page stays
+        │       .ghflex-row-open classes, so a row expanded on the page stays
         │       expanded in fullscreen
         └─► Stores reference: this.fullscreenTable
                 ↓

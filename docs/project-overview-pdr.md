@@ -48,7 +48,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
   - Persistent expand state per-page (localStorage)
   - Drag-to-resize column widths via header border handles
   - Column widths persisted by header structure (shared across pages with identical columns)
-  - Oversized cells auto-clamp to 7.5em height and columns cap at 40em width; only genuinely overflowing cells get a fade + click-to-expand; per-table unclamp choice persists in localStorage
+  - Oversized cells auto-clamp to 7.5em height and columns cap at 40em width; only genuinely overflowing cells get a fade, and clicking one opens its whole row; per-table unclamp choice persists in localStorage
 - **Scope:** All `.markdown-body table` elements
 - **Success Metric:** Tables >1200px wide become readable without horizontal scroll; column widths customizable and persistent; runaway cells no longer dominate the page
 

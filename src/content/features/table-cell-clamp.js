@@ -9,6 +9,7 @@ import {
 
 const STORAGE_KEY = "ghflex-table-cells-unclamped";
 const UNCLAMPED_CLASS = "ghflex-cells-unclamped";
+const ROW_OPEN_CLASS = "ghflex-row-open";
 const DETECT_DEBOUNCE = 100;
 
 // Content that grows after wrapping - an image finishing load, a <details>
@@ -36,6 +37,15 @@ const widthObserver = new ResizeObserver((entries) => {
 // measuring is meaningless and clicks must not toggle state nothing can show.
 const isClamping = (table) => !table.classList.contains(UNCLAMPED_CLASS);
 
+// Returns the rows it closed, so a caller that only wants them out of the way
+// for a moment can put them back. The NodeList is static - removing the class
+// does not disturb it.
+function closeOpenRows(table) {
+  const rows = table.querySelectorAll(`tr.${ROW_OPEN_CLASS}`);
+  for (const row of rows) row.classList.remove(ROW_OPEN_CLASS);
+  return rows;
+}
+
 // Move (never clone) the cell's children into the wrapper, so listeners bound
 // by other features - image-lightbox in particular - survive the wrap.
 function wrapCells(table) {
@@ -56,19 +66,22 @@ function detectOverflow(table) {
   // the toggle re-runs detection the moment clamping comes back on
   if (!isClamping(table)) return;
 
+  // Cells of an open row are uncapped, so clientHeight equals scrollHeight and
+  // every one of them would measure as fitting. Close the rows for the
+  // measurement and put them straight back.
+  const openRows = closeOpenRows(table);
+
   // Batch the passes: interleaving class writes with geometry reads forces a
-  // synchronous reflow per cell. Strip open state, read every height, then
-  // write the results back - only the first read costs a layout.
+  // synchronous reflow per cell. Read every height, then write the results
+  // back - only the first read costs a layout.
   const wrappers = [...table.querySelectorAll(".ghflex-cell-clamp")];
-  const wasOpen = wrappers.map((w) => w.classList.contains("ghflex-cell-open"));
-  for (const w of wrappers) w.classList.remove("ghflex-cell-open");
   // +1 tolerance: scrollHeight is off-by-one on fractional line heights
   const overflows = wrappers.map((w) => w.scrollHeight > w.clientHeight + 1);
-
   wrappers.forEach((w, i) => {
     w.classList.toggle("ghflex-cell-clamped", overflows[i]);
-    w.classList.toggle("ghflex-cell-open", wasOpen[i]);
   });
+
+  for (const row of openRows) row.classList.add(ROW_OPEN_CLASS);
 }
 
 function scheduleDetect(table) {
@@ -88,8 +101,15 @@ function onTableClick(e) {
   if (e.target.closest("a, button, img, input, select, textarea, summary")) {
     return;
   }
-  const wrapper = e.target.closest(".ghflex-cell-clamp.ghflex-cell-clamped");
+  const wrapper = e.target.closest(".ghflex-cell-clamp");
   if (!wrapper) return;
+
+  // Expanding is a row operation, not a cell one: one click releases every cell
+  // of the row, so the lines of a single record can be read side by side.
+  const row = wrapper.closest("tr");
+  const isOpen = row.classList.contains(ROW_OPEN_CLASS);
+  const canOpen = wrapper.classList.contains("ghflex-cell-clamped");
+  if (!isOpen && !canOpen) return;
 
   // a click that ends a text selection in this cell must not collapse it
   const selection = window.getSelection();
@@ -100,7 +120,8 @@ function onTableClick(e) {
   ) {
     return;
   }
-  wrapper.classList.toggle("ghflex-cell-open");
+
+  row.classList.toggle(ROW_OPEN_CLASS);
 }
 
 function onCellContentSettled(e) {
@@ -119,6 +140,10 @@ function createToggleButton(table, tableKey) {
     "Show full cells",
     () => {
       const unclamped = table.classList.toggle(UNCLAMPED_CLASS);
+      // Suspending the whole table subsumes every row opened inside it. Closing
+      // them keeps the two scopes from ever being set at once, so neither the
+      // stylesheet nor a reader has to work out which one takes precedence.
+      closeOpenRows(table);
       // undefined removes the entry - only the non-default state is stored
       writeTableEntry(STORAGE_KEY, tableKey, unclamped ? true : undefined);
       syncUI();
@@ -169,12 +194,17 @@ export function removeCellClamps(table) {
   clearTimeout(detectTimers.get(table));
   detectTimers.delete(table);
 
+  // Rows and the table itself outlive the unwrap below, so the view state they
+  // carry is cleared by hand; the cell markers go with the wrappers that are
+  // about to be destroyed.
+  closeOpenRows(table);
+  table.classList.remove(UNCLAMPED_CLASS);
+
   // Restore the original DOM exactly: move children back, drop the wrapper.
   for (const wrapper of table.querySelectorAll(".ghflex-cell-clamp")) {
     wrapper.parentNode?.append(...wrapper.childNodes);
     wrapper.remove();
   }
-  table.classList.remove(UNCLAMPED_CLASS);
 }
 
 export function removeAllCellClamps() {
