@@ -123,7 +123,12 @@ thead th:hover .ghflex-col-hide-btn {
   /* The fade must blend into the row it sits on, so the colour is a variable
      and the gradient itself is written once. GitHub stripes even rows. */
   --ghflex-cell-fade: var(--bgColor-default, #ffffff);
-  max-height: 7.5em;
+  /* Opening a cell opens its whole row: the clicked cell's content height is
+     set as --ghflex-row-height on the tr and inherits down here, so every cell
+     is released up to it and text that belongs together lines up in one
+     gesture. A value, not a second rule - nothing to out-specify, and the
+     overrides below keep working untouched. */
+  max-height: var(--ghflex-row-height, 7.5em);
   overflow: hidden;
   position: relative;
 }
@@ -149,8 +154,12 @@ tr:nth-child(even) .ghflex-cell-clamp {
   max-height: none;
 }
 
-/* Fade and pointer only on cells that overflow and are currently closed */
-.ghflex-cell-clamped:not(.ghflex-cell-open) {
+/* Fade only on cells that overflow and are currently closed. Every cell of an
+   open row is clickable too - a cut one expands the row to itself, a fully
+   shown one closes it - and both selectors stay at two classes so the
+   unclamped reset below still wins. */
+.ghflex-cell-clamped:not(.ghflex-cell-open),
+.ghflex-row-open .ghflex-cell-clamp {
   cursor: pointer;
 }
 
@@ -163,7 +172,7 @@ tr:nth-child(even) .ghflex-cell-clamp {
   pointer-events: none;
 }
 
-.ghflex-cells-unclamped .ghflex-cell-clamped {
+.ghflex-cells-unclamped .ghflex-cell-clamp {
   cursor: auto;
 }
 
