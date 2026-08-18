@@ -196,6 +196,12 @@
 
 ## Version History
 
+### Unreleased (Aug 18, 2026)
+
+- Refreshed Vietnamese copy across the README, extension locale, landing page, and Chrome/Firefox store-listing docs for more natural, consistent wording.
+- Localized landing-page badge alt text for English, Vietnamese, and Japanese to prevent cross-locale leakage and improve accessibility.
+- Fixed mistranslated project descriptions (Termote, Specpin) and aligned the Japanese landing-page copy with the full feature set.
+
 ### v0.0.9 (Apr 17, 2026)
 
 **Current Release**
@@ -468,5 +474,5 @@ See `docs/project-changelog.md` for detailed version history.
 
 ---
 
-**Last Updated:** 2026-04-17
-**Next Review:** 2026-05-01 (post-testing phase)
+**Last Updated:** 2026-08-18
+**Next Review:** 2026-08-25 (weekly review)

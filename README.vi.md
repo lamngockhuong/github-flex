@@ -46,10 +46,10 @@
 
 <p align="center">
   <a href="https://unikorn.vn/p/github-flex?ref=embed-github-flex" target="_blank"><img src="https://unikorn.vn/api/widgets/badge/github-flex?theme=light" alt="GitHub Flex trên Unikorn.vn" style="width: 180px; height: 45px;" width="180" height="45" /></a>
-  <a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank"><img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/light" alt="GitHub Flex - Launched on J2TEAM Launch" style="width: 180px; height: 45px;" width="180" height="45" /></a>
+  <a href="https://launch.j2team.dev/products/github-flex-enhance-your-github-experience?utm_source=badge-launched&utm_medium=badge&utm_campaign=badge-github-flex-enhance-your-github-experience" target="_blank"><img src="https://launch.j2team.dev/badge/github-flex-enhance-your-github-experience/light" alt="GitHub Flex trên J2TEAM Launch" style="width: 180px; height: 45px;" width="180" height="45" /></a>
 </p>
 
-Tiện ích mở rộng đa trình duyệt (Chrome & Firefox) giúp nâng cấp giao diện GitHub với các tính năng tăng năng suất.
+Tiện ích cho Chrome và Firefox, giúp giao diện GitHub rộng rãi, tiện dụng hơn.
 
 <p align="center">
   <img src="assets/promo-banner-1280x800.svg" alt="GitHub Flex" width="640" />
@@ -57,19 +57,19 @@ Tiện ích mở rộng đa trình duyệt (Chrome & Firefox) giúp nâng cấp 
 
 ## Tính năng
 
-- **Bố cục rộng** - Mở rộng GitHub ra toàn bộ chiều rộng màn hình
-- **Phóng to bảng** - Bảng có thể mở rộng với trạng thái lưu trữ
-- **Phóng to hình ảnh** - Nhấp vào hình ảnh để xem toàn màn hình với zoom
-- **Chọn GIF** - Chèn GIF vào bình luận và issues
+- **Bố cục rộng** - Mở rộng GitHub ra toàn bộ chiều ngang màn hình
+- **Mở rộng bảng** - Xem bảng toàn màn hình và ghi nhớ trạng thái
+- **Xem ảnh toàn màn hình** - Nhấp vào ảnh để xem trên lớp phủ toàn màn hình và phóng to khi cần
+- **Chèn GIF** - Chèn GIF vào bình luận và issue trên GitHub
 - **Ẩn/hiện thanh bên** - Ẩn/hiện thanh bên bằng nút hoặc phím tắt `Alt+M`
-- **Lịch sử chỉnh sửa** - Xem diff chỉnh sửa bình luận với chế độ split/unified/preview
+- **Lịch sử chỉnh sửa** - So sánh các lần sửa bình luận ở chế độ `split`, `unified` hoặc `preview`
 
 <p align="center">
   <img src="assets/promo-02-wide-layout-1280x800.svg" alt="Bố cục rộng" width="400" />
-  <img src="assets/promo-03-lightbox-1280x800.svg" alt="Phóng to hình ảnh" width="400" />
+  <img src="assets/promo-03-lightbox-1280x800.svg" alt="Xem ảnh toàn màn hình" width="400" />
 </p>
 <p align="center">
-  <img src="assets/promo-04-gif-picker-1280x800.svg" alt="Chọn GIF" width="400" />
+  <img src="assets/promo-04-gif-picker-1280x800.svg" alt="Chèn GIF" width="400" />
   <img src="assets/promo-05-sidebar-toggle-1280x800.svg" alt="Ẩn/hiện thanh bên" width="400" />
 </p>
 
@@ -92,7 +92,7 @@ pnpm install
 pnpm build
 ```
 
-Sau đó tải vào trình duyệt:
+Sau đó nạp tiện ích vào trình duyệt:
 
 **Chrome:**
 
@@ -110,19 +110,19 @@ Sau đó tải vào trình duyệt:
 ## Phát triển
 
 ```bash
-pnpm dev              # Build cả hai trình duyệt với chế độ watch
-pnpm build            # Build production cho cả hai trình duyệt
-pnpm build:chrome     # Build chỉ Chrome
-pnpm build:firefox    # Build chỉ Firefox
-pnpm lint             # Kiểm tra code style
+pnpm dev              # Build cho cả hai trình duyệt và theo dõi thay đổi
+pnpm build            # Tạo bản production cho cả hai trình duyệt
+pnpm build:chrome     # Tạo bản build cho Chrome
+pnpm build:firefox    # Tạo bản build cho Firefox
+pnpm lint             # Kiểm tra quy tắc mã nguồn
 pnpm lint:fix         # Tự động sửa lỗi
-pnpm lint:firefox     # Lint Firefox build với web-ext
-pnpm test             # Chạy tests
+pnpm lint:firefox     # Kiểm tra bản Firefox bằng web-ext
+pnpm test             # Chạy bộ test
 ```
 
 ### Phát hành lên Firefox Add-ons
 
-Khi gửi phiên bản mới lên [Firefox Add-ons](https://addons.mozilla.org/), Mozilla yêu cầu tải mã nguồn vì chúng tôi sử dụng esbuild để bundle. Tạo file zip mã nguồn với:
+Khi gửi phiên bản mới lên [Firefox Add-ons](https://addons.mozilla.org/), Mozilla yêu cầu bạn tải mã nguồn lên vì dự án dùng `esbuild` để đóng gói. Tạo file zip chứa mã nguồn bằng lệnh:
 
 ```bash
 zip -r github-flex-source.zip src/ scripts/ package.json pnpm-lock.yaml biome.json README.md LICENSE manifest.json
@@ -134,20 +134,20 @@ zip -r github-flex-source.zip src/ scripts/ package.json pnpm-lock.yaml biome.js
 - Tiếng Việt
 - 日本語 (Tiếng Nhật)
 
-Tiện ích tự động hiển thị theo ngôn ngữ trình duyệt nếu được hỗ trợ.
+Tiện ích tự động dùng ngôn ngữ của trình duyệt nếu ngôn ngữ đó được hỗ trợ.
 
 ## Công nghệ
 
 - Manifest V3 (Chrome 88+, Firefox 112+)
-- webextension-polyfill (tương thích API đa trình duyệt)
+- webextension-polyfill (giúp API tương thích giữa các trình duyệt)
 - Vanilla JavaScript (ES Modules)
-- esbuild (bundler)
-- Biome (linter/formatter)
-- Vitest (testing)
+- esbuild (đóng gói mã nguồn)
+- Biome (kiểm tra và định dạng mã nguồn)
+- Vitest (kiểm thử)
 
 ## Tài trợ
 
-Nếu bạn thấy tiện ích này hữu ích, hãy cân nhắc hỗ trợ phát triển:
+Nếu thấy tiện ích hữu ích, bạn có thể ủng hộ để dự án tiếp tục phát triển:
 
 [![GitHub Sponsors](https://img.shields.io/badge/GitHub_Sponsors-Hỗ_trợ-ea4aaa?logo=githubsponsors&logoColor=white)](https://github.com/sponsors/lamngockhuong)
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-Hỗ_trợ-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/lamngockhuong)
@@ -155,9 +155,9 @@ Nếu bạn thấy tiện ích này hữu ích, hãy cân nhắc hỗ trợ phá
 
 ## Dự án khác
 
-- [Termote](https://github.com/lamngockhuong/termote) - Điều khiển CLI từ xa (Claude Code, GitHub Copilot, bất kỳ terminal nào) từ di động/máy tính qua PWA
-- [TabRest](https://github.com/lamngockhuong/tabrest) - Tiện ích Chrome tự động unload các tab không hoạt động để giải phóng bộ nhớ
-- [Specpin](https://github.com/lamngockhuong/specpin) - Ghim đặc tả nghiệp vụ sống động lên các phần tử của giao diện web đang chạy. Git-native, local-first, không phụ thuộc framework
+- [Termote](https://github.com/lamngockhuong/termote) - Điều khiển CLI từ xa (Claude Code, GitHub Copilot hoặc bất kỳ terminal nào) bằng điện thoại hoặc máy tính qua PWA
+- [TabRest](https://github.com/lamngockhuong/tabrest) - Tiện ích Chrome tự động gỡ các tab không hoạt động khỏi bộ nhớ
+- [Specpin](https://github.com/lamngockhuong/specpin) - Ghim các đặc tả nghiệp vụ luôn được cập nhật vào giao diện web đang chạy. Tích hợp chặt với Git, ưu tiên dữ liệu cục bộ và không phụ thuộc framework
 
 ## Giấy phép
 

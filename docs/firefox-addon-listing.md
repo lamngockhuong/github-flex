@@ -37,25 +37,25 @@ Lightweight, open-source, and built with Manifest V3. No data collection, no tra
 
 ### Vietnamese (vi)
 
-GitHub Flex nâng cao giao diện GitHub với các tính năng giúp quy trình làm việc hàng ngày của bạn mượt mà và hiệu quả hơn.
+GitHub Flex bổ sung những tính năng giúp bạn làm việc trên GitHub nhanh, thoải mái và tập trung hơn.
 
 Tính năng:
 
-• Bố cục rộng (Wide Layout): Mở rộng trang GitHub ra toàn bộ chiều rộng trình duyệt. Không còn lãng phí không gian màn hình - xem nhiều code, diff và nội dung hơn trong một cái nhìn.
+• Bố cục rộng (Wide Layout): Mở rộng trang GitHub ra toàn bộ chiều ngang cửa sổ trình duyệt. Bớt khoảng trống thừa, xem được nhiều code, diff và nội dung hơn cùng lúc.
 
-• Mở rộng bảng (Table Expand): Mở rộng, kéo thay đổi kích thước cột, ẩn/hiện cột trên các bảng lớn. Ô quá cao được thu gọn để hàng dễ đọc - nhấp vào một ô để mở cả hàng đó, hoặc bỏ thu gọn cho cả bảng. Xem bảng ở chế độ toàn màn hình. Tất cả tùy chỉnh (độ rộng cột, cột ẩn, trạng thái mở rộng) được lưu lại qua các lần tải trang.
+• Mở rộng bảng (Table Expand): Mở rộng bảng lớn, kéo để thay đổi độ rộng cột và ẩn/hiện từng cột. Các ô quá cao tự động thu gọn để bảng dễ đọc hơn; nhấp vào ô đã thu gọn để mở toàn bộ hàng, hoặc bỏ giới hạn chiều cao cho cả bảng. Bạn cũng có thể xem bảng ở chế độ toàn màn hình. Các thiết lập như độ rộng cột, cột đang ẩn và trạng thái mở rộng đều được ghi nhớ khi tải lại trang.
 
-• Xem ảnh toàn màn hình (Image Lightbox): Nhấp vào bất kỳ ảnh nào trên GitHub để xem trong chế độ toàn màn hình. Dễ dàng xem ảnh chụp màn hình, sơ đồ và nội dung hình ảnh mà không cần mở tab mới.
+• Xem ảnh toàn màn hình (Image Lightbox): Nhấp vào bất kỳ ảnh nào trên GitHub để mở trong lớp phủ toàn màn hình. Xem kỹ ảnh chụp màn hình, sơ đồ và nội dung trực quan mà không cần mở tab mới.
 
-• Chèn GIF (GIF Picker): Chèn GIF trực tiếp vào bình luận, issue và pull request. Tìm kiếm từ thư viện khổng lồ của Giphy - thêm phản ứng và sự vui nhộn vào cuộc trò chuyện.
+• Chèn GIF (GIF Picker): Chèn GIF thẳng vào bình luận, issue và pull request. Tìm nhanh trong thư viện GIF của GIPHY để cuộc trò chuyện sinh động hơn.
 
-• Ẩn/hiện Sidebar (Sidebar Toggle): Ẩn hoặc hiện sidebar GitHub chỉ với một cú nhấp hoặc phím tắt Alt+M. Lấy lại không gian ngang khi bạn cần tập trung vào nội dung.
+• Ẩn/hiện thanh bên (Sidebar Toggle): Ẩn hoặc hiện thanh bên của GitHub chỉ với một cú nhấp hoặc phím tắt Alt+M. Tạo thêm không gian theo chiều ngang khi bạn muốn tập trung vào nội dung chính.
 
-• Lịch sử chỉnh sửa (Edit History): Trình xem so sánh nâng cao cho các bản chỉnh sửa bình luận và mô tả. Nhấp "Split View" trong bất kỳ hộp thoại lịch sử chỉnh sửa nào để so sánh thay đổi với tô sáng từng từ ở chế độ chia đôi, hợp nhất, hoặc xem trước markdown.
+• Lịch sử chỉnh sửa (Edit History): So sánh rõ nội dung trước và sau mỗi lần sửa bình luận hoặc phần mô tả. Nhấp "Split View" trong hộp thoại lịch sử chỉnh sửa để xem phần thay đổi được tô sáng theo từng từ. Bạn có thể chọn chế độ chia đôi (`split`), hợp nhất (`unified`) hoặc xem trước Markdown đã định dạng (`preview`).
 
-Tất cả tính năng đều có thể bật/tắt riêng từ cửa sổ cài đặt. Tùy chọn của bạn được đồng bộ qua các thiết bị.
+Bạn có thể bật hoặc tắt riêng từng tính năng trong cửa sổ tiện ích. Mọi tùy chọn sẽ được đồng bộ giữa các thiết bị qua cơ chế đồng bộ của trình duyệt.
 
-Nhẹ, mã nguồn mở, xây dựng với Manifest V3. Không thu thập dữ liệu, không theo dõi - chỉ là trải nghiệm GitHub tốt hơn.
+Nhẹ, mã nguồn mở và dùng Manifest V3. Không thu thập dữ liệu, không theo dõi — chỉ giúp GitHub dễ dùng hơn.
 
 ### Japanese (ja)
 

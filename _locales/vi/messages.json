@@ -4,19 +4,19 @@
     "description": "Extension name"
   },
   "extDescription": {
-    "message": "Nâng cấp giao diện GitHub - bố cục rộng, phóng to bảng/ảnh, chọn GIF, ẩn/hiện thanh bên",
+    "message": "Cải thiện giao diện GitHub với bố cục rộng, bảng và ảnh toàn màn hình, chèn GIF, ẩn/hiện thanh bên",
     "description": "Extension description"
   },
   "wideLayout": { "message": "Bố cục rộng" },
-  "wideLayoutDesc": { "message": "Mở rộng GitHub ra toàn bộ chiều rộng" },
-  "tableExpand": { "message": "Phóng to bảng" },
-  "tableExpandDesc": { "message": "Phóng to bảng ra toàn màn hình" },
-  "imageLightbox": { "message": "Phóng to hình ảnh" },
-  "imageLightboxDesc": { "message": "Nhấp vào hình ảnh để phóng to" },
-  "gifPicker": { "message": "Chọn GIF" },
-  "gifPickerDesc": { "message": "Thêm nút GIF vào bình luận" },
+  "wideLayoutDesc": { "message": "Mở rộng GitHub ra toàn bộ chiều ngang màn hình" },
+  "tableExpand": { "message": "Mở rộng bảng" },
+  "tableExpandDesc": { "message": "Xem bảng trên toàn màn hình" },
+  "imageLightbox": { "message": "Xem ảnh toàn màn hình" },
+  "imageLightboxDesc": { "message": "Nhấp vào ảnh để xem toàn màn hình" },
+  "gifPicker": { "message": "Chèn GIF" },
+  "gifPickerDesc": { "message": "Thêm nút chèn GIF vào ô bình luận" },
   "sidebarToggle": { "message": "Ẩn/hiện thanh bên" },
-  "sidebarToggleDesc": { "message": "Ẩn/hiện thanh bên (Alt+M)" },
+  "sidebarToggleDesc": { "message": "Ẩn hoặc hiện thanh bên bằng Alt+M" },
   "editHistory": { "message": "Lịch sử chỉnh sửa" },
-  "editHistoryDesc": { "message": "Trình xem so sánh nâng cao cho bản chỉnh sửa" }
+  "editHistoryDesc": { "message": "So sánh nội dung trước và sau mỗi lần chỉnh sửa" }
 }
