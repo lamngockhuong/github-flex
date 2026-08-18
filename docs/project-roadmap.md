@@ -198,7 +198,7 @@
 
 ### Unreleased (Aug 18, 2026)
 
-- Refreshed Vietnamese copy across the README, extension locale, and landing page for more natural, consistent wording.
+- Refreshed Vietnamese copy across the README, extension locale, landing page, and Chrome/Firefox store-listing docs for more natural, consistent wording.
 - Localized landing-page badge alt text for English, Vietnamese, and Japanese to prevent cross-locale leakage and improve accessibility.
 - Fixed mistranslated project descriptions (Termote, Specpin) and aligned the Japanese landing-page copy with the full feature set.
 
