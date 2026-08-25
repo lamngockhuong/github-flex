@@ -28,6 +28,11 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
+# Floor for every job. release-please calls this workflow with contents: write,
+# which prepare and build have no use for; the release job re-grants it below.
+permissions:
+  contents: read
+
 jobs:
   # ─────────────────────────────────────────────────────────────
   # Prepare: Extract version from different trigger sources
@@ -42,19 +47,35 @@ jobs:
     steps:
       - name: Extract version
         id: version
+        # Inputs arrive via env, never interpolated into the script body:
+        # ${{ }} is substituted as text before bash parses the line, so a
+        # crafted version string would otherwise execute as a command.
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
+          INPUT_DRY_RUN: ${{ inputs.dry_run }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
         run: |
-          if [ -n "${{ inputs.version }}" ]; then
-            VERSION="${{ inputs.version }}"
-            DRY_RUN="${{ inputs.dry_run || 'false' }}"
-            PRERELEASE="${{ inputs.prerelease || 'false' }}"
+          if [ -n "$INPUT_VERSION" ]; then
+            VERSION="$INPUT_VERSION"
+            DRY_RUN="${INPUT_DRY_RUN:-false}"
+            PRERELEASE="${INPUT_PRERELEASE:-false}"
           else
             VERSION="${GITHUB_REF#refs/tags/v}"
             DRY_RUN="false"
             PRERELEASE="false"
           fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
-          echo "dry_run=$DRY_RUN" >> $GITHUB_OUTPUT
-          echo "prerelease=$PRERELEASE" >> $GITHUB_OUTPUT
+
+          # Bash =~ anchors against the whole string. grep would not: it matches
+          # per line, so a version containing a newline would pass ^...$ on its
+          # first line and then write extra keys into $GITHUB_OUTPUT.
+          if ! [[ "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::Refusing to release malformed version: $VERSION"
+            exit 1
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "dry_run=$DRY_RUN" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$PRERELEASE" >> "$GITHUB_OUTPUT"
           echo "Release version: $VERSION (dry_run: $DRY_RUN, prerelease: $PRERELEASE)"
 
   # ─────────────────────────────────────────────────────────────
@@ -84,11 +105,13 @@ jobs:
         run: pnpm run lint:firefox
 
       - name: Create ZIP files
+        env:
+          VERSION: ${{ needs.prepare.outputs.version }}
         run: |
           cd dist/chrome
-          zip -r ../../github-flex-chrome-v${{ needs.prepare.outputs.version }}.zip .
+          zip -r "../../github-flex-chrome-v${VERSION}.zip" .
           cd ../firefox
-          zip -r ../../github-flex-firefox-v${{ needs.prepare.outputs.version }}.zip .
+          zip -r "../../github-flex-firefox-v${VERSION}.zip" .
 
       - name: Generate checksums
         run: sha256sum github-flex-*.zip > checksums.txt
