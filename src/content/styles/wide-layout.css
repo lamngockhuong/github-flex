@@ -123,6 +123,13 @@ html:not(.ghflex-wide-layout-disabled)
   max-width: none;
 }
 
+/* PR Conversation comment column (June 2026) */
+html:not(.ghflex-wide-layout-disabled) .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="Conversations-module__content__"] {
+  max-width: none !important;
+}
+
 /* New issue page */
 html:not(.ghflex-wide-layout-disabled) .application-main
   div[data-target="react-app.reactRoot"]
