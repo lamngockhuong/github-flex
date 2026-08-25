@@ -1,4 +1,12 @@
-// Minimal markdown-to-DOM renderer (XSS-safe, no innerHTML with user data)
+// Minimal markdown-to-DOM renderer for edit-history diffs.
+//
+// Every input here is another GitHub user's comment body, so it is untrusted.
+// Two defences carry that weight: no innerHTML anywhere (text lands via
+// textContent/createTextNode), and every URL passes safeUrl() before it reaches
+// an href or src. The overlay is appended to the github.com DOM, so a
+// javascript: URL slipping through would execute against the user's session.
+
+import { safeUrl } from "../../shared/url-safety.js";
 
 export function renderMarkdown(container, text) {
   const lines = text.split("\n");
@@ -222,14 +230,36 @@ function renderInline(el, text) {
         }
       }
     } else if (token.tag === "img") {
+      const src = safeUrl(token.src);
+      // Unsafe src: keep the alt text visible rather than dropping the content
+      // silently, so the reader still sees an image was there.
+      if (!src) {
+        if (token.value) el.appendChild(document.createTextNode(token.value));
+        continue;
+      }
       const img = document.createElement("img");
-      img.src = token.src;
+      img.src = src;
       img.alt = token.value || "";
       img.style.maxWidth = "100%";
       el.appendChild(img);
     } else {
+      // An anchor whose href we reject degrades to plain text - a link the user
+      // cannot click beats a link pointing somewhere we refused to vet.
+      const href = token.href ? safeUrl(token.href) : null;
+      if (token.href && !href) {
+        el.appendChild(document.createTextNode(token.value));
+        continue;
+      }
       const span = document.createElement(token.tag);
-      if (token.href) span.href = token.href;
+      if (href) {
+        span.href = href;
+        // GitHub's own edit-history dialog shows the diff as plain text, so the
+        // preview is the only place these become clickable. Surfacing the real
+        // destination on hover blunts [text](elsewhere) link spoofing, which a
+        // scheme allowlist alone cannot catch.
+        span.title = href;
+        span.rel = "noopener noreferrer";
+      }
       span.textContent = token.value;
       el.appendChild(span);
     }

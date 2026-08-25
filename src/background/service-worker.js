@@ -6,8 +6,8 @@ import {
   EXT_LINKS,
   MESSAGE_ACTIONS,
 } from "../shared/constants.js";
+import { safeGiphyUrl } from "../shared/url-safety.js";
 
-const ALLOWED_IMAGE_HOSTS = ["giphy.com", "giphycdn.com"];
 const ALLOWED_API_HOST = "github-gifs.aldilaff6545.workers.dev";
 
 function isAllowedApiUrl(url) {
@@ -32,18 +32,6 @@ function fetchGifApi(url) {
     })
     .then((data) => ({ data: data.data || [] }))
     .catch((error) => ({ error: error.message }));
-}
-
-function isAllowedImageUrl(url) {
-  try {
-    const parsed = new URL(url);
-    return (
-      parsed.protocol === "https:" &&
-      ALLOWED_IMAGE_HOSTS.some((h) => parsed.hostname.endsWith(h))
-    );
-  } catch {
-    return false;
-  }
 }
 
 function createContextMenus() {
@@ -91,11 +79,13 @@ browser.runtime.onMessage.addListener((message, _sender) => {
   }
   if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return;
 
-  if (!isAllowedImageUrl(message.url)) {
+  // Fetch the validated URL, not the raw one the content script sent
+  const imageUrl = safeGiphyUrl(message.url);
+  if (!imageUrl) {
     return Promise.resolve({ error: "URL not allowed" });
   }
 
-  return fetch(message.url)
+  return fetch(imageUrl)
     .then((response) => {
       if (!response.ok) throw new Error(`HTTP ${response.status}`);
       return response.arrayBuffer();
