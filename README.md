@@ -153,6 +153,10 @@ If you find this extension useful, consider supporting its development:
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy_Me_A_Coffee-Support-FFDD00?logo=buymeacoffee&logoColor=black)](https://buymeacoffee.com/lamngockhuong)
 [![MoMo](https://img.shields.io/badge/MoMo-Support-ae2070)](https://me.momo.vn/khuong)
 
+## Credits
+
+- GIF search is powered by [github-gifs](https://github.com/aldilaff/github-gifs) by [@aldilaff](https://github.com/aldilaff) — a Cloudflare Worker that proxies the Giphy API. Thanks for making it public.
+
 ## Other Projects
 
 - [Termote](https://github.com/lamngockhuong/termote) - Remote control CLI tools (Claude Code, GitHub Copilot, any terminal) from mobile/desktop via PWA
