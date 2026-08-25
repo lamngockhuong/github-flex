@@ -26,7 +26,7 @@ The extension stores only your **feature toggle preferences** (e.g., wide layout
 The extension makes **no network requests** except when using the **GIF Picker** feature:
 
 - GIF search queries are sent to a Cloudflare Workers proxy, which fetches results from the Giphy API
-- Only the search query text is transmitted - no user identifiers, tokens, or personal data
+- The extension transmits only the search query text - no account identifiers, authentication tokens, or profile data. As with any web request, the proxy and Giphy also receive your IP address and browser user-agent
 - GIF image data is fetched to bypass GitHub's Content Security Policy
 
 No other feature makes any external network request.
@@ -40,7 +40,8 @@ No other feature makes any external network request.
 
 ## Third-Party Services
 
-- **Giphy** (via Cloudflare Workers proxy): Used solely for GIF search in the GIF Picker feature. Subject to [Giphy's Privacy Policy](https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy).
+- **Giphy** — provides the GIF search results. Subject to [Giphy's Privacy Policy](https://support.giphy.com/hc/en-us/articles/360032872931-GIPHY-Privacy-Policy).
+- **github-gifs** — the Cloudflare Worker that proxies those Giphy requests, by [@aldilaff](https://github.com/aldilaff) ([source](https://github.com/aldilaff/github-gifs)). GitHub Flex sends it the search query only; it is operated independently of this extension.
 
 ## Changes
 

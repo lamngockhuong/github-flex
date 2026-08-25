@@ -28,7 +28,10 @@ export const SIDEBAR_TOGGLE_STORAGE_KEY = "ghflex-sidebar-hidden";
 // Table expand storage prefix
 export const TABLE_EXPAND_STORAGE_PREFIX = "ghflex-table-expand";
 
-// GIF picker API
+// GIF picker API.
+// Cloudflare Worker proxying the Giphy API, by @aldilaff:
+// https://github.com/aldilaff/github-gifs
+// Third-party service - responses are treated as untrusted (see url-safety.js).
 export const GIF_API_URL = "https://github-gifs.aldilaff6545.workers.dev";
 export const GIF_DEBOUNCE_DELAY = 300;
 

@@ -8,6 +8,8 @@ import {
   TOOLBAR_SELECTOR,
 } from "../../shared/constants.js";
 import { setTrustedHTML } from "../../shared/dom.js";
+import { toMarkdownImage, toSafeTitle } from "../../shared/markdown-safety.js";
+import { safeGiphyUrl } from "../../shared/url-safety.js";
 
 // Vietnamese diacritics to ASCII conversion map
 const VIET_MAP = {
@@ -208,20 +210,6 @@ function revokeBlobUrls() {
   blobUrls.clear();
 }
 
-// Validate GIF URL (security: prevent javascript: URLs and non-GIPHY domains)
-function isValidGifUrl(url) {
-  try {
-    const parsed = new URL(url);
-    return (
-      parsed.protocol === "https:" &&
-      (parsed.hostname.endsWith("giphy.com") ||
-        parsed.hostname.endsWith("giphycdn.com"))
-    );
-  } catch {
-    return false;
-  }
-}
-
 // Fetch GIFs via background script to bypass page CSP connect-src restrictions.
 // Firefox content scripts are subject to the page's CSP, unlike Chrome.
 async function fetchGifs(query) {
@@ -304,20 +292,17 @@ function createModal() {
 function insertGif(gifUrl, gifTitle) {
   if (!currentTextarea) return;
 
-  // Security: Validate URL before insertion
-  if (!isValidGifUrl(gifUrl)) {
+  // Security: build from the validated URL, never the raw argument
+  const markdown = toMarkdownImage(safeGiphyUrl(gifUrl), gifTitle);
+  if (!markdown) {
     console.error("[GIF Picker] Invalid GIF URL rejected");
     return;
   }
-
-  // Sanitize title to prevent markdown injection
-  const safeTitle = (gifTitle || "GIF").replace(/[[\]()]/g, "");
 
   const start = currentTextarea.selectionStart;
   const end = currentTextarea.selectionEnd;
   const text = currentTextarea.value;
 
-  const markdown = `![${safeTitle}](${gifUrl})`;
   const newText = text.substring(0, start) + markdown + text.substring(end);
 
   currentTextarea.value = newText;
@@ -335,15 +320,12 @@ function insertGif(gifUrl, gifTitle) {
 
 // Copy GIF markdown to clipboard
 async function copyGifMarkdown(gifUrl, gifTitle, button) {
-  // Security: Validate URL before copying
-  if (!isValidGifUrl(gifUrl)) {
+  // Security: build from the validated URL, never the raw argument
+  const markdown = toMarkdownImage(safeGiphyUrl(gifUrl), gifTitle);
+  if (!markdown) {
     console.error("[GIF Picker] Invalid GIF URL rejected");
     return;
   }
-
-  // Sanitize title to prevent markdown injection
-  const safeTitle = (gifTitle || "GIF").replace(/[[\]()]/g, "");
-  const markdown = `![${safeTitle}](${gifUrl})`;
 
   try {
     await navigator.clipboard.writeText(markdown);
@@ -383,14 +365,15 @@ function renderGifs(gifs) {
   }
 
   gifs.forEach((gif) => {
-    const previewUrl =
-      gif.images?.fixed_width_small?.url || gif.images?.original?.url;
-    const fullUrl = gif.images?.original?.url;
-    const title = gif.title || "GIF";
+    // Security: keep only the validated, normalized URLs - the raw values from
+    // the API are never used past this point.
+    const previewUrl = safeGiphyUrl(
+      gif.images?.fixed_width_small?.url || gif.images?.original?.url,
+    );
+    const fullUrl = safeGiphyUrl(gif.images?.original?.url);
+    const title = toSafeTitle(gif.title);
 
-    // Security: Validate URLs before rendering
     if (!previewUrl || !fullUrl) return;
-    if (!isValidGifUrl(previewUrl) || !isValidGifUrl(fullUrl)) return;
 
     // Build DOM safely (no innerHTML with external data)
     const item = document.createElement("div");
