@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.14](https://github.com/lamngockhuong/github-flex/compare/v0.0.13...v0.0.14) (2026-08-25)
+
+
+### Bug Fixes
+
+* **security:** harden untrusted URL and title handling ([#92](https://github.com/lamngockhuong/github-flex/issues/92)) ([946fafa](https://github.com/lamngockhuong/github-flex/commit/946fafa751782758a69774c26f9b71d675c04cef))
+
 ## [0.0.13](https://github.com/lamngockhuong/github-flex/compare/v0.0.12...v0.0.13) (2026-08-18)
 
 
