@@ -30,7 +30,7 @@
   "engines": {
     "node": ">=18"
   },
-  "packageManager": "pnpm@10.34.5",
+  "packageManager": "pnpm@12.3.4",
   "dependencies": {
     "diff": "9.0.0",
     "webextension-polyfill": "0.12.0"
