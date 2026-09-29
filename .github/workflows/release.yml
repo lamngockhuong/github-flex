@@ -141,13 +141,24 @@ jobs:
         with:
           name: release-assets
 
-      - name: Create Release
-        uses: softprops/action-gh-release@efb35369e0ad2afab669f228072c1b0d510eae64 # v3
-        with:
-          tag_name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && '-rc' || '' }}
-          name: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && ' (RC)' || '' }}
-          prerelease: ${{ needs.prepare.outputs.prerelease == 'true' }}
-          generate_release_notes: true
-          files: |
-            github-flex-*.zip
-            checksums.txt
+      # release-please has already published the release with its changelog, so
+      # only the assets are uploaded then. Editing that release with GITHUB_TOKEN
+      # (as action-gh-release does) is rejected: "Resource not accessible by
+      # integration". Tag pushes and manual runs create the release here.
+      - name: Publish release assets
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && '-rc' || '' }}
+          TITLE: v${{ needs.prepare.outputs.version }}${{ needs.prepare.outputs.prerelease == 'true' && ' (RC)' || '' }}
+          PRERELEASE: ${{ needs.prepare.outputs.prerelease }}
+        run: |
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1; then
+            echo "Release $TAG exists; uploading assets only"
+          else
+            args=(--repo "$GITHUB_REPOSITORY" --title "$TITLE" --target "$GITHUB_SHA" --generate-notes)
+            if [ "$PRERELEASE" = "true" ]; then
+              args+=(--prerelease)
+            fi
+            gh release create "$TAG" "${args[@]}"
+          fi
+          gh release upload "$TAG" github-flex-*.zip checksums.txt --repo "$GITHUB_REPOSITORY" --clobber
