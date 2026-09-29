@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.0.15](https://github.com/lamngockhuong/github-flex/compare/v0.0.14...v0.0.15) (2026-09-29)
+
+
+### Bug Fixes
+
+* **security:** close UI-redress, prototype-key and redirect gaps ([#98](https://github.com/lamngockhuong/github-flex/issues/98)) ([e6871e9](https://github.com/lamngockhuong/github-flex/commit/e6871e9475f97ce3a25e1d871bdfdcf24319b1b7))
+
 ## [0.0.14](https://github.com/lamngockhuong/github-flex/compare/v0.0.13...v0.0.14) (2026-08-25)
 
 
