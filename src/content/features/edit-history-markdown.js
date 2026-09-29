@@ -158,20 +158,27 @@ const SAFE_TAGS = new Set([
   "details",
   "summary",
 ]);
-const SAFE_ATTRS = new Set(["id", "class", "title", "name", "open"]);
+// No id, class or name: the preview lands in the live github.com DOM, where an
+// author-chosen id="ghflex-edit-history" or class="ghflex-table-fullscreen-overlay"
+// picks up our own fixed full-viewport styles and paints over the real UI.
+// GitHub itself never renders author ids/classes, so dropping them loses nothing.
+const SAFE_ATTRS = new Set(["title", "open"]);
+
+// Returns the [name, value] pairs of attrsStr that are safe to set.
+export function pickSafeAttrs(attrsStr) {
+  if (!attrsStr) return [];
+  return [...attrsStr.matchAll(/(\w+)="([^"]*)"/g)]
+    .map((m) => [m[1].toLowerCase(), m[2]])
+    .filter(([name]) => SAFE_ATTRS.has(name));
+}
 
 function createSafeHtmlElement(tag, attrsStr, content) {
   const tagLower = tag.toLowerCase();
   if (!SAFE_TAGS.has(tagLower)) return null;
 
   const el = document.createElement(tagLower);
-
-  if (attrsStr) {
-    for (const m of attrsStr.matchAll(/(\w+)="([^"]*)"/g)) {
-      if (SAFE_ATTRS.has(m[1].toLowerCase())) {
-        el.setAttribute(m[1], m[2]);
-      }
-    }
+  for (const [name, value] of pickSafeAttrs(attrsStr)) {
+    el.setAttribute(name, value);
   }
 
   renderInline(el, content);

@@ -6,33 +6,7 @@ import {
   EXT_LINKS,
   MESSAGE_ACTIONS,
 } from "../shared/constants.js";
-import { safeGiphyUrl } from "../shared/url-safety.js";
-
-const ALLOWED_API_HOST = "github-gifs.aldilaff6545.workers.dev";
-
-function isAllowedApiUrl(url) {
-  try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" && parsed.hostname === ALLOWED_API_HOST;
-  } catch {
-    return false;
-  }
-}
-
-// Proxy GIF API requests to bypass page CSP connect-src restrictions
-function fetchGifApi(url) {
-  if (!isAllowedApiUrl(url)) {
-    return Promise.resolve({ error: "URL not allowed" });
-  }
-
-  return fetch(url)
-    .then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.json();
-    })
-    .then((data) => ({ data: data.data || [] }))
-    .catch((error) => ({ error: error.message }));
-}
+import { fetchGifApi, fetchGiphyImage } from "./proxy-fetch.js";
 
 function createContextMenus() {
   browser.contextMenus.removeAll().then(() => {
@@ -79,26 +53,5 @@ browser.runtime.onMessage.addListener((message, _sender) => {
   }
   if (message.action !== MESSAGE_ACTIONS.FETCH_IMAGE) return;
 
-  // Fetch the validated URL, not the raw one the content script sent
-  const imageUrl = safeGiphyUrl(message.url);
-  if (!imageUrl) {
-    return Promise.resolve({ error: "URL not allowed" });
-  }
-
-  return fetch(imageUrl)
-    .then((response) => {
-      if (!response.ok) throw new Error(`HTTP ${response.status}`);
-      return response.arrayBuffer();
-    })
-    .then((buffer) => {
-      const bytes = new Uint8Array(buffer);
-      let binary = "";
-      for (let i = 0; i < bytes.length; i++) {
-        binary += String.fromCharCode(bytes[i]);
-      }
-      return { data: btoa(binary) };
-    })
-    .catch((error) => {
-      return { error: error.message };
-    });
+  return fetchGiphyImage(message.url);
 });

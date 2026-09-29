@@ -27,12 +27,16 @@ export function getTableKey(table) {
     .join("|");
 }
 
+// Table keys are header text from other users' comments, so a header named
+// "__proto__" or "constructor" must not resolve to an inherited value. A
+// prototype-less store makes every lookup an own-property lookup.
 export function loadJsonStore(key) {
+  const store = Object.create(null);
   try {
-    return JSON.parse(localStorage.getItem(key)) || {};
-  } catch {
-    return {};
-  }
+    const parsed = JSON.parse(localStorage.getItem(key));
+    if (parsed && typeof parsed === "object") Object.assign(store, parsed);
+  } catch {}
+  return store;
 }
 
 export function saveJsonStore(key, data) {
