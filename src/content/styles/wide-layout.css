@@ -3,19 +3,15 @@
 /* Uses opt-out selector to prevent FOUC - CSS applies unless disabled class present */
 
 /* General full-page container */
-html:not(.ghflex-wide-layout-disabled) :is(
-    .application-main,
-    #ui-service-main-content
-  )
+html:not(.ghflex-wide-layout-disabled)
+  :is(.application-main, #ui-service-main-content)
   .container-xl {
   max-width: none !important;
 }
 
 /* General content sub-container */
-html:not(.ghflex-wide-layout-disabled) :is(
-    .application-main,
-    #ui-service-main-content
-  )
+html:not(.ghflex-wide-layout-disabled)
+  :is(.application-main, #ui-service-main-content)
   .container-lg {
   max-width: none !important;
   margin-left: 0 !important;
@@ -27,7 +23,8 @@ html:not(.ghflex-wide-layout-disabled) .react-repos-overview-margin {
 }
 
 /* Commit History and Branches page */
-html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
+html:not(.ghflex-wide-layout-disabled)
+  #js-repo-pjax-container
   div[style^="--sticky-pane-height:"]
   > div[class^="Box-sc-"]:first-child {
   max-width: none;
@@ -39,7 +36,8 @@ html:not(.ghflex-wide-layout-disabled) .application-main .col-11 {
 }
 
 /* Issue list Assignee alignment */
-html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
+html:not(.ghflex-wide-layout-disabled)
+  #js-repo-pjax-container
   .js-issue-row
   .text-right {
   max-width: 303px !important;
@@ -48,7 +46,8 @@ html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
 /* New React layout (2024) */
 
 /* Issues list page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[style^="--sticky-pane-height:"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -59,7 +58,8 @@ html:not(.ghflex-wide-layout-disabled) .application-main
 }
 
 /* Issue page */
-html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
+html:not(.ghflex-wide-layout-disabled)
+  #js-repo-pjax-container
   div[data-target="react-app.reactRoot"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -71,7 +71,8 @@ html:not(.ghflex-wide-layout-disabled) #js-repo-pjax-container
 /* New React layout (2025) */
 
 /* Issues list page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-Content-"]
   > div[class^="Box-sc-"] {
@@ -79,21 +80,24 @@ html:not(.ghflex-wide-layout-disabled) .application-main
 }
 
 /* Issues list page (July 2025) */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane-"] {
   max-width: none;
 }
 
 /* Issues list page (Feb 2026) */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ThreePanesLayout-module__ThreePanesLayoutMiddleOnlyPane__"] {
   max-width: none;
 }
 
 /* Issue page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   > div[class^="Box-sc-"]
   > div[class^="Box-sc-"]
@@ -103,7 +107,8 @@ html:not(.ghflex-wide-layout-disabled) .application-main
 }
 
 /* Issue page (July 2025) */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="IssueViewer-module__issueViewerContainer-"]
   > div[class^="Box-sc-"] {
@@ -111,14 +116,16 @@ html:not(.ghflex-wide-layout-disabled) .application-main
 }
 
 /* Issue page (Jan 2026) */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="ContentWrapper-module__contentContainer--"] {
   max-width: none;
 }
 
 /* Issue page (Feb 2026) */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-Content-"] {
   max-width: none;
@@ -132,14 +139,16 @@ html:not(.ghflex-wide-layout-disabled)
 }
 
 /* New issue page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="IssueCreatePage-module__createPaneContainer-"] {
   max-width: none;
 }
 
 /* Commit list page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-PageLayoutWrapper-"] {
   max-width: none;
@@ -163,27 +172,31 @@ html:not(.ghflex-wide-layout-disabled) .repository-content {
 /* New React layout (Oct 2026) */
 
 /* Repo home and code view render in a shell without .application-main */
-html:not(.ghflex-wide-layout-disabled) #ui-service-main-content
+html:not(.ghflex-wide-layout-disabled)
+  #ui-service-main-content
   div[class^="prc-PageLayout-Content-"] {
   max-width: none;
 }
 
 /* Issue page: CSS module classes lost their "<Component>-module__" prefix */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="contentContainer__"] {
   max-width: none;
 }
 
 /* New issue page */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="createPaneContainer__"] {
   max-width: none;
 }
 
 /* Pull request conversation */
-html:not(.ghflex-wide-layout-disabled) .application-main
+html:not(.ghflex-wide-layout-disabled)
+  .application-main
   div[data-target="react-app.reactRoot"]
   div[class^="prc-PageLayout-ContentWrapper-"] {
   max-width: none;

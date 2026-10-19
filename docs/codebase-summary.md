@@ -689,8 +689,8 @@ pnpm dev         # Watch mode (auto-rebuild)
 
 ### System Requirements
 
-- Node.js 18+
-- pnpm 10.33.0+
+- Node.js 22.12+
+- pnpm 12.14.0+
 - Chrome 88+ or Firefox 112+
 
 ## Security Considerations

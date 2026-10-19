@@ -28,15 +28,13 @@ describe("readTableEntry", () => {
 
   // The bug this guards: header text is attacker-authored, and on a plain
   // object these keys resolve to inherited, truthy Object.prototype members.
-  it.each([
-    "__proto__",
-    "constructor",
-    "toString",
-    "valueOf",
-  ])("returns undefined for an unstored %s key", (key) => {
-    writeTableEntry("k", "No|Item", [1]);
-    expect(readTableEntry("k", key)).toBeUndefined();
-  });
+  it.each(["__proto__", "constructor", "toString", "valueOf"])(
+    "returns undefined for an unstored %s key",
+    (key) => {
+      writeTableEntry("k", "No|Item", [1]);
+      expect(readTableEntry("k", key)).toBeUndefined();
+    },
+  );
 
   it("round-trips an entry stored under __proto__ without polluting", () => {
     writeTableEntry("k", "__proto__", [3]);

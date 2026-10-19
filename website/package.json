@@ -2,17 +2,14 @@
   "name": "github-flex-website",
   "version": "1.0.0",
   "type": "module",
-  "pnpm": {
-    "onlyBuiltDependencies": ["esbuild", "sharp"]
-  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview"
   },
   "dependencies": {
-    "@astrojs/sitemap": "3.7.3",
-    "astro": "7.2.2"
+    "@astrojs/sitemap": "3.7.4",
+    "astro": "7.4.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "4.3.3",
