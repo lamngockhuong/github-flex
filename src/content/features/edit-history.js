@@ -1,6 +1,11 @@
 import browser from "webextension-polyfill";
 import { STYLE_IDS } from "../../shared/constants.js";
-import { findDialog, parseDiff, parseMeta } from "./edit-history-parser.js";
+import {
+  findDialog,
+  parseDiff,
+  parseMeta,
+  SELECTORS,
+} from "./edit-history-parser.js";
 import { createOverlay, destroyOverlay } from "./edit-history-ui.js";
 
 const STYLE_ID = STYLE_IDS.EDIT_HISTORY;
@@ -49,7 +54,7 @@ export const editHistory = {
   waitForDialogContent(attempt = 0) {
     if (!this.enabled || attempt > 15) return;
     const dialog = findDialog();
-    if (dialog?.querySelector('[class*="EditHistoryDialogHeader-module"]')) {
+    if (dialog?.querySelector(SELECTORS.header)) {
       this.widenNativeModal(dialog);
       this.injectButton(dialog);
     } else {
@@ -61,16 +66,16 @@ export const editHistory = {
   },
 
   widenNativeModal(dialog) {
-    const overlay = dialog.closest(".Box--overlay, .Box-overlay--wide");
+    const overlay = dialog.closest(
+      '.Box--overlay, .Box-overlay--wide, [role="dialog"]',
+    );
     if (overlay) overlay.classList.add(WIDE_CLASS);
   },
 
   injectButton(dialog) {
     if (!dialog || dialog.querySelector(`#${BUTTON_ID}`)) return;
 
-    const header = dialog.querySelector(
-      '[class*="EditHistoryDialogHeader-module"]',
-    );
+    const header = dialog.querySelector(SELECTORS.header);
     if (!header) return;
 
     const btn = document.createElement("button");
