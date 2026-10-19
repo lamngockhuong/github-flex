@@ -5,7 +5,7 @@ export const SETTINGS_DEFAULTS = {
   imageLightbox: true,
   gifPicker: true,
   sidebarToggle: true,
-  editHistory: false,
+  editHistory: true,
 };
 
 // Chrome storage keys

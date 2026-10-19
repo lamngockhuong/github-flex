@@ -1,8 +1,10 @@
-const SELECTORS = {
-  dialog: '[class*="EditHistoryDialog-module__EditHistoryDialogContainer"]',
-  header: '[class*="EditHistoryDialogHeader-module"]',
-  diffContainer: '[class*="GroupedTextDiffViewer-module__diffContainer"]',
-  diffLine: '[class*="GroupedTextDiffViewer-module__diffLine"]',
+// Match on the class name only: GitHub CSS modules drop and re-add the
+// "<Component>-module__" prefix between builds.
+export const SELECTORS = {
+  dialog: '[class*="EditHistoryDialogContainer"]',
+  header: '[class*="EditHistoryDialogHeader"]',
+  diffContainer: '[class*="diffContainer"]',
+  diffLine: '[class*="diffLine"]',
   borderAdded: '[class*="borderStylingAdded"]',
   borderRemoved: '[class*="borderStylingRemoved"]',
   borderChanged: '[class*="borderStylingChanged"]',

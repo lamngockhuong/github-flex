@@ -276,7 +276,7 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 | Risk                                    | Likelihood | Impact | Mitigation                                                 |
 | --------------------------------------- | ---------- | ------ | ---------------------------------------------------------- |
 | GitHub DOM changes break features       | High       | High   | Use semantic selectors, regular testing, feature detection |
-| Edit History dialog selectors change    | High       | Medium | Feature disabled by default; relies on CSS module classes  |
+| Edit History dialog selectors change    | High       | Medium | Selectors match class-name substrings, survive prefix changes |
 | GIF API proxy downtime                  | Medium     | Low    | Show error message, feature degrades gracefully            |
 | Chrome Web Store rejection              | Low        | High   | Follow all manifest V3 guidelines, minimal permissions     |
 | Performance regression on large pages   | Medium     | Medium | Lazy initialization, debounced observers                   |
