@@ -250,8 +250,8 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 ### Build-time
 
 - esbuild 0.28.0 (bundler)
-- @biomejs/biome 2.4.10 (linter/formatter)
-- vitest 4.1.3 + @vitest/coverage-v8 (testing)
+- @biomejs/biome 2.5.15 (linter/formatter)
+- vitest 5.0.5 + @vitest/coverage-v8 (testing)
 
 ### Runtime
 
@@ -268,8 +268,8 @@ Enhance GitHub's web interface with productivity features while maintaining nati
 
 ### System
 
-- Node.js 18+
-- pnpm 10.33.0+
+- Node.js 22.12+
+- pnpm 12.14.0+
 
 ## Risk Assessment
 
