@@ -47,6 +47,12 @@ pnpm preview          # Preview production build
 3. Click "Load Temporary Add-on"
 4. Select any file in the `dist/firefox/` folder (e.g., `manifest.json`)
 
+## Testing Against Live GitHub
+
+Features break when GitHub changes its DOM, which unit tests cannot see. To debug or verify a
+content-script fix on real github.com, use the `github-live-test` skill
+(`.claude/skills/github-live-test/`): it drives a logged-in Playwright Chromium with `dist/chrome` loaded.
+
 ## Architecture
 
 ### Extension Structure

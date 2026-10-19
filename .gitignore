@@ -7,9 +7,15 @@ coverage/
 # Generated promo PNGs (convert from SVGs for Chrome Web Store)
 assets/*.png
 
-# Claude Code
-.claude/
+# Claude Code (only this project's own skills are committed)
+.claude/*
+!.claude/skills/
+.claude/skills/*
+!.claude/skills/github-live-test/
 .playwright-mcp/
+
+# Logged-in browser profile for live GitHub testing
+.playwright-profile/
 
 # Plans and reports
 plans/
