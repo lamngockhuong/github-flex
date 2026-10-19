@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.0.16](https://github.com/lamngockhuong/github-flex/compare/v0.0.15...v0.0.16) (2026-10-19)
+
+
+### Bug Fixes
+
+* **edit-history:** match GitHub CSS module classes and enable by default ([#107](https://github.com/lamngockhuong/github-flex/issues/107)) ([bc6ad58](https://github.com/lamngockhuong/github-flex/commit/bc6ad58711f061bc8a5b63d0877ff1946ae4d44a))
+* **wide-layout:** match GitHub's new page shell and CSS module class names ([#105](https://github.com/lamngockhuong/github-flex/issues/105)) ([69fbd80](https://github.com/lamngockhuong/github-flex/commit/69fbd80a09d5e5d93c867b5534938f3e2f5d89ce))
+
 ## [0.0.15](https://github.com/lamngockhuong/github-flex/compare/v0.0.14...v0.0.15) (2026-09-29)
 
 
