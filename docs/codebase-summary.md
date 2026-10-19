@@ -411,7 +411,7 @@ User clicks checkbox in popup
 - Image Lightbox: on/off (default: on)
 - GIF Picker: on/off (default: on)
 - Sidebar Toggle: on/off (default: on)
-- Edit History: on/off (default: off)
+- Edit History: on/off (default: on)
 
 **localStorage (per-page state):**
 

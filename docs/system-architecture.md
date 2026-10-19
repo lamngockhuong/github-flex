@@ -649,7 +649,7 @@ XSS-safe renderer that creates DOM elements directly (no innerHTML with user dat
 4. Rendered markdown preview with diff highlighting
 5. Word count statistics
 
-**Why Default Off?** Feature relies on GitHub's internal CSS class names (e.g., `EditHistoryDialog-module`, `GroupedTextDiffViewer-module`) which may change. Opt-in reduces impact of GitHub DOM updates on users who don't need this feature.
+**Selector Strategy:** Feature relies on GitHub's internal CSS module class names (e.g., `EditHistoryDialogContainer`, `diffContainer`, `diffLine`). Selectors match the class name substring only, since GitHub adds and drops the `<Component>-module__` prefix between builds. Enabled by default.
 
 ## Communication Patterns
 
