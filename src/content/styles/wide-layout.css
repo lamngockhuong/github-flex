@@ -3,12 +3,20 @@
 /* Uses opt-out selector to prevent FOUC - CSS applies unless disabled class present */
 
 /* General full-page container */
-html:not(.ghflex-wide-layout-disabled) .application-main .container-xl {
+html:not(.ghflex-wide-layout-disabled) :is(
+    .application-main,
+    #ui-service-main-content
+  )
+  .container-xl {
   max-width: none !important;
 }
 
 /* General content sub-container */
-html:not(.ghflex-wide-layout-disabled) .application-main .container-lg {
+html:not(.ghflex-wide-layout-disabled) :is(
+    .application-main,
+    #ui-service-main-content
+  )
+  .container-lg {
   max-width: none !important;
   margin-left: 0 !important;
 }
@@ -150,4 +158,33 @@ html:not(.ghflex-wide-layout-disabled) .pagehead {
 /* File browser and code view */
 html:not(.ghflex-wide-layout-disabled) .repository-content {
   max-width: 100% !important;
+}
+
+/* New React layout (Oct 2026) */
+
+/* Repo home and code view render in a shell without .application-main */
+html:not(.ghflex-wide-layout-disabled) #ui-service-main-content
+  div[class^="prc-PageLayout-Content-"] {
+  max-width: none;
+}
+
+/* Issue page: CSS module classes lost their "<Component>-module__" prefix */
+html:not(.ghflex-wide-layout-disabled) .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="contentContainer__"] {
+  max-width: none;
+}
+
+/* New issue page */
+html:not(.ghflex-wide-layout-disabled) .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="createPaneContainer__"] {
+  max-width: none;
+}
+
+/* Pull request conversation */
+html:not(.ghflex-wide-layout-disabled) .application-main
+  div[data-target="react-app.reactRoot"]
+  div[class^="prc-PageLayout-ContentWrapper-"] {
+  max-width: none;
 }
